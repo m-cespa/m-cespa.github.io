@@ -37,33 +37,37 @@
     </nav>
     <section id="profile">
         <div class="section__pic-container">
-            <img src="./assets/profile-pic.png" alt="Michele Cespa Profile Picture">
+            <img src="./assets/profile-pic.png" alt="Michele Cespa Profile Picture" />
         </div>
         <div class="section__text">
             <p class="section__text__p1">Hello, I'm</p>
             <h1 class="title">Michele Cespa</h1>
             <p class="section__text__p2">Physics Student</p>
             <div class="btn-container">
-                <button class="btn btn-color-2"onclick="window.open('./assets/vitae.pdf')">
-                    Download CV
-                </button>
-                <button class="btn btn-color-1"onclick="location.href='./#contact'">
-                    Contact Info
-                </button>
-            </div>
-            <div id="socials-container">
                 <img 
-                    src="./assets/linkedin.png" 
-                    alt="My Linkedin Profile"
-                    class="icon" 
-                    onclick="location.href='https://www.linkedin.com/in/michele-cespa-0bb0b62a1/'"
+                    src="./assets/contact_logo.png" 
+                    alt="Contact" 
+                    class="btn-logo" 
+                    onclick="location.href='./#contact'"
                 >
                 <img 
-                src="./assets/github.png" 
-                alt="My Github Profile"
-                class="icon" 
-                onclick="location.href='https://github.com/m-cespa'"
-            >
+                    src="./assets/github.png" 
+                    alt="GitHub" 
+                    class="btn-logo" 
+                    onclick="window.open('https://github.com/m-cespa', '_blank')"
+                >
+                <img 
+                    src="./assets/linkedin_logo.png" 
+                    alt="LinkedIn" 
+                    class="btn-logo" 
+                    onclick="window.open('https://www.linkedin.com/in/michele-cespa-0bb0b62a1/', '_blank')"
+                >
+                <img 
+                    src="./assets/cv_logo.png" 
+                    alt="Download CV" 
+                    class="btn-logo" 
+                    onclick="window.open('./assets/vitae.pdf', '_blank')"
+                >
             </div>
         </div>
     </section>
@@ -71,33 +75,73 @@
         <p class="section__text__p1">Get To Know More</p>
         <h1 class="title">About Me</h1>
         <div class="section-container">
-            <div class="section__pic-container">
-                <img 
-                src="./assets/about-pic.png" 
-                alt="Profile Picture"
-                class="about-pic"
-                >
-            </div>
+          <div class="section__pic-container">
+            <img
+              src="./assets/about-pic.png"
+              alt="Profile picture"
+              class="about-pic"
+            />
+          </div>
             <div class="about-details-container">
                 <div class="about-containers">
                     <div class="details-container">
-                        <img 
-                        src="./assets/experience.png"
-                        alt="Experience icon"
-                        class="icon"
-                        >
-                        <h3>Experience</h3>
-                        <p>1st line <br>2nd line</p>
-                    </div>
-                    <div class="details-container">
-                        <img 
-                        src="./assets/education.png"
-                        alt="Education icon"
-                        class="icon"
-                        >
                         <h3>Education</h3>
-                        <p>BA (Hons) in Natural Sciences (Physics)<br>University of Cambridge</p>
+                        <ul class="custom-bullet-list">
+                            <li class="custom-bullet-item type-1">
+                                <img 
+                                    src="./assets/education.png"
+                                    alt="Experience icon"
+                                    class="icon"
+                                >
+                                <div class="text-container">
+                                    <div class="main-text">BA (Hons) in Natural Sciences (Physics), 2025</div>
+                                    <div class="secondary-text">University of Cambridge</div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
+                    
+                    <div class="details-container">
+                        <h3>Interests</h3>
+                        <ul class="custom-bullet-list">
+                            <li class="custom-bullet-item type-2">
+                                <img 
+                                    src="./assets/physics_bullet.png"
+                                    alt="Experience icon"
+                                    class="icon"
+                                >
+                                <div class="text-container">
+                                    <div class="main-text">
+                                        Statistical Physics descriptions of Machine Learning
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="custom-bullet-item type-2">
+                                <img 
+                                    src="./assets/physics_bullet.png"
+                                    alt="Experience icon"
+                                    class="icon"
+                                >
+                                <div class="text-container">
+                                    <div class="main-text">
+                                        Neural Network Architecture      
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="custom-bullet-item type-2">
+                                <img 
+                                    src="./assets/physics_bullet.png"
+                                    alt="Experience icon"
+                                    class="icon"
+                                >
+                                <div class="text-container">
+                                    <div class="main-text">
+                                        Temporal Neural Networks for Prosthetics and Robotics    
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>                                      
                 </div>
                 <div class="text-container">
                     <p>
@@ -115,11 +159,11 @@
             </div>
         </div>
         <img 
-        src="./assets/arrow.png"
-        alt="Arrow icon"
-        class="icon arrow"
-        onclick="location.href='./#experience'"
-        >
+            src="./assets/arrow.png"
+            alt="Arrow icon"
+            class="icon arrow"
+            onclick="location.href='./#experience'"
+        />
     </section>
     <section id="experience">
         <p class="section__text__p1">Explore My</p>
@@ -142,12 +186,12 @@
                         </article>
                         <article>
                             <img 
-                            src="./assets/html_logo.png"
+                            src="./assets/html_css.png"
                             alt="Experience icon"
                             class="icon"
                             >
                             <div>
-                                <h3>HTML</h3>
+                                <h3>HTML/CSS</h3>
                                 <p>Intermediate</p>
                             </div>
                         </article>
@@ -186,7 +230,7 @@
                             >
                             <div>
                                 <h3>PyTorch</h3>
-                                <p>Basic/Intermediate</p>
+                                <p>Intermediate</p>
                             </div>
                         </article>
                         <article>
@@ -224,6 +268,49 @@
                         </article>
                     </div>
                 </div>
+<!-- 
+                <div class="details-container">
+                    <h2 class="experience-sub-title">Relevant Courses</h2>
+                    <ul class="custom-bullet-list">
+                        <li class="custom-bullet-item type-3">
+                            <img 
+                                src="./assets/book_logo.png"
+                                alt="Experience icon"
+                                class="icon"
+                            >
+                            <div class="text-container">
+                                <div class="main-text">
+                                    Linear & Tensor Algebra
+                                </div>
+                            </div>
+                        </li>
+                        <li class="custom-bullet-item type-3">
+                            <img 
+                                src="./assets/book_logo.png"
+                                alt="Experience icon"
+                                class="icon"
+                            >
+                            <div class="text-container">
+                                <div class="main-text">
+                                    Multivariate & Vector Calculus     
+                                </div>
+                            </div>
+                        </li>
+                        <li class="custom-bullet-item type-3">
+                            <img 
+                                src="./assets/book_logo.png"
+                                alt="Experience icon"
+                                class="icon"
+                            >
+                            <div class="text-container">
+                                <div class="main-text">
+                                    Vector Spaces  
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>   -->
+
             </div>
         </div>
         <img 
@@ -233,6 +320,116 @@
         onclick="location.href='./#projects'"
         >
     </section>
+    <section id="projects">
+        <p class="section__text__p1">Browse My Recent</p>
+        <h1 class="title">Projects</h1>
+        <div class="experience-details-container">
+            <div class="about-containers">
+                <div class="projects-details-container color-container">
+                    <div class="article-container">
+                        <img 
+                            src="assets/neural_network_diag.png"
+                            alt="Project 1"
+                            class="project-img"
+                        />
+                    </div>
+                    <h2 class="project-sub-title project-title">Pure NumPy Neural Network</h2>
+                    <div class="project-btn-container">
+                        <img 
+                        src="./assets/github.png" 
+                        alt="GitHub" 
+                        class="btn-logo" 
+                        onclick="window.open('https://github.com/m-cespa/Learning_ML/tree/main/CNN_from_scratch', '_blank')"
+                        >
+                    </div>
+                </div>
+                <div class="projects-details-container color-container">
+                    <div class="article-container">
+                        <img 
+                            src="assets/gr_helper.png"
+                            alt="Project 2"
+                            class="project-img"
+                        />
+                    </div>
+                    <h2 class="project-sub-title project-title">General Relativity Helper</h2>
+                    <div class="project-btn-container">
+                        <img 
+                        src="./assets/github.png" 
+                        alt="GitHub" 
+                        class="btn-logo" 
+                        onclick="window.open('https://github.com/m-cespa/GR_helper', '_blank')"
+                        >
+                        <img 
+                        src="./assets/internet_logo.png" 
+                        alt="Web-page" 
+                        class="btn-logo" 
+                        onclick="window.open('https://grapper-wanqxpchdjlnmcgbxemz9j.streamlit.app/', '_blank')"
+                        >
+                    </div>
+                </div>
+                <div class="projects-details-container color-container">
+                    <div class="article-container">
+                        <img 
+                            src="assets/rpi_reactors.png"
+                            alt="Project 3"
+                            class="project-img"
+                        />
+                    </div>
+                    <h2 class="project-sub-title project-title">RPi Bioreactors</h2>
+                    <div class="project-btn-container">
+                        <img 
+                        src="./assets/github.png" 
+                        alt="GitHub" 
+                        class="btn-logo" 
+                        onclick="window.open('https://github.com/m-cespa/RPi-Biosensor', '_blank')"
+                        >
+                        <img 
+                        src="./assets/internet_logo.png" 
+                        alt="Web-page" 
+                        class="btn-logo" 
+                        onclick="window.open('https://notes.livingphysics.org/build_posts/gen1_reactor_build/', '_blank')"
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <p class="section__text__p1">Get in Touch</p>
+        <h1 class="title">Contact Me</h1>
+        <div class="contact-info-upper-container">
+            <div class="contact-info-container">
+                <img
+                src="./assets/contact_logo.png"
+                alt="Email icon"
+                class="icon contact-icon email-icon"
+                />
+                <p><a href="mailto:mc2369@cam.ac.uk">mc2369@cam.ac.uk</a></p>
+            </div>
+            <div class="contact-info-container">
+                <img
+                src="./assets/linkedin_logo.png"
+                alt="LinkedIn icon"
+                class="icon contact-icon"
+                />
+                <p><a href="https://www.linkedin.com/in/michele-cespa-0bb0b62a1/">LinkedIn</a></p>
+            </div>
+        </div>
+    </section>
     <script src="script.js"></script>
-</body>
-</html>
+
+    <footer>
+        <nav>
+            <div class="nav-links-container">
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </footer>
+    <script src="script.js"></script>
+    </body>
+  </html>

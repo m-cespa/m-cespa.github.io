@@ -1,14 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 /* Page layout */
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Poppins', 'sans-serif'; 
+    font-family: "Poppins", "sans-serif"; 
 }
 
 html {
@@ -19,13 +18,17 @@ p {
     color: rgb(85, 85, 85);
 }
 
-/* Transitions */
-a, .btn {
+/* TRANSITIONS */
+
+a,
+.btn {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Desktop navigation */
-nav, .nav-links {
+/* DESKTOP NAVIGATION */
+
+nav,
+.nav-links {
     display: flex;
 }
 
@@ -62,7 +65,8 @@ a:hover {
     cursor: default;
 }
 
-/* Hamburger menu */
+/* HAMBURGER MENU */
+
 #hamburger-nav {
     display: none;
 }
@@ -152,7 +156,7 @@ a:hover {
     transform: none;
 }
 
-/* sections */
+/* SECTIONS */
 
 section {
     padding-top: 4vh;
@@ -166,13 +170,15 @@ section {
     display: flex;
 }
 
-/* profile */
+/* PROFILE SECTION */
 
 #profile {
     display: flex;
     justify-content: center;
     gap: 5rem;
     height: 80vh;
+    flex-wrap: wrap; /* Allows content to wrap on smaller screens */
+    padding: 1rem; /* Adds spacing on smaller screens */
 }
 
 .section__pic-container {
@@ -205,53 +211,44 @@ section {
     text-align: center;
 }
 
-.socials-container {
+#socials-container {
     display: flex;
     justify-content: center;
     margin-top: 1rem;
     gap: 1rem;
 }
 
-/* icons */
-
-.icon {
-    cursor: pointer;
-    height: 2rem;
-}
-
-/* buttons */
+/* BUTTONS */
 
 .btn-container {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
+    justify-content: space-evenly; /* Reduced spacing compared to space-evenly */
+    align-items: center; /* Align logos vertically */
+    margin-top: 1.5rem;
 }
 
-.btn {
-    font-weight: 600;
-    transition: all 300ms ease-in-out; /* Smooth transition */
-    padding: 1rem;
-    width: 8rem;
-    border-radius: 2rem;
-    border: rgb(53, 53, 53) 0.1rem solid;
-    background: none;
-    color: rgb(53, 53, 53);
-}
-
-.btn:hover {
+.btn-logo {
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Keep consistent dimensions */
+    border-radius: 20%; /* Makes logos circular */
+    transition: all 300ms ease-in-out; /* Smooth hover and animation effects */
     cursor: pointer;
-    background: rgb(53, 53, 53);
-    color: white;
-    transform: translateY(-3px); /* Slight lift animation */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    border: 1px solid transparent; /* Border for hover effect */
+    background-color: transparent; /* Optional background for contrast */
 }
 
-.btn:active {
-    transform: translateY(0); /* Reset animation for active click */
-    box-shadow: none;
+.btn-logo:hover {
+    transform: scale(1.2); /* Zoom effect */
+    border-color: rgba(53, 53, 53, 0.5); /* Border highlight on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
 }
 
-/* about section */
+.btn-logo:active {
+    transform: scale(1); /* Reset zoom on click */
+    box-shadow: none; /* Remove shadow on click */
+}
+
+/* ABOUT SECTION */
 
 #about {
     position: relative;
@@ -268,8 +265,9 @@ section {
     flex-direction: column;
 }
 
-.about-containers, .about-details-container {
-    display: flex;
+.about-containers,
+.about-details-container {
+  display: flex;
 }
 
 .about-pic {
@@ -289,7 +287,66 @@ section {
     border-radius: 2rem;
     border: rgb(53, 53, 53) 0.1rem solid;
     border-color: rgb(163, 163, 163);
-    text-align: center;
+    text-align: left;
+}
+
+.custom-bullet-list {
+    list-style-type: none; /* Remove default list bullets */
+    padding: 0.3rem;
+    margin: 0;
+}
+
+.custom-bullet-item {
+    display: flex;
+    align-items: flex-start; /* Align the items at the top */
+    gap: 1rem; /* Space between the image and the text */
+    margin-bottom: 0.5rem; /* Add some space between list items */
+}
+
+.custom-bullet-item img {
+    object-fit: contain; /* Ensure the image fits without distortion */
+    flex-shrink: 0; /* Prevent shrinking the image */
+    width: 20px; /* Set the image size for Education section */
+    height: 20px; /* Set the image size for Education section */
+    margin-top: 0;
+    vertical-align: top;
+}
+
+.custom-bullet-item.type-1 img {
+    width: 25px; /* Set the image size for type-1 */
+    height: 25px; /* Set the image size for type-1 */
+}
+
+.custom-bullet-item.type-2 img {
+    margin-top: 0.13rem;
+    width: 15px; /* Set the image size for type-1 */
+    height: 15px; /* Set the image size for type-1 */
+}
+
+.custom-bullet-item.type-3 img {
+    margin-top: -0.25rem;
+    width: 30px;
+    height: 30px;
+}
+
+.custom-bullet-item .text-container {
+    display: flex;
+    flex-direction: column; /* Stack main text and secondary text vertically */
+    gap: 0.25rem; /* Space between main text and secondary text */
+    flex-grow: 1; /* Allow text container to take up the remaining space */
+}
+
+.custom-bullet-item .main-text {
+    display: block;
+    font-size: 0.82rem; /* Regular font size for the main text */
+    font-weight: normal; /* Bold for emphasis */
+    line-height: 1.5; /* Line height for readability */
+}
+
+.custom-bullet-item .secondary-text {
+    font-size: 0.72rem; /* Smaller font size for the second line */
+    color: #888; /* Grey color for the second line */
+    margin-top: 0.25rem; /* Add a small space between the lines */
 }
 
 .section-container {
@@ -303,6 +360,8 @@ section {
     margin: auto 0;
 }
 
+/* EXPERIENCE SECTION */
+
 #experience {
     position: relative;
 }
@@ -311,7 +370,7 @@ section {
     color: rgb(85, 85, 85);
     font-weight: 600;
     font-size: 1.75rem;
-    margin-bottom: 2rem;    
+    margin-bottom: 1rem;    
 }
 
 .experience-details-container {
@@ -322,7 +381,7 @@ section {
 
 .article-container {
     display: flex;
-    text-align: initial;
+    align-items: center;
     flex-wrap: wrap;
     flex-direction: row;
     gap: 2.5rem;
@@ -332,11 +391,171 @@ section {
 article {
     display: flex;
     width: 10rem;
-    justify-content: space-around;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-start;
 }
 
 article.icon {
     cursor: default;
 }
 
+.icon {
+    background-color: transparent;
+    width: 40px; /* Set maximum width */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 40px; /* Ensure no dimension exceeds 40px */
+    object-fit: contain; /* Contain the image within the box */
+    flex-shrink: 1; /* Allow the icon to shrink if necessary */
+    display: block; /* Prevent inline spacing issues */
+    margin: auto; /* Center the icon both vertically and horizontally */
+    box-sizing: border-box; /* Include padding and border in width/height */
+}
+
+article div {
+    flex: 1; /* Allow the text container to occupy remaining space */
+    text-align: left; /* Align text to the left */
+    display: flex; /* Make the text container a flexbox */
+    flex-direction: column; /* Stack the text elements vertically */
+    justify-content: center; /* Vertically center-align the text */
+}
+
+.article-container > article div h3,
+.article-container > article div p {
+    margin: 0; /* Remove default margins from text */
+}
+
+/* PROJECTS SECTION */
+
+#projects {
+    position: relative;
+}
+
+.color-container {
+    border-color: rgb(163, 163, 163);
+    background: rgb(250, 250, 250);
+}
+
+/* .details-container {
+    padding: 1.5rem;
+    flex: 1;
+    background: white;
+    border-radius: 2rem;
+    border: rgb(53, 53, 53) 0.1rem solid;
+    border-color: rgb(163, 163, 163);
+    text-align: left;
+} */
+
+.projects-details-container {
+    position: relative;
+    padding: 1.5rem;
+    width: 500px; /* Adjust this to make the container smaller or larger */
+    height: 400px; /* Adjust this based on how tall you want the container */
+    padding: 1rem; /* Adjust padding to make the content more compact */
+    background: white;
+    border-radius: 2rem; /* You can adjust the border radius if needed */
+    border: rgb(53, 53, 53) 0.1rem solid;
+    border-color: rgb(163, 163, 163);
+    text-align: left;
+}
+
+.project-img {
+    width: 100%; /* Make the image fill the width of the container */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Limit the height to ensure it doesn't become too tall */
+    object-fit: cover; /* Ensure the image covers the area without distorting */
+    border-radius: 1rem; /* Slightly rounded corners for a cleaner look */
+}
+
+.project-sub-title {
+    color: rgb(85, 85, 85);
+    font-weight: 600;
+    font-size: 1.75rem;
+    margin-bottom: 2rem;    
+}
+
+.project-title {
+    margin: 1rem;
+    color: black;
+}
+
+.project-btn-container {
+    position: relative;
+    bottom: 0.5rem; /* Distance from the bottom of the container */
+    left: 1rem;  /* Distance from the right of the container */
+    display: flex;
+    gap: 1rem;    /* Space between the buttons */
+    align-items: center; /* Align buttons vertically */
+}
+
+.project-btn-logo {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Keep consistent dimensions */
+    border-radius: 20%; /* Makes logos circular */
+    transition: all 300ms ease-in-out; /* Smooth hover and animation effects */
+    cursor: pointer;
+    border: 1px solid transparent; /* Border for hover effect */
+    background-color: transparent; /* Optional background for contrast */
+}
+
+.project-btn-logo:hover {
+    transform: scale(1.2); /* Zoom effect */
+    border-color: rgba(53, 53, 53, 0.5); /* Border highlight on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+.project-btn-logo:active {
+    transform: scale(1); /* Reset zoom on click */
+    box-shadow: none; /* Remove shadow on click */
+}
+
+/* CONTACTS SECTION */
+
+#contact {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 70vh;
+  }
+  
+  .contact-info-upper-container {
+    display: flex;
+    justify-content: center;
+    border-radius: 2rem;
+    border: rgb(53, 53, 53) 0.1rem solid;
+    border-color: rgb(163, 163, 163);
+    background: (250, 250, 250);
+    margin: 2rem auto;
+    padding: 0.5rem;
+  }
+  
+  .contact-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem;
+  }
+  
+  .contact-info-container p {
+    font-size: larger;
+  }
+  
+  .contact-icon {
+    cursor: default;
+  }
+  
+  .email-icon {
+    height: 2.5rem;
+  }
+
+  /* FOOTER SECTION */
+
+footer {
+    height: 26vh;
+    margin: 0 1rem;
+  }
+  
+  footer p {
+    text-align: center;
+  }
