@@ -275,9 +275,16 @@ section {
 }
 
 .arrow {
+    cursor: pointer;
     position: absolute;
     right: -5rem;
     bottom: 2.5rem;
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth hover effect */
+}
+
+.arrow:hover {
+    transform: translateY(5px) scale(1.2); /* Move slightly right and grow */
+    opacity: 0.8; /* Slightly fade on hover */
 }
 
 .details-container {
