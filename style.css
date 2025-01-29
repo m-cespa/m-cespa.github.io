@@ -444,6 +444,7 @@ article div {
 }
 
 .scrollable-details-container {
+    margin-top: 2rem;
     display: flex;
     overflow-x: auto;  /* Enable horizontal scrolling */
     scroll-snap-type: x mandatory;  /* Smooth snapping */
