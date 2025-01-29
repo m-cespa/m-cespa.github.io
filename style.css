@@ -443,6 +443,20 @@ article div {
     background: rgb(250, 250, 250);
 }
 
+.scrollable-details-container {
+    display: flex;
+    overflow-x: auto;  /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory;  /* Smooth snapping */
+    gap: 1rem;  /* Space between project cards */
+    padding-bottom: 1rem; /* Avoid scrollbar overlap */
+}
+
+.scrollable-about-containers {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    gap: 1rem;
+}
+
 /* .details-container {
     padding: 1.5rem;
     flex: 1;
@@ -455,15 +469,26 @@ article div {
 
 .projects-details-container {
     position: relative;
-    padding: 1.5rem;
-    width: 500px; /* Adjust this to make the container smaller or larger */
-    height: 400px; /* Adjust this based on how tall you want the container */
-    padding: 1rem; /* Adjust padding to make the content more compact */
+    flex: 0 0 300px; /* Fixed width for uniform size */
+    height: 350px; /* Fixed height */
+    border: 1px solid rgb(163, 163, 163); /* Light grey border */
+    border-radius: 1rem; /* Rounded corners */
     background: white;
-    border-radius: 2rem; /* You can adjust the border radius if needed */
-    border: rgb(53, 53, 53) 0.1rem solid;
-    border-color: rgb(163, 163, 163);
-    text-align: left;
+    padding: 1rem; /* Padding for content spacing */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Ensures even spacing */
+    text-align: center;
+}
+
+/* Hide scrollbar for cleaner look */
+.scrollable-details-container::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari */
+}
+
+.scrollable-details-container {
+    scrollbar-width: none; /* For Firefox */
 }
 
 .project-img {
@@ -475,10 +500,11 @@ article div {
 }
 
 .project-sub-title {
+    position: absolute;
+    top: 14rem;
     color: rgb(85, 85, 85);
     font-weight: 600;
-    font-size: 1.75rem;
-    margin-bottom: 2rem;    
+    font-size: 1.75rem;   
 }
 
 .project-title {
@@ -487,17 +513,20 @@ article div {
 }
 
 .project-btn-container {
-    position: relative;
-    bottom: 0.5rem; /* Distance from the bottom of the container */
-    left: 1rem;  /* Distance from the right of the container */
+    position: absolute; /* Fix position relative to the container */
+    bottom: 1rem; /* Fixed distance from the bottom */
+    left: 50%; /* Center align */
+    transform: translateX(-50%); /* Adjust for centering */
     display: flex;
-    gap: 1rem;    /* Space between the buttons */
-    align-items: center; /* Align buttons vertically */
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Ensures alignment inside the container */
 }
 
 .project-btn-logo {
-    width: 40px; /* Adjust size as needed */
-    height: 40px; /* Keep consistent dimensions */
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Keep consistent dimensions */
     border-radius: 20%; /* Makes logos circular */
     transition: all 300ms ease-in-out; /* Smooth hover and animation effects */
     cursor: pointer;
