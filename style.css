@@ -263,6 +263,7 @@ section {
 .about-details-container {
     justify-content: center;
     flex-direction: column;
+    width: 700px;
 }
 
 .about-containers,
@@ -272,6 +273,8 @@ section {
 
 .about-pic {
     border-radius: 2rem;
+    width: 350px;
+    height: 350px;
 }
 
 .arrow {
