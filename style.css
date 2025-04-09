@@ -474,7 +474,7 @@ article div {
 .projects-details-container {
     position: relative;
     flex: 0 0 300px; /* Fixed width for uniform size */
-    height: 350px; /* Fixed height */
+    height: 400px; /* Fixed height */
     border: 1px solid rgb(163, 163, 163); /* Light grey border */
     border-radius: 1rem; /* Rounded corners */
     background: white;
