@@ -7,7 +7,8 @@
 }
 
 body {
-    font-family: "Poppins", "sans-serif"; 
+    font-family: "Poppins", "sans-serif";
+    background-color: rgb(245, 245, 235); 
 }
 
 html {
@@ -264,7 +265,7 @@ section {
     justify-content: center;
     flex-direction: column;
     width: 100%; /* Takes full parent width */
-    max-width: 700px; /* But never exceeds 700px */
+    max-width: 700px; /* But never exceeds 700px */;
 }
 
 .about-containers,
@@ -294,7 +295,7 @@ section {
 .details-container {
     padding: 1.5rem;
     flex: 1;
-    background: white;
+    background: rgb(247, 247, 237);
     border-radius: 2rem;
     border: rgb(53, 53, 53) 0.1rem solid;
     border-color: rgb(163, 163, 163);
@@ -478,7 +479,7 @@ article div {
     height: 400px; /* Fixed height */
     border: 1px solid rgb(163, 163, 163); /* Light grey border */
     border-radius: 1rem; /* Rounded corners */
-    background: white;
+    background: rgb(247, 247, 237);
     padding: 1rem; /* Padding for content spacing */
     display: flex;
     flex-direction: column;
