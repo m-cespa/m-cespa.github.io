@@ -1,5 +1,9 @@
 # A Probabilistic View on Linear Regression
 
+<img src="blogposts/images/prob_view_on_lin_reg.jpeg" alt="Alt text for accessibility" width="500">
+
+*Whiteboard musings from this morning*
+
 <br>
 
 <u> Why "least squares"? </u>
