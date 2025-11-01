@@ -1,36 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Michele Cespa</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="media_queries.css">
-    <link rel="icon" type="image/png" href="./assets/favicon-32x32.png">
-</head>
-<body class="blog_page">
-    <nav id="desktop-nav">
-        <div class="logo">
-            <a href="index.html">Back to Homepage</a>
-        </div>
-    </nav>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Michele Cespa</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="media_queries.css" />
+  <link rel="icon" type="image/png" href="./assets/favicon-32x32.png" />
 
-    <div class="sections-wrapper">
-        <section>
-            <h1 class="title">Project Blog</h1>
-            <div class="blog-intro-container">
-                <p>
-                    This "blog" was largely motivated by friends who recommended I add this as a section to my website. 
-                    Not that I will be sharing anything particularly groundbreaking 
-                    (for that see <a href="https://www.paulgraham.com/">Paul Graham's website</a>) but I'll share 
-                    anything interesting (to me) which I'm working on, which if you're interested in similar things, 
-                    may also be interesting (to you). <brbr>
-                </p>
-                <p class="notice">
-                    <em>I'll start posting things here once I figure out how I want this page to look</em>
-                </p>
-            </div>
-            <!-- Projects Glossary Section -->
-    
+  <!-- Highlight.js -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+  />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] },
+      svg: { fontCache: "global" },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <!-- Markdown-it + texmath -->
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
+</head>
+
+<body class="blog_page">
+  <nav id="desktop-nav">
+    <div class="logo">
+      <a href="index.html">Back to Homepage</a>
+    </div>
+  </nav>
+
+  <div class="sections-wrapper-blog">
+    <div class="blog-intro-container-blog">
+      <p>
+        This "blog" was largely motivated by friends who recommended I add this
+        as a section to my website - not that I will be sharing anything
+        particularly groundbreaking (for that see
+        <a href="https://www.paulgraham.com/">Paul Graham's website</a>). I recently 
+        got a whiteboard and find myself working on random problems, often over breakfast. 
+        I find it useful to write down what I work on - explaining stuff tends to help the 
+        explain-er just as much as the explain-ee. Some posts might be longer discussions 
+        on bits of maths/CS/physics I stumble across, others might be a one-off interesting 
+        problem. If you like what you see, let me know, if you don't, then don't let me know.
+        </p>
+        <p>
+
+        (I am currently writing these posts in markdown and pre-parsing them into html, if anyone 
+        can suggest a neater solution, let me know)
+      </p>
+
+      <!-- Simple clickable list replacing cards -->
+      <ul class="blog-list">
+        <li onclick="openPostMarkdownBlog('blogposts/probabilistic_view_on_lin_reg.md')">
+          A probabilistic view on linear regression - 1st Nov 2025
+        </li>
+        <!-- Add more posts here as needed -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div
+    id="markdown-modal-blog"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+  >
+    <div class="modal-content-blog" tabindex="-1">
+      <button
+        class="close-btn-blog"
+        aria-label="Close post"
+        onclick="closeModalBlog()"
+      >
+        &times;
+      </button>
+      <div id="markdown-content-blog">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Your updated JS -->
+  <script src="script.js"></script>
 </body>
 </html>
