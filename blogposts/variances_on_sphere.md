@@ -1,0 +1,99 @@
+# Variances on a sphere
+
+*"Entities are not to be multiplied unnecessarily" John Punch*
+
+<br>
+
+The following discussion is very much against the above citation of Ockham's Razor but is nonetheless entertaining. The problem is a simple one and you probably know the solution too (you might even know multiple solutions - if that's the case, this post is likely a waste of your time). What is the variance of any of the coordinate $x, y, z$ on a unit sphere?
+
+<br>
+<u> Geometric Solution </u>
+
+Before doing anything fancy, it should be obvious without calculation that the expected value of any of the three cartesian coordinates is zero as the probability mass in the opposing hemispheres is equal. If you're a physicist, the following is probably the solution you've seen before. We'll focus on the $z$ coordinate - by symmetry they all have the same variance. We could jump straight to a trig integral and get to the answer in a few lines, but that implies assuming quite a bit of knowledge. The approach is broadly going to be:
+
+\- transform to spherical coordinates with $r=1$
+
+\- determine the joint pdf of being at some location $(\theta, \phi)$ on the sphere
+
+\- extract the marginal pdf of being at some polar angle $\theta$
+
+\- evaluate the variance in $z$ knowing that $z = \cos \theta$
+
+The coordinate transform to spherical coordinates is:
+
+$$
+\begin{align}
+x &= r\sin\theta \cos\phi \\
+y &= r\sin\theta \sin\phi \\
+z &= r\cos\theta
+\end{align}
+$$
+
+To get the joint pdf we can either do a bit of sketching, or work with Jacobians. I'll cover both:
+
+<img src="blogposts/images/surface_ele_sphere.jpeg" alt="Alt text for accessibility" width="300">
+
+*a bit of sketching*
+<br>
+
+So we have that our area element is $dS = \sin\theta d\theta d\phi$. In much the same way that we would calculate the probability of landing at some radius $r$ in a circle of radius $R$ by evaluating the ratio of areas $\frac{\pi r^2}{\pi R^2}$, we will do the same here - our area now being $4\pi$:
+
+$$
+\begin{align}
+\mathbb{P}[\theta < \theta' < \theta + d\theta, \phi < &\phi' < \phi + d\phi] = \frac{1}{4\pi}\sin\theta \, d\theta \, d\phi \\
+p(\theta, \phi) &= \frac{1}{4\pi}\sin\theta \\
+p(\theta) = \int_{\phi=0}^{\phi=2\pi} &p(\theta, \phi) d\phi = \frac{1}{2} \sin\theta
+\end{align}
+$$
+
+With the marginal, the solution is easy. Let's revisit the Jacobian. For a coordinate transform from coordinates $x_i$ to $x_j$ we have that $J_{ij} = \frac{\partial x_i}{\partial x_j}$. The Jacobian is really the transformation operator between the two systems and thus its determinant will tell us how much the generalised volume changes between the two. If in coordinates $x_i$ we have a volume $dx_i^{(1)} dx_i^{(2)} dx_i^{(3)}$, in $x_j$ we will have a volume $\det(J) dx_j^{(1)} dx_j^{(2)} dx_j^{(3)}$. For our purposes $x_i = (x, y, z)$ and $x_j = (r, \theta, \phi)$. I'll spare you the dirty work, the determinant of our Jacobian turns out to be $r^2 \sin\theta$ thus:
+
+$$
+\begin{align}
+\iiint f(x, y, z)\, dx\, dy\, dz = \iiint f(r\sin\theta\cos\phi, r\sin\theta\sin\phi, r\cos\theta) r^2 \sin\theta \, dr \, d\theta \, d\phi
+\end{align}
+$$
+
+Our radius is constant so we can drop that dimension and look at the double integral instead. Let's substitute $f(x, y, z)$ as the pdf on the surface of the sphere which is uniform with probability $\frac{1}{4\pi}$:
+
+$$
+\begin{align}
+\iint \frac{1}{4\pi} \sin\theta \, d\theta \, d\phi = 1 \text{ (by normalisation of a pdf)}
+\end{align}
+$$
+
+We are unsurprisingly back at the same result for the joint pdf $p(\theta, \phi)$. To conclude the solution we perform our variance calculation:
+
+$$
+\begin{align}
+\mathbb{V}[z] = \mathbb{V}[\cos\theta] = \int_{0}^{\pi} p(\theta) \cos^2\theta \, d\theta - \Bigg[ \int_{0}^{\pi} p(\theta) \cos\theta \, d\theta \Bigg]^2 = \frac{1}{3}
+\end{align}
+$$
+
+<br>
+
+<u> Sort of Geometric Solution </u>
+
+Suppose you have the marginal $p(\theta) = \frac{1}{2} \sin\theta$, we could also perform a variable transform to recover the marginal $p(z)$. If we define a random variable $Y = g(X)$ on some interval where $g$ is a deterministic monotonic function then:
+
+$$
+\begin{align}
+\mathbb{P}[Y < y] &= \int_{-\infty}^{g^{-1}(y)} p_X(x) \, dx = \mathbb{P}[X < g^{-1}(y)] \text{ for increasing $g$} \\
+&= \int_{g^{-1}(y)}^{\infty} p_X(x) \, dx = \mathbb{P}[X > g^{-1}(y)] \text{ for decreasing $g$}
+\end{align}
+$$
+
+In our case the interval of interest is $\theta \in [0, \pi]$ with $z = g(\theta) = \cos\theta$ where $\cos$ is monotonically decreasing over this interval. So we have that $\mathbb{P}[Z < z] = \frac{1}{2}(1 + z)$ from which we get that $p_Z(z) = \frac{1}{2}$. To some, this uniform marginal might be intuitive. On quick inspection, it seems that closer to the poles, there infinitesimal rings of constant $z$ have smaller area than near the equator. It turns out that the rate at which these infinitesimal areas shrink near the poles is balanced by the rate at which the $z$ coordinate changes with $\theta$. Anyhow, from here we again get that $\mathbb{V}[Z] = \frac{1}{3}$.
+
+<br>
+
+<u> Symmetry Solution </u>
+
+This is by far the most economical solution and relies only on linearity of expectations. Our constraint is that $x^2 + y^2 + z^2 = 1$ thus:
+
+$$
+\begin{align}
+&\mathbb{E}[X^2 + Y^2 + Z^2 \mid X^2 + Y^2 + Z^2 = 1] = 1 \\
+3&\mathbb{E}[Z^2 \mid X^2 + Y^2 + Z^2 = 1] = 1 \rightarrow  \mathbb{V}[Z] = \frac{1}{3} \\
+\end{align}
+$$
