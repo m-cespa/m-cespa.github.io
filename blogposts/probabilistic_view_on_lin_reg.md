@@ -35,7 +35,7 @@ I personally prefer working in index notation (the arguments scale easily to arb
 
 <br>
 
-Our measured data will almost surely not lie on a straight line, it's noisy. We can think of each datum $y_i$ as being drawn from some distribution centred on mean value $\mu_i = X_{ij}\theta_j^{\ast}$ with *white noise* $\xi_i$. By white noise we mean a gaussian with $\mathbb{E}[\xi_i] = 0$ and $\mathbb{V}[\xi_i] = \sigma^2\delta_{ij}$ (zero-mean and spherical variance). Formally we have:
+Our measured data will almost surely not lie on a straight line, it's noisy. We can think of each datum $y_i$ as being drawn from some distribution centred on mean value $\mu_i = X_{ij}\theta_j^{\ast}$ with noise $\xi_i$. We take the noise to be gaussian with $\mathbb{E}[\xi_i] = 0$ and $\mathbb{V}[\xi_i] = \sigma^2\delta_{ij}$. Formally we have:
 
 $$
 \begin{align}
@@ -56,7 +56,7 @@ Our goal parameter $\theta_j^{\ast}$ is inside the distribution's mean. If we ha
 $$
 \begin{align}
 \hat{\mu_i} &= X_{ij}\theta_j \\
-\mathbb{P}[Y_i = y_i \mid X, \vec{\theta}] \propto \exp\Bigg[-\frac{1}{2} &(y_i - X_{ik}\theta_k) (\sigma^2 \delta_{ij})^{-1} (y_j - X_{jk}\theta_k) \Bigg]
+\mathbb{P}[Y_i = y_i \mid \vec{\theta}, X] \propto \exp\Bigg[-\frac{1}{2} &(y_i - X_{ik}\theta_k) (\sigma^2 \delta_{ij})^{-1} (y_j - X_{jk}\theta_k) \Bigg]
 \end{align}
 $$
 
@@ -85,7 +85,7 @@ Where we are implicitly using the fact that $\lim_{N \to \infty} \frac{1}{N} \su
 
 <u> Incorporating Priors: Regularisation </u>
 
-So far we have made no assumption about the distribution of our summation coefficients $\theta_j$. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, ..., annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or *weighting* than others. More generally, we want to make use of any prior knowledge of the distribution of $\vec{\theta}$. This is known as regularisation. To do this, we should now maximise the log-likelihood of the joint probability $\mathbb{P}[y_i, \vec{\theta} \mid X] = \mathbb{P}[y_i \mid X, \vec{\theta}]\mathbb{P}[\vec{\theta}]$.
+So far we have made no assumption about the distribution of our summation coefficients $\theta_j$. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, ..., annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or *weighting* than others. More generally, we want to make use of any prior knowledge of the distribution of $\vec{\theta}$. This is known as regularisation. To do this, we should now maximise the log-likelihood of the joint probability $\mathbb{P}[y_i, \vec{\theta} \mid X] = \mathbb{P}[y_i \mid \vec{\theta}, X]\mathbb{P}[\vec{\theta} \mid X]$ (in this discussion I am ignoring any probabilistic features in $X$ thus $\mathbb{P}[\vec{\theta} \mid X] \equiv \mathbb{P}[\theta]$, the conditioning is a bit of a notational overload)
 
 <br>
 
