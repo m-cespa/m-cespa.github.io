@@ -32,7 +32,7 @@ $$
 
 To get the joint pdf we can either do a bit of sketching, or work with Jacobians. I'll cover both:
 
-![An attempt at a sketch of a sphere](../../posts/images/surface_ele_sphere.jpeg){fig-alt="some sketching" width=30% fig-align="left"}
+![An attempt at a sketch of a sphere](images/surface_ele_sphere.jpeg){fig-alt="some sketching" width=30% fig-align="left"}
 
 So we have that our area element is $dS = \sin\theta d\theta d\phi$. In much the same way that we would calculate the probability of landing at some radius $r$ in a circle of radius $R$ by evaluating the ratio of areas $\frac{\pi r^2}{\pi R^2}$, we will do the same here - our area now being $4\pi$:
 

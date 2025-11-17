@@ -30,7 +30,7 @@ $$
 
 I personally prefer working in index notation (the arguments scale easily to arbitrary dimensions) so I'll stick to that. So far we have been dealing with this idealised scenario where there exists this *optimal* projection direction which we'll denote as $\theta_j^{\ast}$. If this value exists, our optimisation task is simply to converge our model parameter $\theta_j$ to this value such that our model outputs $\hat{y}_i$ closely match the true measured values $y_i$. I want to validate this claim of there existing such an optimal parameter $\theta_j^{\ast}$.
 
-![Whiteboard musings from this morning](../../posts/images/prob_view_on_lin_reg.jpeg){fig-alt="some whiteboard doodles" width=60% fig-align="left"}
+![Whiteboard musings from this morning](images/prob_view_on_lin_reg.jpeg){fig-alt="some whiteboard doodles" width=60% fig-align="left"}
 
 # Why Least Squares?
 
