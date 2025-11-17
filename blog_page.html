@@ -4,29 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Michele Cespa</title>
+
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="media_queries.css" />
   <link rel="icon" type="image/png" href="./assets/favicon-32x32.png" />
-
-  <!-- Highlight.js -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
-  />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-  <!-- MathJax -->
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] },
-      svg: { fontCache: "global" },
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-
-  <!-- Markdown-it + texmath -->
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
 </head>
 
 <body class="blog_page">
@@ -42,47 +23,32 @@
         This "blog" was largely motivated by friends who recommended I add this
         as a section to my website - not that I will be sharing anything
         particularly groundbreaking (for that see
-        <a href="https://www.paulgraham.com/">Paul Graham's website</a>). I recently 
-        got a whiteboard and find myself working on random problems, often over breakfast. 
-        I find it useful to write down what I work on - explaining stuff tends to help the 
-        explain-er just as much as the explain-ee. Some posts might be longer discussions 
-        on bits of maths/CS/physics I stumble across, others might be a one-off interesting 
-        problem. I am currently writing these posts in markdown and pre-parsing them into html - 
-        neater solutions are welcome. Disclaimer: the mobile view of the posts is still a bit rubbish...
+        <a href="https://www.paulgraham.com/">Paul Graham's website</a>). 
+        I recently got a whiteboard and find myself working on random problems, 
+        often over breakfast. I find it useful to write down what I work on - 
+        explaining stuff tends to help the explain-er just as much as the explain-ee. 
+        Some posts might be longer discussions on bits of maths/CS/physics I stumble across, 
+        others might be a one-off interesting problem.
       </p>
 
-      <!-- Simple clickable list replacing cards -->
       <ul class="blog-list">
-        <li onclick="openPostMarkdownBlog('blogposts/probabilistic_view_on_lin_reg.md')">
-          A probabilistic view on linear regression - 1st Nov 2025
-        </li>
-        <li onclick="openPostMarkdownBlog('blogposts/variances_on_sphere.md')">
-          Variances on a sphere - 15th Oct 2025
-        <!-- Add more posts here as needed -->
+        <li class="blog-item">
+          <a href="myblog/_site/posts/probabilistic_view_on_lin_reg.html" class="blog-link">
+            <div class="blog-content">
+              A probabilistic view on linear regression — 1st Nov 2025
+            </div>
+          </a>
+        </li>       
+        <li class="blog-item">
+          <a href="myblog/_site/posts/variances_on_sphere.html" class="blog-link">
+            <div class="blog-content">
+              Variances on a sphere — 15th Oct 2025
+            </div>
+          </a>
+        </li>   
+        <!-- Add more posts here -->
       </ul>
     </div>
   </div>
-
-  <!-- MODAL -->
-  <div
-    id="markdown-modal-blog"
-    role="dialog"
-    aria-modal="true"
-    aria-hidden="true"
-  >
-    <div class="modal-content-blog" tabindex="-1">
-      <button
-        class="close-btn-blog"
-        aria-label="Close post"
-        onclick="closeModalBlog()"
-      >
-        &times;
-      </button>
-      <div id="markdown-content-blog">Loading...</div>
-    </div>
-  </div>
-
-  <!-- Your updated JS -->
-  <script src="script.js"></script>
 </body>
 </html>

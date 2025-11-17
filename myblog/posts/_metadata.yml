@@ -1,0 +1,9 @@
+# Apply to all posts in this folder
+
+freeze: true            # Cache executed code (optional)
+title-block-banner: true
+format:
+  html:
+    toc: true
+    code-fold: false
+    anchor-sections: true

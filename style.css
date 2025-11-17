@@ -645,7 +645,7 @@ footer {
 /* ----------------------------------------------
    Simple clickable blog list
    ---------------------------------------------- */
-.blog-list {
+   .blog-list {
     list-style: none;
     padding: 0;
     margin: 1rem 0 0 0;
@@ -654,102 +654,44 @@ footer {
     align-items: center;
 }
 
-.blog-list li {
+.blog-list li.blog-item {
     padding: 0.6rem 1rem;
     margin-bottom: 0.5rem;
     background: #fefdfb;
     border-radius: 8px;
     border: 1px solid #ddd;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
 
     width: 80%;       /* narrower than full width of main box */
     max-width: 600px; /* optional cap for large screens */
     text-align: left; /* keep text aligned left inside the box */
+
+    /* remove cursor from li itself, let <a> handle it */
+    cursor: default;
+
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.blog-list li:hover {
+/* Hover effect stays on li, not <a> */
+.blog-list li.blog-item:hover {
     background-color: #faf7f7;
     border-color: #660000;
 }
 
-/* ----------------------------------------------
-   Modal overlay (for Markdown preview)
-   ---------------------------------------------- */
-#markdown-modal-blog {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
+/* Make the <a> fill the whole <li> */
+.blog-item a.blog-link {
+    display: block;         /* fills entire <li> */
+    text-decoration: none;  /* remove underline */
+    color: inherit;         /* keep text color */
+    width: 100%;
+    height: 100%;
+    cursor: pointer;        /* show pointer on hover */
 }
 
-#markdown-modal-blog[aria-hidden="false"] {
-    display: flex;
+/* Remove separate <a> hover effect, rely on li hover */
+.blog-item a.blog-link:hover {
+    background-color: inherit; /* do nothing, hover handled by li */
 }
 
-.modal-content-blog {
-    background: white;
-    border-radius: 10px;
-    padding: 2rem;
-    width: min(880px, 96%);
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    line-height: 1.6;
-    font-size: 18px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
-}
-
-.close-btn-blog {
-    position: absolute;
-    top: 0.4rem;
-    right: 0.8rem;
-    font-size: 1.6rem;
-    line-height: 1;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    padding: 0.2rem 0.4rem;
-    color: #333;
-}
-
-/* Markdown content inside modal */
-#markdown-content-blog pre {
-    overflow-x: auto;
-    background: #f6f7f9;
-    border-radius: 6px;
-    padding: 0.8rem;
-    margin: 1rem 0;
-    border: 1px solid #eee;
-}
-
-#markdown-content-blog pre code {
-    display: block;
-    white-space: pre;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-    font-size: 0.95rem;
-}
-
-#markdown-content-blog code {
-    background: #f4f4f4;
-    padding: 0.15rem 0.36rem;
-    border-radius: 3px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-}
-
-#markdown-content-blog .mjx-block {
-    margin: 1rem 0;
-}
-
-.modal-content-blog :focus {
-    outline: 2px solid rgba(100, 150, 255, 0.35);
-    outline-offset: 2px;
-}
 
 /* Small-screen tweaks */
 @media (max-width: 600px) {

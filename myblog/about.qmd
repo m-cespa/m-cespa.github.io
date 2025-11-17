@@ -1,0 +1,31 @@
+---
+title: "About"
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/michele-cespa-0bb0b62a1/
+    - icon: github
+      text: Github
+      href: https://github.com/m-cespa
+
+---
+
+This "blog" was largely motivated by friends who recommended I start writing 
+the discussions I would otherwise burden them with over lunch - I reckon 
+most blogs probably start like this. If you like science, philosophy or just 
+interesting discussions I recommend Paul Graham's [website]("https://www.paulgraham.com/") 
+for some takes from someone far better than me.
+
+If you find yourself here but do not have the time to read my posts I unfortunately 
+am not relevant enough (yet) to warrant making a podcast. That said, I totally 
+empathise with the sentiment so I've put my favourite two podcasts below to keep 
+you entertained: Sean Carroll's [Mindscape](https://www.preposterousuniverse.com/podcast/), 
+Quant Magazine's [Joy of Why](https://www.quantamagazine.org/tag/the-joy-of-why/).
+
+I recently got a whiteboard and find myself working on random problems, 
+often over breakfast. I find it useful to write down what I work on - 
+explaining stuff tends to help the explain-er just as much as the explain-ee. 
+Some posts might be longer discussions on bits of maths/CS/physics I stumble across, 
+others might be a one-off interesting problem. That's the jist of this blog.
