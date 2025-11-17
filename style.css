@@ -500,6 +500,11 @@ article div {
     text-align: center;
 }
 
+.project-sub-title small {
+    font-size: 0.7em;   /* adjusts size */
+    opacity: 0.7;       /* optional: softer look */
+}
+
 /* Hide scrollbar for cleaner look */
 .scrollable-details-container::-webkit-scrollbar {
     display: none; /* For Chrome, Safari */
