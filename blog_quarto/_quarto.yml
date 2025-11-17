@@ -1,21 +1,20 @@
 project:
   type: website
+  output-dir: ../blog
 
 website:
-  description: "A blog built with Quarto"
-  site-url: https://m-cespa.github.io/myblog/ # you must change this appropriately for RSS feeds to work properly
   title: "myblog"
+  description: "A blog built with Quarto"
+  site-url: "https://m-cespa.github.io/myblog/"   # base URL for your blog
   navbar:
     right:
       - about.qmd
       - icon: github
         href: https://github.com/m-cespa
+
 format:
   html:
     theme:
       - cosmo
       - brand
     css: styles.css
-
-
-
