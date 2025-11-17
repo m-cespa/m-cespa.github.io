@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Michele Cespa">
+<meta name="dcterms.date" content="2025-10-15">
 
-<title>My Blog – myblog</title>
+<title>Variances on a sphere – myblog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,35 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -130,17 +101,17 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">myblog</span>
     </a>
   </div>
@@ -151,7 +122,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -167,91 +138,137 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Variances on a sphere</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Michele Cespa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 15, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#geometric-solution" id="toc-geometric-solution" class="nav-link" data-scroll-target="#geometric-solution">Geometric Solution</a></li>
+  <li><a href="#cdf-solution" id="toc-cdf-solution" class="nav-link" data-scroll-target="#cdf-solution">CDF Solution</a></li>
+  <li><a href="#symmetry-solution" id="toc-symmetry-solution" class="nav-link" data-scroll-target="#symmetry-solution">Symmetry Solution</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">My Blog</h1>
+
+
+
+
+<p><em>“Entities are not to be multiplied unnecessarily” John Punch</em></p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>The following discussion is very much against the above citation of Ockham’s Razor but is nonetheless entertaining. The problem is a simple one and you probably know the solution too (you might even know multiple solutions - if that’s the case, this post is likely a waste of your time). What is the variance of any of the coordinate <span class="math inline">\(x, y, z\)</span> on a unit sphere?</p>
+</section>
+<section id="geometric-solution" class="level1">
+<h1>Geometric Solution</h1>
+<p>Before doing anything fancy, it should be obvious without calculation that the expected value of any of the three cartesian coordinates is zero as the probability mass in the opposing hemispheres is equal. If you’re a physicist, the following is probably the solution you’ve seen before. We’ll focus on the <span class="math inline">\(z\)</span> coordinate - by symmetry they all have the same variance. We could jump straight to a trig integral and get to the answer in a few lines, but that implies assuming quite a bit of knowledge. The approach is broadly going to be:</p>
+<ul>
+<li>transform to spherical coordinates with <span class="math inline">\(r=1\)</span></li>
+<li>determine the joint pdf of being at some location <span class="math inline">\((\theta, \phi)\)</span> on the sphere</li>
+<li>extract the marginal pdf of being at some polar angle <span class="math inline">\(\theta\)</span></li>
+<li>evaluate the variance in <span class="math inline">\(z\)</span> knowing that <span class="math inline">\(z = \cos \theta\)</span></li>
+</ul>
+<p>The coordinate transform to spherical coordinates is:</p>
+<p><span class="math display">\[
+\begin{align}
+x &amp;= r\sin\theta \cos\phi \\
+y &amp;= r\sin\theta \sin\phi \\
+z &amp;= r\cos\theta
+\end{align}
+\]</span></p>
+<p>To get the joint pdf we can either do a bit of sketching, or work with Jacobians. I’ll cover both:</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="images/surface_ele_sphere.jpeg" class="img-fluid figure-img" style="width:30.0%" alt="some sketching"></p>
+<figcaption>An attempt at a sketch of a sphere</figcaption>
+</figure>
 </div>
+<p>So we have that our area element is <span class="math inline">\(dS = \sin\theta d\theta d\phi\)</span>. In much the same way that we would calculate the probability of landing at some radius <span class="math inline">\(r\)</span> in a circle of radius <span class="math inline">\(R\)</span> by evaluating the ratio of areas <span class="math inline">\(\frac{\pi r^2}{\pi R^2}\)</span>, we will do the same here - our area now being <span class="math inline">\(4\pi\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{P}[\theta &lt; \theta' &lt; \theta + d\theta, \phi &lt; &amp;\phi' &lt; \phi + d\phi] = \frac{1}{4\pi}\sin\theta \, d\theta \, d\phi \\
+p(\theta, \phi) &amp;= \frac{1}{4\pi}\sin\theta \\
+p(\theta) = \int_{\phi=0}^{\phi=2\pi} &amp;p(\theta, \phi) d\phi = \frac{1}{2} \sin\theta
+\end{align}
+\]</span></p>
+<p>With the marginal, the solution is easy. Let’s revisit the Jacobian. For a coordinate transform from coordinates <span class="math inline">\(x_i\)</span> to <span class="math inline">\(x_j\)</span> we have that <span class="math inline">\(J_{ij} = \frac{\partial x_i}{\partial x_j}\)</span>. The Jacobian is really the transformation operator between the two systems and thus its determinant will tell us how much the generalised volume changes between the two. If in coordinates <span class="math inline">\(x_i\)</span> we have a volume <span class="math inline">\(dx_i^{(1)} dx_i^{(2)} dx_i^{(3)}\)</span>, in <span class="math inline">\(x_j\)</span> we will have a volume <span class="math inline">\(\det(J) dx_j^{(1)} dx_j^{(2)} dx_j^{(3)}\)</span>. For our purposes <span class="math inline">\(x_i = (x, y, z)\)</span> and <span class="math inline">\(x_j = (r, \theta, \phi)\)</span>. I’ll spare you the dirty work, the determinant of our Jacobian turns out to be <span class="math inline">\(r^2 \sin\theta\)</span> thus:</p>
+<p><span class="math display">\[
+\begin{align}
+\iiint f(x, y, z)\, dx\, dy\, dz = \iiint f(r\sin\theta\cos\phi, r\sin\theta\sin\phi, r\cos\theta) r^2 \sin\theta \, dr \, d\theta \, d\phi
+\end{align}
+\]</span></p>
+<p>Our radius is constant so we can drop that dimension and look at the double integral instead. Let’s substitute <span class="math inline">\(f(x, y, z)\)</span> as the pdf on the surface of the sphere which is uniform with probability <span class="math inline">\(\frac{1}{4\pi}\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+\iint \frac{1}{4\pi} \sin\theta \, d\theta \, d\phi = 1 \text{ (by normalisation of a pdf)}
+\end{align}
+\]</span></p>
+<p>We are unsurprisingly back at the same result for the joint pdf <span class="math inline">\(p(\theta, \phi)\)</span>. To conclude the solution we perform our variance calculation:</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{V}[z] = \mathbb{V}[\cos\theta] = \int_{0}^{\pi} p(\theta) \cos^2\theta \, d\theta - \Bigg[ \int_{0}^{\pi} p(\theta) \cos\theta \, d\theta \Bigg]^2 = \frac{1}{3}
+\end{align}
+\]</span></p>
+</section>
+<section id="cdf-solution" class="level1">
+<h1>CDF Solution</h1>
+<p>Suppose you have the marginal <span class="math inline">\(p(\theta) = \frac{1}{2} \sin\theta\)</span>, we could also perform a variable transform to recover the marginal <span class="math inline">\(p(z)\)</span>. If we define a random variable <span class="math inline">\(Y = g(X)\)</span> on some interval where <span class="math inline">\(g\)</span> is a deterministic monotonic function then:</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{P}[Y &lt; y] &amp;= \int_{-\infty}^{g^{-1}(y)} p_X(x) \, dx = \mathbb{P}[X &lt; g^{-1}(y)] \text{ for increasing $g$} \\
+&amp;= \int_{g^{-1}(y)}^{\infty} p_X(x) \, dx = \mathbb{P}[X &gt; g^{-1}(y)] \text{ for decreasing $g$}
+\end{align}
+\]</span></p>
+<p>In our case the interval of interest is <span class="math inline">\(\theta \in [0, \pi]\)</span> with <span class="math inline">\(z = g(\theta) = \cos\theta\)</span> where <span class="math inline">\(\cos\)</span> is monotonically decreasing over this interval. So we have that <span class="math inline">\(\mathbb{P}[Z &lt; z] = \frac{1}{2}(1 + z)\)</span> from which we get that <span class="math inline">\(p_Z(z) = \frac{1}{2}\)</span>. To some, this uniform marginal might be intuitive. On quick inspection, it seems that closer to the poles, there infinitesimal rings of constant <span class="math inline">\(z\)</span> have smaller area than near the equator. It turns out that the rate at which these infinitesimal areas shrink near the poles is balanced by the rate at which the <span class="math inline">\(z\)</span> coordinate changes with <span class="math inline">\(\theta\)</span>. Anyhow, from here we again get that <span class="math inline">\(\mathbb{V}[Z] = \frac{1}{3}\)</span>.</p>
+</section>
+<section id="symmetry-solution" class="level1">
+<h1>Symmetry Solution</h1>
+<p>This is by far the most economical solution and relies only on linearity of expectations. Our constraint is that <span class="math inline">\(x^2 + y^2 + z^2 = 1\)</span> thus:</p>
+<p><span class="math display">\[
+\begin{align}
+&amp;\mathbb{E}[X^2 + Y^2 + Z^2 \mid X^2 + Y^2 + Z^2 = 1] = 1 \\
+3&amp;\mathbb{E}[Z^2 \mid X^2 + Y^2 + Z^2 = 1] = 1 \rightarrow  \mathbb{V}[Z] = \frac{1}{3} \\
+\end{align}
+\]</span></p>
 
 
+</section>
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1761955200000" data-listing-file-modified-sort="1763392187401" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1109">
-<div class="thumbnail"><a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">
-
-<p class="card-img-top"><img src="posts/images/prob_view_on_lin_reg.jpeg" alt="some whiteboard doodles"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">A Probabilistic View on Linear Regression</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">
-<em>“Essentially, all models are wrong, but some are useful.” George E. P. Box</em>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">
-<div class="listing-date">
-Nov 1, 2025
-</div>
-<div class="listing-author">
-Michele Cespa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1760482800000" data-listing-file-modified-sort="1763391935981" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="803">
-<div class="thumbnail"><a href="./posts/variances_on_sphere.html" class="no-external">
-
-<p class="card-img-top"><img src="posts/images/surface_ele_sphere.jpeg" alt="some sketching"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/variances_on_sphere.html" class="no-external">Variances on a sphere</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/variances_on_sphere.html" class="no-external">
-<em>“Entities are not to be multiplied unnecessarily” John Punch</em>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/variances_on_sphere.html" class="no-external">
-<div class="listing-date">
-Oct 15, 2025
-</div>
-<div class="listing-author">
-Michele Cespa
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

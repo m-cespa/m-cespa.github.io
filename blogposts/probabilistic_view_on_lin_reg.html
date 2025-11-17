@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Michele Cespa">
+<meta name="dcterms.date" content="2025-11-01">
 
-<title>My Blog – myblog</title>
+<title>A Probabilistic View on Linear Regression – myblog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,35 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -130,17 +101,17 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">myblog</span>
     </a>
   </div>
@@ -151,7 +122,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -167,91 +138,143 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">A Probabilistic View on Linear Regression</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Michele Cespa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 1, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#why-least-squares" id="toc-why-least-squares" class="nav-link" data-scroll-target="#why-least-squares">Why Least Squares?</a></li>
+  <li><a href="#incorporating-priors" id="toc-incorporating-priors" class="nav-link" data-scroll-target="#incorporating-priors">Incorporating Priors</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">My Blog</h1>
+
+
+
+
+<p><em>“Essentially, all models are wrong, but some are useful.” George E. P. Box</em></p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This is by no means a new topic nor a particularly complex one, but I generally like to know where stuff in math or science really comes from. If you’re reading this, you are probably familiar with Linear Regression or Least Squares Regression (or whatever other name you’ve heard it called). The premise is that if we have some data points <span class="math inline">\(y_i\)</span> and we measure a series of features <span class="math inline">\(\vec{x}^{(i)}\)</span>, if our features are relevant predictors of our data, there ought to exist a linear (or affine) model which relates them:</p>
+<p><span class="math display">\[
+\begin{align}
+y_i = \theta_1 x^{(i)}_1 + \theta_2 x^{(i)}_2 + ... = \vec{\theta} \cdot \vec{x}^{(i)}
+\end{align}
+\]</span></p>
+<p>We should think of <span class="math inline">\(y_i\)</span> as the output, and each entry (<span class="math inline">\(n\)</span> in total) of <span class="math inline">\(\vec{x}^{(i)}\)</span> as some feature. As good statisticians, we might measure <span class="math inline">\(m\)</span> such outputs <span class="math inline">\(y_i\)</span> and for each, their corresponding input feature vector <span class="math inline">\(\vec{x}^{(i)}\)</span>. It is convenient to concatenate our <span class="math inline">\(y_i\)</span> into a column vector <span class="math inline">\(\vec{y} \in \mathbb{R}^m\)</span> and our <span class="math inline">\(\vec{x}^{(i)}\)</span> vectors as rows of a matrix <span class="math inline">\(X \in \mathbb{R}^{m \times n}\)</span>. For every pair <span class="math inline">\((y_i, \vec{x}^{(i)})\)</span> we will still use the same summation coefficients <span class="math inline">\(\vec{\theta} \in \mathbb{R}^n\)</span>.</p>
+<p><span class="math display">\[
+\begin{align}
+\vec{y} = X \vec{\theta}
+\end{align}
+\]</span></p>
+<p>I personally prefer working in index notation (the arguments scale easily to arbitrary dimensions) so I’ll stick to that. So far we have been dealing with this idealised scenario where there exists this <em>optimal</em> projection direction which we’ll denote as <span class="math inline">\(\theta_j^{\ast}\)</span>. If this value exists, our optimisation task is simply to converge our model parameter <span class="math inline">\(\theta_j\)</span> to this value such that our model outputs <span class="math inline">\(\hat{y}_i\)</span> closely match the true measured values <span class="math inline">\(y_i\)</span>. I want to validate this claim of there existing such an optimal parameter <span class="math inline">\(\theta_j^{\ast}\)</span>.</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="images/prob_view_on_lin_reg.jpeg" class="img-fluid figure-img" style="width:60.0%" alt="some whiteboard doodles"></p>
+<figcaption>Whiteboard musings from this morning</figcaption>
+</figure>
 </div>
+</section>
+<section id="why-least-squares" class="level1">
+<h1>Why Least Squares?</h1>
+<p>We can now start talking in terms of probability. Our measured data will almost surely not lie on a straight line, it’s noisy. We can think of each datum <span class="math inline">\(y_i\)</span> as being drawn from some distribution centred on mean value <span class="math inline">\(\mu_i = X_{ij}\theta_j^{\ast}\)</span> with noise <span class="math inline">\(\xi_i\)</span>. We take the noise to be gaussian with <span class="math inline">\(\mathbb{E}[\xi_i] = 0\)</span> and <span class="math inline">\(\mathbb{V}[\xi_i] = \sigma^2\delta_{ij}\)</span>. Formally we have:</p>
+<p><span class="math display">\[
+\begin{align}
+Y_i \sim \mathcal{N}(\mu_i, \sigma^2 \delta_{ij})
+\end{align}
+\]</span></p>
+<p>For each datum <span class="math inline">\(y_i\)</span> there is a corresponding distribution. All have the same variance but the mean will be different - importantly, the mean is always coupled to the input feature vector. Equivalently, we can think of the concatenated vector of measured outputs <span class="math inline">\(\vec{y}\)</span> as being a sample from:</p>
+<p><span class="math display">\[
+\begin{align}
+\vec{Y} \sim \mathcal{N}(\vec{\mu}, \sigma^2 \mathbb{I})
+\end{align}
+\]</span></p>
+<p>Our goal parameter <span class="math inline">\(\theta_j^{\ast}\)</span> is inside the distribution’s mean. If we had many such vectors <span class="math inline">\(\vec{y}_i\)</span> all drawn from the same data matrix <span class="math inline">\(X\)</span>, the job of finding the mean would be straightforward (we’ll get back to this later). What if we only have one such <span class="math inline">\(\vec{y}\)</span>? Given an observed value of this random variable <span class="math inline">\(Y_i\)</span>, we can assign a probability to this sample given a mean <span class="math inline">\(\hat{\mu}_i\)</span>:</p>
+<p><span class="math display">\[
+\begin{align}
+\hat{\mu_i} &amp;= X_{ij}\theta_j \\
+\mathbb{P}[Y_i = y_i \mid \vec{\theta}, X] \propto \exp\Bigg[-\frac{1}{2} &amp;(y_i - X_{ik}\theta_k) (\sigma^2 \delta_{ij})^{-1} (y_j - X_{jk}\theta_k) \Bigg]
+\end{align}
+\]</span></p>
+<p>We of course want the maximum likelihood estimator (MLE) of this mean. For a string of <span class="math inline">\(m\)</span> such iid samples we can maximise the log-likelihood, omitting constant terms like the variance <span class="math inline">\(\sigma^2\)</span> or the normalisation factors, we have:</p>
+<p><span class="math display">\[
+\begin{align}
+\vec{\theta}^{\ast} &amp;= \arg\max_{\theta} \left\{ \sum_{i=1}^{m} -\frac{1}{2} (y_i - X_{ik} \theta_k)^2 \right\} \\
+&amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} (y_i - X_{ik} \theta_k)^2 \right\}
+\end{align}
+\]</span></p>
+<p>This is now the familiar form of the problem with solution <span class="math inline">\(\vec{\theta} = (X^T X)^{-1}X^T \vec{y}\)</span>. Now we can revisit the suggestion of arriving at this answer by collecting lots of sample vectors <span class="math inline">\(\vec{y}_i\)</span> (all from the same data matrix <span class="math inline">\(X\)</span>) and finding their arithemtic mean. The process would like like this:</p>
+<p><span class="math display">\[
+\begin{align}
+\langle \vec{y} \rangle &amp;= \frac{1}{N} \sum_{i=1}^{N} \vec{y}_i \\
+&amp;= X\vec{\theta} \\
+\rightarrow \vec{\theta} &amp;= (X^T X)^{-1}X^T \langle \vec{y} \rangle
+\end{align}
+\]</span></p>
+<p>Where we are implicitly using the fact that <span class="math inline">\(\lim_{N \to \infty} \frac{1}{N} \sum_{i=1}^{N} \vec{y}_i = \mathbb{E}[\vec{y}]\)</span> and the pseudo-inverse in the final line. Interestingly/unsurprisingly, we arrive at the same result.</p>
+</section>
+<section id="incorporating-priors" class="level1">
+<h1>Incorporating Priors</h1>
+<p>So far we have made no assumption about the distribution of our summation coefficients <span class="math inline">\(\theta_j\)</span>. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, …, annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or <em>weighting</em> than others. More generally, we want to make use of any prior knowledge of the distribution of <span class="math inline">\(\vec{\theta}\)</span>. This is known as regularisation. To do this, we should now maximise the log-likelihood of the joint probability <span class="math inline">\(\mathbb{P}[y_i, \vec{\theta} \mid X] = \mathbb{P}[y_i \mid \vec{\theta}, X]\mathbb{P}[\vec{\theta} \mid X]\)</span> (in this discussion I am ignoring any probabilistic features in <span class="math inline">\(X\)</span> thus <span class="math inline">\(\mathbb{P}[\vec{\theta} \mid X] \equiv \mathbb{P}[\theta]\)</span>, the conditioning is a bit of a notational overload)</p>
+<p>A common assumption is that the weights are also gaussian with <span class="math inline">\(\theta_j \sim \mathcal{N}(0, \tau^2)\)</span>. Evaluating the product over <span class="math inline">\(m\)</span> iid samples gives a joint likelihood of:</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{P}[\vec{\theta}] &amp;\propto \prod_{j=1}^{n} \exp\Bigg[\frac{\theta_j^2}{2\tau^2} \Bigg] \\
+\mathbb{P}[\vec{y}, \vec{\theta} \mid X] &amp;\propto \prod_{i=1}^{m} \exp\Bigg[-\frac{1}{2\sigma^2} (y_i - X_{ik}\theta_k)^2 \Bigg] \prod_{j=1}^{n} \exp\Bigg[-\frac{\theta_j^2}{2\tau^2} \Bigg] \\
+\vec{\theta}^{\ast} &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} \frac{1}{\sigma^2} (y_i - X_{ik} \theta_k)^2 + \sum_{j=1}^{n} \frac{\theta_j^2}{\tau^2} \right\} \\
+&amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} (y_i - X_{ik} \theta_k)^2 + \lambda \sum_{j=1}^{n} \theta_j^2 \right\} \\
+\text{where } \lambda &amp;= \frac{\sigma^2}{\tau^2}
+\end{align}
+\]</span></p>
+<p>This is the <em>Ridge</em> regression which we interpret as punishing large coefficients (in a loss function sense). The analytic solution is now <span class="math inline">\(\vec{\theta} = (X^T X + \lambda \mathbb{I})^{-1}X^T \vec{y}\)</span>. A full bias-variance analysis (a topic for another post) reveals that this estimator is (unsurprisingly) biased but with lower variance. By restricting our search for parameters which also satisfy our assumption of the underlying parameter distribution, the spread of our optimal parameter will intuitively be smaller at the cost of bias.</p>
+<p>Another common assumption of the underlying distribution is the Laplace or double-exponential assumption. This corresponds to <span class="math inline">\(\mathbb{P}[\theta_j] = \frac{1}{2b}\exp [-\frac{|\theta_j|}{b}]\)</span>. This symmetric distribution is much narrower than a gaussian with a much sharper gradient around zero. This shape is useful if we assume that not only are weights evenly distributed about zero, but many weights are <em>exactly</em> zero. Such an assumption is present in cases where we know that only a small subset of our feature space is relevant at all (but we don’t know apriori which features these are so we measure all of them anyway). An identical treatment to the above discussion on Ridge gives:</p>
+<p><span class="math display">\[
+\begin{align}
+\vec{\theta}^{\ast} &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m}(y_i - X_{ik}\theta_k)^2 + \lambda \sum_{j=1}^{n} |\theta_j| \right\} \\
+\text{where } \lambda &amp;= \frac{2\sigma^2}{b}
+\end{align}
+\]</span></p>
+<p>This is the <em>Lasso</em> regression which also punishes large coefficients but is less forgiving for very small ones (unlike Ridge). The absolute value function is not differentiable at zero so there is no analytic solution for <span class="math inline">\(\vec{\theta}\)</span>. We usually proceed by sub-gradient descent (see <a href="https://davidrosenberg.github.io/mlcourse/Archive/2019/Lectures/03c.subgradient-descent-lasso.pdf">here</a>).</p>
 
 
+</section>
 
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1761955200000" data-listing-file-modified-sort="1763392187401" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1109">
-<div class="thumbnail"><a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">
-
-<p class="card-img-top"><img src="posts/images/prob_view_on_lin_reg.jpeg" alt="some whiteboard doodles"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">A Probabilistic View on Linear Regression</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">
-<em>“Essentially, all models are wrong, but some are useful.” George E. P. Box</em>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/probabilistic_view_on_lin_reg.html" class="no-external">
-<div class="listing-date">
-Nov 1, 2025
-</div>
-<div class="listing-author">
-Michele Cespa
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1760482800000" data-listing-file-modified-sort="1763391935981" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="803">
-<div class="thumbnail"><a href="./posts/variances_on_sphere.html" class="no-external">
-
-<p class="card-img-top"><img src="posts/images/surface_ele_sphere.jpeg" alt="some sketching"  class="thumbnail-image card-img"/></p>
-
-</a></div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/variances_on_sphere.html" class="no-external">Variances on a sphere</a>
-</h3>
-<div class="delink listing-description"><a href="./posts/variances_on_sphere.html" class="no-external">
-<em>“Entities are not to be multiplied unnecessarily” John Punch</em>
-</a></div>
-</div>
-<div class="metadata">
-<a href="./posts/variances_on_sphere.html" class="no-external">
-<div class="listing-date">
-Oct 15, 2025
-</div>
-<div class="listing-author">
-Michele Cespa
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
