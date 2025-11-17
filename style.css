@@ -488,7 +488,7 @@ article div {
 }
 
 .project-sub-title small {
-    font-size: 0.7em;   /* adjusts size */
+    font-size: 0.5em;   /* adjusts size */
     opacity: 0.7;       /* optional: softer look */
 }
 
