@@ -303,7 +303,12 @@ H[X | Y] &amp;= \sum_{y \in \mathcal{Y}} -p(y) \sum_{x \in \mathcal{X}} p(x | y)
 <figcaption>Entropy Venn Diagram</figcaption>
 </figure>
 </div>
-<p>The way to read this diagram is: - <span class="math inline">\(H[X | Y]\)</span> is the left over uncertainty in <span class="math inline">\(X\)</span> if <span class="math inline">\(Y\)</span> is known - corresponds to <span class="math inline">\(X \cap Y^c\)</span> (reverse argument for <span class="math inline">\(H[Y | X]\)</span>) - <span class="math inline">\(H[X, Y]\)</span> is the uncertainty in sampling both variables - corresponds to <span class="math inline">\(X \cup Y\)</span> - <span class="math inline">\(I(X ;Y)\)</span> is the amount of uncertainty which <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> share - corresponds to <span class="math inline">\(X \cap Y\)</span></p>
+<p>The way to read this diagram is:</p>
+<ul>
+<li><span class="math inline">\(H[X | Y]\)</span> is the left over uncertainty in <span class="math inline">\(X\)</span> if <span class="math inline">\(Y\)</span> is known - corresponds to <span class="math inline">\(X \cap Y^c\)</span> (reverse argument for <span class="math inline">\(H[Y | X]\)</span>)</li>
+<li><span class="math inline">\(H[X, Y]\)</span> is the uncertainty in sampling both variables - corresponds to <span class="math inline">\(X \cup Y\)</span></li>
+<li><span class="math inline">\(I(X ;Y)\)</span> is the amount of uncertainty which <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> share - corresponds to <span class="math inline">\(X \cap Y\)</span></li>
+</ul>
 <p>This motivates the notion of mutual information which is this <span class="math inline">\(I(X; Y)\)</span> (the ; represents symmetry in the arguments). We can actually assemble this object by inclusion-exclusion from the venn diagram:</p>
 <p><span class="math display">\[
 \begin{align}

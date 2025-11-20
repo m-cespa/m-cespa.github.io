@@ -136,6 +136,7 @@ Having established the generality of entropy, we might ask what else we can do w
 ![Entropy Venn Diagram](images/entropy_venn.png){fig-alt="venn diagram of entropies" width=60% fig-align="center"}
 
 The way to read this diagram is:
+
 - $H[X | Y]$ is the left over uncertainty in $X$ if $Y$ is known - corresponds to $X \cap Y^c$ (reverse argument for $H[Y | X]$)
 - $H[X, Y]$ is the uncertainty in sampling both variables - corresponds to $X \cup Y$
 - $I(X ;Y)$ is the amount of uncertainty which $X$ and $Y$ share - corresponds to $X \cap Y$
