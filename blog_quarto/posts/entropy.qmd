@@ -81,7 +81,7 @@ It is maybe obvious, maybe not, that all the elements in the typical set have eq
 
 $$
 \begin{align}
-\prod_{k=1}^{N} p(X_k) &= 1 / |\mathcal{A} \\
+\prod_{k=1}^{N} p(X_k) &= 1 / |\mathcal{A}| \\
 \sum_{k=1}^{N} -\ln p(X_k) &= \ln |\mathcal{A}|
 \end{align}
 $$
