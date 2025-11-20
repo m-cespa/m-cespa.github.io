@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Michele Cespa">
-<meta name="dcterms.date" content="2025-11-01">
+<meta name="dcterms.date" content="2025-11-19">
 
-<title>A Probabilistic View on Linear Regression – myblog</title>
+<title>What is Entropy? – myblog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -141,7 +141,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">A Probabilistic View on Linear Regression</h1>
+      <h1 class="title">What is Entropy?</h1>
                       </div>
   </div>
     
@@ -158,7 +158,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">November 1, 2025</p>
+        <p class="date">November 19, 2025</p>
       </div>
     </div>
     
@@ -175,8 +175,13 @@ window.Quarto = {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#why-least-squares" id="toc-why-least-squares" class="nav-link" data-scroll-target="#why-least-squares">Why Least Squares?</a></li>
-  <li><a href="#incorporating-priors" id="toc-incorporating-priors" class="nav-link" data-scroll-target="#incorporating-priors">Incorporating Priors</a></li>
+  <li><a href="#boltzmann-entropy" id="toc-boltzmann-entropy" class="nav-link" data-scroll-target="#boltzmann-entropy">Boltzmann Entropy</a></li>
+  <li><a href="#the-typical-set" id="toc-the-typical-set" class="nav-link" data-scroll-target="#the-typical-set">The Typical Set</a></li>
+  <li><a href="#information-entropy" id="toc-information-entropy" class="nav-link" data-scroll-target="#information-entropy">Information Entropy</a></li>
+  <li><a href="#other-information-theoretic-measures" id="toc-other-information-theoretic-measures" class="nav-link" data-scroll-target="#other-information-theoretic-measures">Other Information Theoretic Measures</a></li>
+  <li><a href="#application-to-machine-learning" id="toc-application-to-machine-learning" class="nav-link" data-scroll-target="#application-to-machine-learning">Application to Machine Learning</a></li>
+  <li><a href="#application-to-statistics" id="toc-application-to-statistics" class="nav-link" data-scroll-target="#application-to-statistics">Application to Statistics</a></li>
+  <li><a href="#the-end" id="toc-the-end" class="nav-link" data-scroll-target="#the-end">The End</a></li>
   </ul>
 </nav>
     </div>
@@ -187,89 +192,202 @@ window.Quarto = {
 
 
 
-<p><em>“Essentially, all models are wrong, but some are useful.” George E. P. Box</em></p>
+<p><em>“You should call it entropy, because nobody knows what entropy really is, so in a debate you will always have the advantage.” John von Neumann</em></p>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This is by no means a new topic nor a particularly complex one, but I generally like to know where stuff in math or science really comes from. If you’re reading this, you are probably familiar with Linear Regression or Least Squares Regression (or whatever other name you’ve heard it called). The premise is that if we have some data points <span class="math inline">\(y_i\)</span> and we measure a series of features <span class="math inline">\(\vec{x}^{(i)}\)</span>, if our features are relevant predictors of our data, there might exist a linear (or affine) model which relates them:</p>
+<p>I come from a physics background and my favourite field is by far statistical physics or condensed matter. The tldr on why, is that the arguments that the physicsists of the past came up with are surprisingly generalisable considering they were devised to describe particles in a gas or electrons populating discrete energy levels. The quote above is (allegedly) from a discussion between John von Neumann and Claude Shannon on what to call the new measure he had constructed to talk about information.</p>
+<p>Seeing as I have exams in a few weeks, this serves as a nice opportunity to summarise some things I have learned about entropy now from an information theoretic perspective.</p>
+</section>
+<section id="boltzmann-entropy" class="level1">
+<h1>Boltzmann Entropy</h1>
+<p>Firstly, we’ll derive the standard Boltzmann or configurational entropy formula which gives us a feel for what this object looks like. We’ll be using the Stirling approximation for factorials:</p>
 <p><span class="math display">\[
 \begin{align}
-y_i = \theta_1 x^{(i)}_1 + \theta_2 x^{(i)}_2 + ... = \vec{\theta} \cdot \vec{x}^{(i)}
+\ln N! \approx N \ln N - N
 \end{align}
 \]</span></p>
-<p>We should think of <span class="math inline">\(y_i\)</span> as the output, and each entry (<span class="math inline">\(n\)</span> in total) of <span class="math inline">\(\vec{x}^{(i)}\)</span> as some feature. As good statisticians, we might measure <span class="math inline">\(m\)</span> such outputs <span class="math inline">\(y_i\)</span> and for each, their corresponding input feature vector <span class="math inline">\(\vec{x}^{(i)}\)</span>. It is convenient to concatenate our <span class="math inline">\(y_i\)</span> into a column vector <span class="math inline">\(\vec{y} \in \mathbb{R}^m\)</span> and our <span class="math inline">\(\vec{x}^{(i)}\)</span> vectors as rows of a matrix <span class="math inline">\(X \in \mathbb{R}^{m \times n}\)</span>. For every pair <span class="math inline">\((y_i, \vec{x}^{(i)})\)</span> we will still use the same summation coefficients <span class="math inline">\(\vec{\theta} \in \mathbb{R}^n\)</span>.</p>
+<p>The standard argument goes as follows. Suppose a system can only ever be in any one of <span class="math inline">\(M\)</span> energy states or <em>microstates</em>. Each microstate corresponds to a physical configuration of particles in the system. Certain microstates may be more probable than others. If we take <span class="math inline">\(N\)</span> observations of our system, we might find that the <span class="math inline">\(i^{th}\)</span> microstate occurs <span class="math inline">\(N_i\)</span> times. We can thus define some basic probabilistic quantities:</p>
 <p><span class="math display">\[
 \begin{align}
-\vec{y} = X \vec{\theta}
+E &amp;= \frac{1}{N} \sum_{i=1}^{M} N_i E_i \\
+N &amp;= \sum_{i=1}^{M} n_i
 \end{align}
 \]</span></p>
-<p>I personally prefer working in index notation (the arguments scale easily to arbitrary dimensions) so I’ll stick to that. So far we have been dealing with this idealised scenario where there exists this <em>optimal</em> projection direction which we’ll denote as <span class="math inline">\(\theta_j^{\ast}\)</span>. If this value exists, our optimisation task is simply to converge our model parameter <span class="math inline">\(\theta_j\)</span> to this value such that our model outputs <span class="math inline">\(\hat{y}_i\)</span> closely match the true measured values <span class="math inline">\(y_i\)</span>. I want to validate this claim of there existing such an optimal parameter <span class="math inline">\(\theta_j^{\ast}\)</span>.</p>
-<div class="quarto-figure quarto-figure-left">
+<p>This describes a system which can be in <span class="math inline">\(M\)</span> distinct microstates and we implicitly assume that <span class="math inline">\(N\)</span> is large enough that we sample over all possible microstates. The total energy is a constant here as we assume the system to be in equilibrium with a reservoir - we can’t have a closed system otherwise there can be no fluctuations. Denote the <span class="math inline">\(n^{th}\)</span> of N observations with the observed energy <span class="math inline">\(E^{(i)}_n\)</span>. Our sampling is represented by all strings <span class="math inline">\(E^{(i)}_1, E^{(i)}_2, E^{(j)}_3...\)</span> where the the <span class="math inline">\(i^{th}\)</span> energy appears <span class="math inline">\(N_i\)</span> times. The size of this set is:</p>
+<p><span class="math display">\[
+\begin{align}
+\Omega(E) = \frac{N!}{\prod_{i=1}^{M} N_i !}
+\end{align}
+\]</span></p>
+<p>Note that I write <span class="math inline">\(\Omega(E)\)</span> as we are under a constraint on the total system energy. We now turn this into an optimisation problem with the objective of solving for the microstate multiplicities which maximise the likelihood of our sample (everything is an MLE if you really think about it…). To do this we maximise this configurational size <span class="math inline">\(\Omega(E)\)</span> or as is often the case, its logarithm under constraint of total energy:</p>
+<p><span class="math display">\[
+\begin{align}
+\ln \Omega_{\lambda} &amp;\approx N \ln N - N - \sum_{i=1}^{M} N_i \ln N_i + \sum_{i=1}^{M} N_i - \lambda (\frac{1}{N} \sum_{i=1}^{M} N_i E_i - E) \\
+\frac{\partial \ln \Omega_{\lambda}}{\partial N_k} &amp;= -\ln N_k -N - \lambda \frac{E_k}{N} = 0 \\
+\end{align}
+\]</span></p>
+<p>This gives a probability of the <span class="math inline">\(k^{th}\)</span> microstate <span class="math inline">\(p_k = \frac{1}{Z} \exp(-\beta E_k)\)</span> where the constant <span class="math inline">\(\beta\)</span> subsumes any relevant multiplicative factor on energy. By some more physical and thermodynamic arguments, we can conclude that <span class="math inline">\(\beta = \frac{1}{k_B T}\)</span> where <span class="math inline">\(k_B\)</span> is the boltzmann factor. I won’t go into detail on these arguments but there are many useful stack exchange threads on the topic such as <a href="https://physics.stackexchange.com/questions/660259/why-is-the-frac-1-beta-t-a-constant-boltzmann-constant">this one</a>.</p>
+<p>This normalisation factor <span class="math inline">\(Z = \sum_{k=1}^{M} \exp(-\beta E_k)\)</span> is the canonical partition function which turns out to be enormously useful. That said, we still haven’t established what entropy is. This thing we call entropy is really just the log-likelihood we extremised to get here (up to a constant factor <span class="math inline">\(k_B\)</span> so everything has the right physical units).</p>
+<p><span class="math display">\[
+\begin{align}
+S(E) &amp;= k_B \ln \Omega(E) \\
+&amp;= k_B \Bigg[ \ln N! - \sum_{i=1}^{M} \ln N_i! \Bigg] \\
+&amp;\approx k_B \sum_{i=1}^{M} N_i (\ln N - \ln N_i) \\
+&amp;= -N k_B \sum_{i=1}^{M} \frac{N_i}{N} \ln \frac{N_i}{N} \\
+&amp;= -N k_B \sum_{i=1}^{M} p_i \ln p_i
+\end{align}
+\]</span></p>
+<p>The constant order factors are less interesting, the salient point here is that entropy is really the expected negative log-likelihood of a system with <span class="math inline">\(i\)</span> states each with probability <span class="math inline">\(p_i\)</span>. Now tying this back to thermodynamics, we know that systems with higher entropy are favoured by the <span class="math inline">\(2^{nd}\)</span> law which now physically motivates our otherwise purely probabilistic thought process for the optimisation problem.</p>
+</section>
+<section id="the-typical-set" class="level1">
+<h1>The Typical Set</h1>
+<p>Before tackling the information theoretic interpretation, I’m going to do things slightly in reverse to the standard order. The entropy is now, relatively clearly, a generalisable measure of expected negative log-likelihood. The object we extremised to get here was <span class="math inline">\(\Omega\)</span> representing the total number of distinct strings compatible with our sample of the system. We concluded that <span class="math inline">\(\Omega = \exp(\frac{S}{k_B})\)</span>.</p>
+<p>The typical set now appears. The typical set <span class="math inline">\(\mathcal{A}\)</span> is the set of all strings of <span class="math inline">\(N\)</span> observations in the limit <span class="math inline">\(N \to \infty\)</span> which constitute almost all the probability mass. This is sometimes stated as the set of strings which are <em>almost surely</em> observed. We let <span class="math inline">\(X^N\)</span> denote the string <span class="math inline">\(X_1, X_2, ... X_N\)</span> of iid samples thus:</p>
+<p><span class="math display">\[
+\begin{align}
+\lim_{N \to \infty} \sum_{i \in \mathcal{A}} p(X^N_i) = \lim_{N \to \infty} \sum_{i \in \mathcal{A}} \prod_{k=1}^{N} p(X_k^{(i)})= 1
+\end{align}
+\]</span></p>
+<p>It is maybe obvious, maybe not, that all the elements in the typical set have equal probability so we can drop the index <span class="math inline">\(i\)</span> denoting the <span class="math inline">\(i^{th}\)</span> such element:</p>
+<p><span class="math display">\[
+\begin{align}
+\prod_{k=1}^{N} p(X_k) &amp;= 1 / |\mathcal{A} \\
+\sum_{k=1}^{N} -\ln p(X_k) &amp;= \ln |\mathcal{A}|
+\end{align}
+\]</span></p>
+<p>Using the weak law of large numbers we have that <span class="math inline">\(\frac{1}{N} \sum_{k=1}^{N} -\ln p(X_k)\)</span> converges in probability to the expected value of the negative log-likelihood <span class="math inline">\(\mathbb{E}_p[-\ln p(X)]\)</span>. Sticking with the strict boltzmann definition that <span class="math inline">\(S = -N k_B \sum_{i=1}^{M} p_i \ln p_i\)</span> and rearranging:</p>
+<p><span class="math display">\[
+\begin{align}
+\ln |\mathcal{A}| &amp;= N \mathbb{E}_p[-\ln p(X)] \\
+&amp;= S / k_B \\
+|\mathcal{A}| &amp;= \exp(\frac{S}{k_B}) \\
+\end{align}
+\]</span></p>
+<p>I think this is pretty neat. The optimal value of <span class="math inline">\(\Omega\)</span> after extremising with respect to the multiplicites <em>is</em> the size of the typical set. This makes intuitive sense retrospectively. I want to highlight that I’ve not been quite so rigorous in these last few steps after invoking the law of large numbers. Many of these equalities are only true in terms of convergence in probability - the <a href="https://en.wikipedia.org/wiki/Typical_set">wikipedia page</a> is quite good at covering this.</p>
+</section>
+<section id="information-entropy" class="level1">
+<h1>Information Entropy</h1>
+<p>Information theory presents some more pragmatic interpretations to some of these strange objects. The first is the notion of a surprisal or uncertainty function. If we have some distribution <span class="math inline">\(p(x)\)</span> for <span class="math inline">\(x \in \mathcal{X}\)</span> (some discrete alphabet of symbols <span class="math inline">\(\mathcal{X}\)</span>), the less likely a symbol is, the more we should be surprised if we observe it in a random sample from the distribution. We also want that a symbol with probability <span class="math inline">\(1\)</span> encodes no surprise at all and a symbol with probability <span class="math inline">\(0\)</span> encodes infinite surprise.</p>
+<p>Conveniently, the function satisfying this is <span class="math inline">\(h = \ln \frac{1}{p(x)}\)</span> or <span class="math inline">\(-\ln p(x)\)</span>. The expected value of this surprisal is then our entropy which for reasons beyond my understanding is denoted <span class="math inline">\(H[X]\)</span> in IT. A graphic example helps here so let’s take the biased coin with <span class="math inline">\(p(x_1) = p\)</span> and <span class="math inline">\(p(x_2) = 1 - p\)</span> which has entropy <span class="math inline">\(-p \ln p - (1-p)\ln(1-p)\)</span>. This should be familiar to physicists as the entropy of a binary mixture.</p>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/prob_view_on_lin_reg.jpeg" class="img-fluid figure-img" style="width:60.0%" alt="some whiteboard doodles"></p>
-<figcaption>Whiteboard musings from this morning</figcaption>
+<p><img src="images/biased-coin.png" class="img-fluid figure-img" style="width:60.0%" alt="biased coin"></p>
+<figcaption>Entropy and Surprisal of Biased Coin</figcaption>
 </figure>
 </div>
+<p>The incredibly convenient property about logarithms is their additivity. This means we can now sum surprisals and entropies. If we observe two independent events with probabilities <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>, the surprisal is <span class="math inline">\(h(p) + h(q)\)</span>. Likewise for two independent random variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> the total entropy is <span class="math inline">\(H[X] + H[Y]\)</span>. With this toolkit of entropy and typical set you can cover a remarkable amount of ground in coding theory. This post isn’t going to do that.</p>
+<p>A final remark on this additivity property is how entropy lends a nice interpretation to conditional probability chain rules. Below are some examples:</p>
+<p><span class="math display">\[
+\begin{align}
+p(X, Y) &amp;= p(X | Y)p(Y) \\
+\text{ gives } H[X, Y] &amp;= H[X | Y] + H[Y] = H[Y | X] + H[X] \\
+\\
+p(X, Y | Z) &amp;= p(X | Y, Z)p(Y | Z) \\
+\text{ gives } H[X, Y | Z] &amp;= H[X | Y, Z] + H[Y | Z]
+\end{align}
+\]</span></p>
+<p>Where the entropies are defined as:</p>
+<p><span class="math display">\[
+\begin{align}
+H[X, Y] &amp;= \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} -p(x, y) \ln p(x, y) \\
+H[X | Y] &amp;= \sum_{y \in \mathcal{Y}} -p(y) \sum_{x \in \mathcal{X}} p(x | y) \ln p(x | y)
+\end{align}
+\]</span></p>
 </section>
-<section id="why-least-squares" class="level1">
-<h1>Why Least Squares?</h1>
-<p>We can now start talking in terms of probability. Our measured data will almost surely not lie on a straight line, it’s noisy. We can think of each datum <span class="math inline">\(y_i\)</span> as being drawn from some distribution centred on mean value <span class="math inline">\(\mu_i = X_{ij}\theta_j^{\ast}\)</span> with noise <span class="math inline">\(\xi_i\)</span>. We take the noise to be gaussian with <span class="math inline">\(\mathbb{E}[\xi_i] = 0\)</span> and <span class="math inline">\(\mathbb{V}[\xi_i] = \sigma^2\delta_{ij}\)</span>. Formally we have:</p>
+<section id="other-information-theoretic-measures" class="level1">
+<h1>Other Information Theoretic Measures</h1>
+<p>Having established the generality of entropy, we might ask what else we can do with it. Before that I want to present a diagram which I at first didn’t really get the point of at all but is actually a very good summary of the various forms of entropy when dealing with a bivariate distribution.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/entropy_venn.png" class="img-fluid figure-img" style="width:60.0%" alt="venn diagram of entropies"></p>
+<figcaption>Entropy Venn Diagram</figcaption>
+</figure>
+</div>
+<p>The way to read this diagram is: - <span class="math inline">\(H[X | Y]\)</span> is the left over uncertainty in <span class="math inline">\(X\)</span> if <span class="math inline">\(Y\)</span> is known - corresponds to <span class="math inline">\(X \cap Y^c\)</span> (reverse argument for <span class="math inline">\(H[Y | X]\)</span>) - <span class="math inline">\(H[X, Y]\)</span> is the uncertainty in sampling both variables - corresponds to <span class="math inline">\(X \cup Y\)</span> - <span class="math inline">\(I(X ;Y)\)</span> is the amount of uncertainty which <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> share - corresponds to <span class="math inline">\(X \cap Y\)</span></p>
+<p>This motivates the notion of mutual information which is this <span class="math inline">\(I(X; Y)\)</span> (the ; represents symmetry in the arguments). We can actually assemble this object by inclusion-exclusion from the venn diagram:</p>
 <p><span class="math display">\[
 \begin{align}
-Y_i \sim \mathcal{N}(\mu_i, \sigma^2 \delta_{ij})
+I(X; Y) &amp;= H[X] + H[Y] - H[X, Y] \\
+&amp;= H[X] - H[X | Y] \\
+&amp;= H[Y] - H[Y | X]
 \end{align}
 \]</span></p>
-<p>For each datum <span class="math inline">\(y_i\)</span> there is a corresponding distribution. All have the same variance but the mean will be different - importantly, the mean is always coupled to the input feature vector. Equivalently, we can think of the concatenated vector of measured outputs <span class="math inline">\(\vec{y}\)</span> as being a sample from:</p>
+<p>There are many interpretations of this object. The dominant one is that we can view a decrement in entropy as an increment in information (the converse of uncertainty is information). This is a useful view to take because with our understanding of entropy as a negative log-likelihood, many common optimisation problems commonly posed as maximising a product of likelihoods (maximise information) can be equivalently posed as minimising a sum of negative log-likelihoods or entropy (minimise uncertainty). The mutual information is then the information gained about <span class="math inline">\(X\)</span> after learning <span class="math inline">\(Y\)</span>.</p>
+<p>A different interpretation comes from the first formulation which is concretely:</p>
 <p><span class="math display">\[
 \begin{align}
-\vec{Y} \sim \mathcal{N}(\vec{\mu}, \sigma^2 \mathbb{I})
+I(X; Y) = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x, y) \ln \frac{p(x, y)}{p(x)p(y)}
 \end{align}
 \]</span></p>
-<p>Our goal parameter <span class="math inline">\(\theta_j^{\ast}\)</span> is inside the distribution’s mean. If we had many such vectors <span class="math inline">\(\vec{y}_i\)</span> all drawn from the same data matrix <span class="math inline">\(X\)</span>, the job of finding the mean would be straightforward (we’ll get back to this later). What if we only have one such <span class="math inline">\(\vec{y}\)</span>? Given an observed value of this random variable <span class="math inline">\(Y_i\)</span>, we can assign a probability to this sample given a mean <span class="math inline">\(\hat{\mu}_i\)</span>:</p>
+<p>To interpret this I’ll briefly need to introduce the KL-Divergence which we can think of as a measure of distance between two distributions. We write it as <span class="math inline">\(D_{KL}(p || q)\)</span> and it satisfies <span class="math inline">\(D_{KL} \geq 0\)</span> (Gibb’s inequality). The formula for the bivariate case is:</p>
 <p><span class="math display">\[
 \begin{align}
-\hat{\mu_i} &amp;= X_{ij}\theta_j \\
-\mathbb{P}[Y_i = y_i \mid \vec{\theta}, X] \propto \exp\Bigg[-\frac{1}{2} &amp;(y_i - X_{ik}\theta_k) (\sigma^2 \delta_{ij})^{-1} (y_j - X_{jk}\theta_k) \Bigg]
+D_{KL}(p(x, y) || q(x, y)) = \sum_{x \in \mathcal{X}}\sum_{y \in \mathcal{Y}} p(x, y) \ln \frac{p(x, y)}{q(x, y)}
 \end{align}
 \]</span></p>
-<p>We of course want the maximum likelihood estimator (MLE) of this mean. For a string of <span class="math inline">\(m\)</span> such iid samples we can maximise the log-likelihood, omitting constant terms like the variance <span class="math inline">\(\sigma^2\)</span> or the normalisation factors, we have:</p>
-<p><span class="math display">\[
-\begin{align}
-\vec{\theta}^{\ast} &amp;= \arg\max_{\theta} \left\{ \sum_{i=1}^{m} -\frac{1}{2} (y_i - X_{ik} \theta_k)^2 \right\} \\
-&amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} (y_i - X_{ik} \theta_k)^2 \right\}
-\end{align}
-\]</span></p>
-<p>This is now the familiar form of the problem with solution <span class="math inline">\(\vec{\theta} = (X^T X)^{-1}X^T \vec{y}\)</span>. Now we can revisit the suggestion of arriving at this answer by collecting lots of sample vectors <span class="math inline">\(\vec{y}_i\)</span> (all from the same data matrix <span class="math inline">\(X\)</span>) and finding their arithemtic mean. The process would like like this:</p>
-<p><span class="math display">\[
-\begin{align}
-\langle \vec{y} \rangle &amp;= \frac{1}{N} \sum_{i=1}^{N} \vec{y}_i \\
-&amp;= X\vec{\theta} \\
-\rightarrow \vec{\theta} &amp;= (X^T X)^{-1}X^T \langle \vec{y} \rangle
-\end{align}
-\]</span></p>
-<p>Where we are implicitly using the fact that <span class="math inline">\(\lim_{N \to \infty} \frac{1}{N} \sum_{i=1}^{N} \vec{y}_i = \mathbb{E}[\vec{y}]\)</span> and the pseudo-inverse in the final line. Interestingly/unsurprisingly, we arrive at the same result.</p>
+<p>We generally view <span class="math inline">\(p\)</span> as the ground truth distribution and <span class="math inline">\(q\)</span> as some model distribution. The mutual information is then just <span class="math inline">\(D_{KL}(p(x, y) || p(x)p(y))\)</span> and represents the deviation from independence displayed in the joint distribution. The property that <span class="math inline">\(D_{KL} \geq 0\)</span> ensures that this mutual information cannot be negative. In other words, conditioning on something cannot decrease the information you know about your random variable of interest.</p>
 </section>
-<section id="incorporating-priors" class="level1">
-<h1>Incorporating Priors</h1>
-<p>So far we have made no assumption about the distribution of our summation coefficients <span class="math inline">\(\theta_j\)</span>. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, …, annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or <em>weighting</em> than others. More generally, we want to make use of any prior knowledge of the distribution of <span class="math inline">\(\vec{\theta}\)</span>. This is known as regularisation. To do this, we should now maximise the log-likelihood of the joint probability <span class="math inline">\(\mathbb{P}[y_i, \vec{\theta} \mid X] = \mathbb{P}[y_i \mid \vec{\theta}, X]\mathbb{P}[\vec{\theta} \mid X]\)</span> (in this discussion I am ignoring any probabilistic features in <span class="math inline">\(X\)</span> thus <span class="math inline">\(\mathbb{P}[\vec{\theta} \mid X] \equiv \mathbb{P}[\theta]\)</span>, the conditioning is a bit of a notational overload)</p>
-<p>A common assumption is that the weights are also gaussian with <span class="math inline">\(\theta_j \sim \mathcal{N}(0, \tau^2)\)</span>. Evaluating the product over <span class="math inline">\(m\)</span> iid samples gives a joint likelihood of:</p>
+<section id="application-to-machine-learning" class="level1">
+<h1>Application to Machine Learning</h1>
+<p>The big entropy related measure I’ve ommitted entirely here is the Cross-Entropy. I think to properly motivate the Cross-Entropy a study on logistic regression or source coding helps - another time. That said, the mutual information and KL-divergence come up all the time - unsurprisingly as most ML tasks boil down to maximising a sum of log-likelihoods.</p>
+<p>Take a supervised learning scenario with dataset <span class="math inline">\(\mathcal{D} = \{x_i, y_i\}\)</span>. Our model will implicitly learn a distribution <span class="math inline">\(q(y | x, \theta)\)</span> (where <span class="math inline">\(\theta\)</span> is the set of model parameters). Letting the true underlying distribution be <span class="math inline">\(p(y | x)\)</span> we have <span class="math inline">\(D_{KL}(p || q) \geq 0\)</span> thus <span class="math inline">\(\mathbb{E}_p[\ln p] \geq \mathbb{E}_p[\ln q]\)</span>. Jumbling some algebra together we get:</p>
 <p><span class="math display">\[
 \begin{align}
-\mathbb{P}[\vec{\theta}] &amp;\propto \prod_{j=1}^{n} \exp\Bigg[\frac{\theta_j^2}{2\tau^2} \Bigg] \\
-\mathbb{P}[\vec{y}, \vec{\theta} \mid X] &amp;\propto \prod_{i=1}^{m} \exp\Bigg[-\frac{1}{2\sigma^2} (y_i - X_{ik}\theta_k)^2 \Bigg] \prod_{j=1}^{n} \exp\Bigg[-\frac{\theta_j^2}{2\tau^2} \Bigg] \\
-\vec{\theta}^{\ast} &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} \frac{1}{\sigma^2} (y_i - X_{ik} \theta_k)^2 + \sum_{j=1}^{n} \frac{\theta_j^2}{\tau^2} \right\} \\
-&amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} (y_i - X_{ik} \theta_k)^2 + \lambda \sum_{j=1}^{n} \theta_j^2 \right\} \\
-\text{where } \lambda &amp;= \frac{\sigma^2}{\tau^2}
+I(X; Y) &amp;= H[Y] - H[Y | X] \\
+&amp;= H[Y] + \sum_{x \in \mathcal{X}} \sum_{y \in \mathcal{Y}} p(x, y) \ln p(x | y) \\
+&amp;= H[Y] + \mathbb{E}_{p(x,y)}[ \ln p(y | x)] \\
+&amp;\geq H[Y] + \mathbb{E}_{p(x,y)}[ \ln q(y | x, \theta)] \\
 \end{align}
 \]</span></p>
-<p>This is the <em>Ridge</em> regression which we interpret as punishing large coefficients (in a loss function sense). The analytic solution is now <span class="math inline">\(\vec{\theta} = (X^T X + \lambda \mathbb{I})^{-1}X^T \vec{y}\)</span>. A full bias-variance analysis (a topic for another post) reveals that this estimator is (unsurprisingly) biased but with lower variance. By restricting our search for parameters which also satisfy our assumption of the underlying parameter distribution, the spread of our optimal parameter will intuitively be smaller at the cost of bias.</p>
-<p>Another common assumption of the underlying distribution is the Laplace or double-exponential assumption. This corresponds to <span class="math inline">\(\mathbb{P}[\theta_j] = \frac{1}{2b}\exp [-\frac{|\theta_j|}{b}]\)</span>. This symmetric distribution is much narrower than a gaussian with a much sharper gradient around zero. This shape is useful if we assume that not only are weights evenly distributed about zero, but many weights are <em>exactly</em> zero. Such an assumption is present in cases where we know that only a small subset of our feature space is relevant at all (but we don’t know apriori which features these are so we measure all of them anyway). An identical treatment to the above discussion on Ridge gives:</p>
+<p>We should hope that a good model has objective of maximising the mutual information between features and labels and we can see that this optimisation is bounded by the true value.</p>
+</section>
+<section id="application-to-statistics" class="level1">
+<h1>Application to Statistics</h1>
+<p>If you do a lot of hypothesis testing you will be familiar with the Neyman-Pearson likelihood ratio:</p>
 <p><span class="math display">\[
 \begin{align}
-\vec{\theta}^{\ast} &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m}(y_i - X_{ik}\theta_k)^2 + \lambda \sum_{j=1}^{n} |\theta_j| \right\} \\
-\text{where } \lambda &amp;= \frac{2\sigma^2}{b}
+\Lambda = \frac{\sup_{\theta \in \Theta_1} p_{\theta}(x)}{\sup_{\theta \in \Theta_0} p_{\theta}(x)}
 \end{align}
 \]</span></p>
-<p>This is the <em>Lasso</em> regression which also punishes large coefficients but is less forgiving for very small ones (unlike Ridge). The absolute value function is not differentiable at zero so there is no analytic solution for <span class="math inline">\(\vec{\theta}\)</span>. We usually proceed by sub-gradient descent (see <a href="https://davidrosenberg.github.io/mlcourse/Archive/2019/Lectures/03c.subgradient-descent-lasso.pdf">here</a>).</p>
+<p>(Note I am now using the frequentist notation for <span class="math inline">\(\theta\)</span> where it is not a random variable)</p>
+<p>Likelihood and ratio already point to something like a KL-divergence. The rest is really just the same old trick. Take the case of hypothesis testing for dependence. Formally</p>
+<p><span class="math display">\[
+\begin{align}
+\mathcal{H_0}: p_{\theta}(x, y) = f(x)g(y) \\
+\mathcal{H_1}: p_{\theta}(x, y) \neq f(x)g(y) \\
+\end{align}
+\]</span></p>
+<p>If we take <span class="math inline">\(N\)</span> iid samples from our distribution, we should look at the product of likelihood ratios…or its logarithm.</p>
+<p><span class="math display">\[
+\begin{align}
+\ln \Lambda &amp;= \sum_{i=1}^{N} \ln p_{\theta_j}(x_i, y_i) - \ln p_{\theta_f}(x_i, y_i) \\
+&amp;= N \mathbb{E}_{p(x, y)}[ \ln p_{\theta_j}(x_i, y_i)] - N \mathbb{E}_{p(x, y)} [\ln p_{\theta_f}(x_i, y_i) ] \\
+&amp;\text{(in the weak law of large numbers limit)}
+\end{align}
+\]</span></p>
+<p>(where I am writing the null hypothesis factorised distribution as <span class="math inline">\(p_{\theta_f}(x_i, y_i)\)</span>, the alternative hypothesis joint distribution as <span class="math inline">\(p_{\theta_j}(x_i, y_i)\)</span> and the true underlying distribution as <span class="math inline">\(p(x, y)\)</span>)</p>
+<p>Looking at each term of the expression in turn we have for the first term:</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{E}_{p(x, y)}[ \ln p_{\theta_j}(x_i, y_i)] &amp;= \mathbb{E}_{p(x, y)}[ \ln p_{\theta_j}(x_i, y_i) \frac{p(x, y)}{p(x, y)}] \\
+&amp;= -D_{KL}(p || p_{\theta_j}) - H[X, Y] \\
+&amp;= -H[X, Y] \\
+\end{align}
+\]</span></p>
+<p>(in the final line we take the extremal case where there does exist an optimal <span class="math inline">\(\theta_j\)</span> which makes the joint distribution from the alternative hypothesis exactly match the true underlying)</p>
+<p>For the second term:</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbb{E}_{p(x, y)} [\ln p_{\theta_f}(x_i, y_i)] &amp;= -D_{KL}(p(x) || p_{\theta_f}(x)) - D_{KL}(p(y) || p_{\theta_f}(y)) - H[X] - H[Y] \\
+&amp;= -H[X] - H[Y]
+\end{align}
+\]</span></p>
+<p>(using a similar argument here for the extremal cases where the KL-divergence goes to zero)</p>
+<p>Putting it together we get <span class="math inline">\(\ln \Lambda = N(H[X] + H[Y] - H[X, Y]) = N I(X; Y)\)</span>. This makes a lot of sense retrospectively. If our variables are in fact independent, we expect <span class="math inline">\(I = 0\)</span> which corresponds to a likelihood ratio of <span class="math inline">\(1\)</span> - insufficient evidence to reject the null. If our variables are dependent, we expect a large mutual information and likelihood ratio - reject the null. We also see that the log ratio is linear in <span class="math inline">\(N\)</span> thus more samples will always increase the likelihood ratio.</p>
+</section>
+<section id="the-end" class="level1">
+<h1>The End</h1>
+<p>One thing I want to make clear is that what I’ve presented is very much the configurational interpretation of entropy. The strange thing about entropy in physics, is that it appears in conjunction with energies and other thermodynamic quantities. This can of course be derived as well, I’m just not going to do it here. David Tong’s lecture notes do this very well - <a href="https://www.damtp.cam.ac.uk/user/tong/statphys/statphys.pdf?utm_source=chatgpt.com">here</a>.</p>
 
 
 </section>

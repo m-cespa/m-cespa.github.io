@@ -12,7 +12,7 @@ format: html
 This is by no means a new topic nor a particularly complex one, but I generally like to know where stuff in math or science really comes from. 
 If you're reading this, you are probably familiar with Linear Regression or Least Squares Regression (or whatever other name you've heard it called). 
 The premise is that if we have some data points $y_i$ and we measure a series of features $\vec{x}^{(i)}$, if our features are relevant predictors of our data, 
-there ought to exist a linear (or affine) model which relates them:
+there might exist a linear (or affine) model which relates them:
 
 $$
 \begin{align}

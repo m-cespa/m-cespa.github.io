@@ -1,6 +1,9 @@
 project:
   type: website
-  output-dir: ../blog
+  output-dir: _site
+
+# from inside blog_quarto
+# rsync -av --delete _site/ ../blog/ && rm -rf _site - RUN THIS
 
 website:
   title: "myblog"
