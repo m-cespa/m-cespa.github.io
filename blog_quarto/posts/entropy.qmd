@@ -28,7 +28,7 @@ The standard argument goes as follows. Suppose a system can only ever be in any 
 $$
 \begin{align}
 E &= \frac{1}{N} \sum_{i=1}^{M} N_i E_i \\
-N &= \sum_{i=1}^{M} n_i
+N &= \sum_{i=1}^{M} N_i
 \end{align}
 $$
 
