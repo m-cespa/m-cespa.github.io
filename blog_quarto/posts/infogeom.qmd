@@ -182,7 +182,7 @@ What we did here was an I-projection with uniform prior while fixing the expecte
 
 # The End
 
-I've necessarily been brief and less rigorous in places because I think what's most important to take from study of these things is the intuition of what the framework is telling you, the maths can sometimes get in the way. For more rigorous treatments I recommend any of the following:
+I've necessarily been brief and less rigorous in places because I think what's most important to take from the study of these things is the intuition of what the framework is telling you, the maths can sometimes get in the way. For more rigorous treatments I recommend any of the following:
 
 - [Microsoft Research Lecture](https://youtu.be/zmUMBLEHhZg?si=AXHYW-NOmFphVlgM)
 - [Edwin Jayne's Seminal Paper](https://journals.aps.org/pr/abstract/10.1103/PhysRev.106.620)
