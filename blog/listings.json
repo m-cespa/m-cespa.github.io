@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/probabilistic_view_on_lin_reg.html",
+      "/posts/infogeom.html",
       "/posts/variances_on_sphere.html",
       "/posts/entropy.html"
     ]
