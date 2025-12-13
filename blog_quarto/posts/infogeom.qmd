@@ -37,6 +37,7 @@ The KL-Divergence ($D(p || q)$) is in general *not* symmetric in its arguments a
 # Exponential Families
 
 Another ingredient we'll need is the notion of an exponential family. These functional forms turn out to be a very convenient way to express distributions. An exponential family for points $x \in \mathbb{R}^n$ is characterised by:
+
 - an input subspace $S \subseteq \mathbb{R^n}$
 - a base measure $h: \mathbb{R}^n \rightarrow \mathbb{R}$
 - a set of features $\mathbf{T}(x) = (T_1(x),..., T_m(x))$ with $T_i: \mathbb{R}^n \rightarrow \mathbb{R}$
