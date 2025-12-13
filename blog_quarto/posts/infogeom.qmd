@@ -15,7 +15,7 @@ Very much continuing from the theme of the last post, I want to talk about some 
 
 In geometry we are often interested in "shortest distances" which motivates the notion of orthogonal projections. The standard Euclidean projection can be formulated in a few ways but the one useful to us will be:
 
-let $Q = \vec{l} \cdot \vec{x}$ define a plane and $P$ be some point we want to project onto the plane:
+let $Q = \vec{\theta} \cdot \vec{x}$ define a plane and $P$ be some point we want to project onto the plane:
 $$
 \begin{align}
 proj(P, Q) = \arg\min_{x'} || Q(x') - P ||^2
