@@ -193,13 +193,13 @@ window.Quarto = {
 <p>This is by no means a new topic nor a particularly complex one, but I generally like to know where stuff in math or science really comes from. If you’re reading this, you are probably familiar with Linear Regression or Least Squares Regression (or whatever other name you’ve heard it called). The premise is that if we have some data points <span class="math inline">\(y_i\)</span> and we measure a series of features <span class="math inline">\(\vec{x}^{(i)}\)</span>, if our features are relevant predictors of our data, there might exist a linear (or affine) model which relates them:</p>
 <p><span class="math display">\[
 \begin{align}
-y_i = \theta_1 x^{(i)}_1 + \theta_2 x^{(i)}_2 + ... = \vec{\theta} \cdot \vec{x}^{(i)}
+y_i = \theta_1 x^{(i)}_1 + \theta_2 x^{(i)}_2 + ... = \mathbf{\theta} \cdot \mathbf{x}_i
 \end{align}
 \]</span></p>
-<p>We should think of <span class="math inline">\(y_i\)</span> as the output, and each entry (<span class="math inline">\(n\)</span> in total) of <span class="math inline">\(\vec{x}^{(i)}\)</span> as some feature. As good statisticians, we might measure <span class="math inline">\(m\)</span> such outputs <span class="math inline">\(y_i\)</span> and for each, their corresponding input feature vector <span class="math inline">\(\vec{x}^{(i)}\)</span>. It is convenient to concatenate our <span class="math inline">\(y_i\)</span> into a column vector <span class="math inline">\(\vec{y} \in \mathbb{R}^m\)</span> and our <span class="math inline">\(\vec{x}^{(i)}\)</span> vectors as rows of a matrix <span class="math inline">\(X \in \mathbb{R}^{m \times n}\)</span>. For every pair <span class="math inline">\((y_i, \vec{x}^{(i)})\)</span> we will still use the same summation coefficients <span class="math inline">\(\vec{\theta} \in \mathbb{R}^n\)</span>.</p>
+<p>We should think of <span class="math inline">\(y_i\)</span> as the output, and each entry (<span class="math inline">\(n\)</span> in total) of <span class="math inline">\(\vec{x}^{(i)}\)</span> as some feature. As good statisticians, we might measure <span class="math inline">\(m\)</span> such outputs <span class="math inline">\(y_i\)</span> and for each, their corresponding input feature vector <span class="math inline">\(\mathbf{x}_i\)</span>. It is convenient to concatenate our <span class="math inline">\(y_i\)</span> into a column vector <span class="math inline">\(\mathbf{y} \in \mathbb{R}^m\)</span> and our <span class="math inline">\(\mathbf{x}_i\)</span> vectors as rows of a matrix <span class="math inline">\(X \in \mathbb{R}^{m \times n}\)</span>. For every pair <span class="math inline">\((y_i, \mathbf{x}_i)\)</span> we will still use the same summation coefficients <span class="math inline">\(\mathbf{\theta} \in \mathbb{R}^n\)</span> (this is the premise of linear regression).</p>
 <p><span class="math display">\[
 \begin{align}
-\vec{y} = X \vec{\theta}
+\mathbf{y} = \matrix{X} \mathbf{\theta}
 \end{align}
 \]</span></p>
 <p>I personally prefer working in index notation (the arguments scale easily to arbitrary dimensions) so I’ll stick to that. So far we have been dealing with this idealised scenario where there exists this <em>optimal</em> projection direction which we’ll denote as <span class="math inline">\(\theta_j^{\ast}\)</span>. If this value exists, our optimisation task is simply to converge our model parameter <span class="math inline">\(\theta_j\)</span> to this value such that our model outputs <span class="math inline">\(\hat{y}_i\)</span> closely match the true measured values <span class="math inline">\(y_i\)</span>. I want to validate this claim of there existing such an optimal parameter <span class="math inline">\(\theta_j^{\ast}\)</span>.</p>
@@ -212,64 +212,80 @@ y_i = \theta_1 x^{(i)}_1 + \theta_2 x^{(i)}_2 + ... = \vec{\theta} \cdot \vec{x}
 </section>
 <section id="why-least-squares" class="level1">
 <h1>Why Least Squares?</h1>
-<p>We can now start talking in terms of probability. Our measured data will almost surely not lie on a straight line, it’s noisy. We can think of each datum <span class="math inline">\(y_i\)</span> as being drawn from some distribution centred on mean value <span class="math inline">\(\mu_i = X_{ij}\theta_j^{\ast}\)</span> with noise <span class="math inline">\(\xi_i\)</span>. We take the noise to be gaussian with <span class="math inline">\(\mathbb{E}[\xi_i] = 0\)</span> and <span class="math inline">\(\mathbb{V}[\xi_i] = \sigma^2\delta_{ij}\)</span>. Formally we have:</p>
+<p>We can now start talking in terms of probability. We define our dataset to be <span class="math inline">\(\mathcal{D} = \{(y_i, \mathbf{x}_i)\}_{i=1}^{N}\)</span>. In regression, we generally take the <span class="math inline">\(y_i\)</span> to be random variables whilst the feature vectors <span class="math inline">\(\mathbf{x}_i\)</span> are treated as exact non-random quantities (this is of course a modelling over-simplification). We must assume some randomness in <span class="math inline">\(y_i\)</span> otherwise the conditional distribution over the labels collapses to a delta cone which we cannot make much use of. It should also be intuitively sensible to assume that our label measurements will be noisy. For the (or OLS) solution, we simply seek to maximise the likelihood of our probabilistic labels given our choice of parameters.</p>
+<p>We generally take the noise in our labels to be zero mean-gaussian. This is equivalent to writing <span class="math inline">\(y_i = \mu_i + \xi_i\)</span> where <span class="math inline">\(\xi_i \sim \mathcal{N}(0, \sigma^2)\)</span> and <span class="math inline">\(\mu_i = X_{ij}\theta_j\)</span>. This is sumarrised below.</p>
 <p><span class="math display">\[
 \begin{align}
-Y_i \sim \mathcal{N}(\mu_i, \sigma^2 \delta_{ij})
+Y_i \sim \mathcal{N}(X_{ij}\theta_j, \sigma^2 \delta_{ij})
 \end{align}
 \]</span></p>
-<p>For each datum <span class="math inline">\(y_i\)</span> there is a corresponding distribution. All have the same variance but the mean will be different - importantly, the mean is always coupled to the input feature vector. Equivalently, we can think of the concatenated vector of measured outputs <span class="math inline">\(\vec{y}\)</span> as being a sample from:</p>
+<p>For each datum <span class="math inline">\(y_i\)</span> there is a corresponding distribution. All have the same variance (by our assumption of the noise) but the mean will be different - importantly, the mean is always coupled to the input feature vector. Equivalently, we can think of the concatenated vector of measured outputs <span class="math inline">\(\mathbf{y}\)</span> as being a sample from:</p>
 <p><span class="math display">\[
 \begin{align}
-\vec{Y} \sim \mathcal{N}(\vec{\mu}, \sigma^2 \mathbb{I})
+\mathbf{Y} \sim \mathcal{N}(\matrix{X}\mathbf{\theta}, \sigma^2 \mathbb{I})
 \end{align}
 \]</span></p>
-<p>Our goal parameter <span class="math inline">\(\theta_j^{\ast}\)</span> is inside the distribution’s mean. If we had many such vectors <span class="math inline">\(\vec{y}_i\)</span> all drawn from the same data matrix <span class="math inline">\(X\)</span>, the job of finding the mean would be straightforward (we’ll get back to this later). What if we only have one such <span class="math inline">\(\vec{y}\)</span>? Given an observed value of this random variable <span class="math inline">\(Y_i\)</span>, we can assign a probability to this sample given a mean <span class="math inline">\(\hat{\mu}_i\)</span>:</p>
+<p>Our goal parameter <span class="math inline">\(\theta_j^{\ast}\)</span> is inside the distribution’s mean. If we had many such vectors <span class="math inline">\(\mathbf{y}_i\)</span> all drawn from the same data matrix <span class="math inline">\(\matrix{X}\)</span>, the job of finding the mean would be straightforward (we’ll get back to this later). We generally only measure one such <span class="math inline">\(\mathbf{y}\)</span>. Writing out the gaussian noise explicitly we have:</p>
 <p><span class="math display">\[
 \begin{align}
-\hat{\mu_i} &amp;= X_{ij}\theta_j \\
-\mathbb{P}[Y_i = y_i \mid \vec{\theta}, X] \propto \exp\Bigg[-\frac{1}{2} &amp;(y_i - X_{ik}\theta_k) (\sigma^2 \delta_{ij})^{-1} (y_j - X_{jk}\theta_k) \Bigg]
+p_{\matrix{X}, \mathbf{\theta}}(y_i) \propto \exp\Bigg[-\frac{1}{2} &amp;(y_i - X_{ik}\theta_k) (\sigma^2 \delta_{ij})^{-1} (y_j - X_{jk}\theta_k) \Bigg]
 \end{align}
 \]</span></p>
-<p>We of course want the maximum likelihood estimator (MLE) of this mean. For a string of <span class="math inline">\(m\)</span> such iid samples we can maximise the log-likelihood, omitting constant terms like the variance <span class="math inline">\(\sigma^2\)</span> or the normalisation factors, we have:</p>
+<p>We of course want the maximum likelihood estimator (MLE) of our parameter vector <span class="math inline">\(\mathbf{\theta}_{MLE}\)</span>. For a string of <span class="math inline">\(m\)</span> such iid samples we can maximise the log-likelihood, omitting constant terms like the variance <span class="math inline">\(\sigma^2\)</span> or the normalisation factors, we have:</p>
 <p><span class="math display">\[
 \begin{align}
-\vec{\theta}^{\ast} &amp;= \arg\max_{\theta} \left\{ \sum_{i=1}^{m} -\frac{1}{2} (y_i - X_{ik} \theta_k)^2 \right\} \\
+\mathbf{\theta}_{MLE} &amp;= \arg\max_{\theta} \prod_{i=1}^m p_{\matrix{X}, \mathbf{\theta}}(y_i)\\
+&amp;= \arg\max_{\theta} \sum_{i=1}^m \log p_{\matrix{X}, \mathbf{\theta}}(y_i) \\
+&amp;= \arg\max_{\theta} \left\{ \sum_{i=1}^{m} -\frac{1}{2} (y_i - X_{ik} \theta_k)^2 \right\} \\
 &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} (y_i - X_{ik} \theta_k)^2 \right\}
 \end{align}
 \]</span></p>
-<p>This is now the familiar form of the problem with solution <span class="math inline">\(\vec{\theta} = (X^T X)^{-1}X^T \vec{y}\)</span>. Now we can revisit the suggestion of arriving at this answer by collecting lots of sample vectors <span class="math inline">\(\vec{y}_i\)</span> (all from the same data matrix <span class="math inline">\(X\)</span>) and finding their arithemtic mean. The process would like like this:</p>
+<p>Note that I am explicitly writing <span class="math inline">\(p_{\matrix{X}, \mathbf{\theta}}(y_i)\)</span> rather than <span class="math inline">\(p(y_i | \matrix{X}, \mathbf{\theta})\)</span>. To keep things rigorous, we should only condition on random variables.</p>
+<p>This is now the familiar form of the problem with solution <span class="math inline">\(\mathbf{\theta} = (\matrix{X}^T \matrix{X})^{-1}\matrix{X}^T \mathbf{y}\)</span>. Now we can revisit the suggestion of arriving at this answer by collecting lots of sample vectors <span class="math inline">\(\mathbf{y}_i\)</span> (all from the same data matrix <span class="math inline">\(\matrix{X}\)</span>) and finding their arithemtic mean. The process would like like this:</p>
 <p><span class="math display">\[
 \begin{align}
-\langle \vec{y} \rangle &amp;= \frac{1}{N} \sum_{i=1}^{N} \vec{y}_i \\
-&amp;= X\vec{\theta} \\
-\rightarrow \vec{\theta} &amp;= (X^T X)^{-1}X^T \langle \vec{y} \rangle
+\langle \mathbf{y} \rangle &amp;= \frac{1}{N} \sum_{i=1}^{N} \mathbf{y}_i \\
+&amp;= \matrix{X}\mathbf{\theta}_{MLE} \\
+\rightarrow \mathbf{\theta}_{MLE} &amp;= (\matrix{X}^T \matrix{X})^{-1}\matrix{X}^T \langle \mathbf{y} \rangle
 \end{align}
 \]</span></p>
-<p>Where we are implicitly using the fact that <span class="math inline">\(\lim_{N \to \infty} \frac{1}{N} \sum_{i=1}^{N} \vec{y}_i = \mathbb{E}[\vec{y}]\)</span> and the pseudo-inverse in the final line. Interestingly/unsurprisingly, we arrive at the same result.</p>
+<p>Where we are implicitly using the weak Law of Large Numbers (wLLN) - <span class="math inline">\(\lim_{N \to \infty} \frac{1}{N} \sum_{i=1}^{N} \mathbf{y}_i = \mathbb{E}[\mathbf{y}]\)</span> - and the pseudo-inverse in the final line. Interestingly/unsurprisingly, we arrive at the same result. We actually don’t even need to invoke wLLN here as our sampled vectors <span class="math inline">\(\mathbf{y}_i\)</span> are sampled from a gaussian and the arithmetic mean turns out to be the MLE for a gaussian anyway.</p>
 </section>
 <section id="incorporating-priors" class="level1">
 <h1>Incorporating Priors</h1>
-<p>So far we have made no assumption about the distribution of our summation coefficients <span class="math inline">\(\theta_j\)</span>. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, …, annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or <em>weighting</em> than others. More generally, we want to make use of any prior knowledge of the distribution of <span class="math inline">\(\vec{\theta}\)</span>. This is known as regularisation. To do this, we should now maximise the log-likelihood of the joint probability <span class="math inline">\(\mathbb{P}[y_i, \vec{\theta} \mid X] = \mathbb{P}[y_i \mid \vec{\theta}, X]\mathbb{P}[\vec{\theta} \mid X]\)</span> (in this discussion I am ignoring any probabilistic features in <span class="math inline">\(X\)</span> thus <span class="math inline">\(\mathbb{P}[\vec{\theta} \mid X] \equiv \mathbb{P}[\theta]\)</span>, the conditioning is a bit of a notational overload)</p>
-<p>A common assumption is that the weights are also gaussian with <span class="math inline">\(\theta_j \sim \mathcal{N}(0, \tau^2)\)</span>. Evaluating the product over <span class="math inline">\(m\)</span> iid samples gives a joint likelihood of:</p>
+<p>So far we have made no assumption about the distribution of our summation coefficients <span class="math inline">\(\theta_j\)</span>. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, …, annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or <em>weighting</em> than others. More generally, we want to make use of any prior knowledge of the distribution of <span class="math inline">\(\mathbf{\theta}\)</span>. This is known as regularisation. We now require a more rigorous Bayesian treatment of the problem. Ultimately, we want to extract a distribution over our parameters <span class="math inline">\(\mathbf{\theta}\)</span> given the observed dataset <span class="math inline">\(\mathcal{D}\)</span>.</p>
+<p>We first require the standard Bayesian inference step to reach the posterior:</p>
 <p><span class="math display">\[
 \begin{align}
-\mathbb{P}[\vec{\theta}] &amp;\propto \prod_{j=1}^{n} \exp\Bigg[\frac{\theta_j^2}{2\tau^2} \Bigg] \\
-\mathbb{P}[\vec{y}, \vec{\theta} \mid X] &amp;\propto \prod_{i=1}^{m} \exp\Bigg[-\frac{1}{2\sigma^2} (y_i - X_{ik}\theta_k)^2 \Bigg] \prod_{j=1}^{n} \exp\Bigg[-\frac{\theta_j^2}{2\tau^2} \Bigg] \\
-\vec{\theta}^{\ast} &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} \frac{1}{\sigma^2} (y_i - X_{ik} \theta_k)^2 + \sum_{j=1}^{n} \frac{\theta_j^2}{\tau^2} \right\} \\
+p(\mathbf{\theta} | \mathcal{D}) &amp;= \frac{p(\mathcal{D} | \mathbf{\theta}) p(\mathbf{\theta})}{p(\mathcal{D})} \\
+&amp;\propto p(\mathbf{\theta})\prod_{i=1}^m p_{\matrix{X}}(y_i | \mathbf{\theta})
+\end{align}
+\]</span></p>
+<p>When optimising in the Bayesian framework, we can drop the <span class="math inline">\(p(\mathcal{D})\)</span> term as it is not a function of <span class="math inline">\(\mathbf{\theta}\)</span> and thus will vanish under any differentiation. Our estimator will now be the maximum a-posteriori estimator (MAP) rather than the MLE.</p>
+<p><span class="math display">\[
+\begin{align}
+\mathbf{\theta}_{MAP} &amp;= \arg\max_{\theta} p(\mathbf{\theta} | \mathcal{D}) \\
+&amp;= \arg\max_{\theta} \{ p_{\matrix{X}}(\mathbf{y} | \mathbf{\theta}) p(\mathbf{\theta}) \}
+\end{align}
+\]</span></p>
+<p>A common assumption is that the weights are also iid gaussian with <span class="math inline">\(\theta_j \sim \mathcal{N}(0, \tau^2)\)</span> thus for all <span class="math inline">\(n\)</span> weights in our weight vector we have that <span class="math inline">\(p(\mathbf{\theta}) \propto \prod_{j=1}^{n} \exp\Bigg[\frac{\theta_j^2}{2\tau^2} \Bigg]\)</span>. Evaluating the posterior gives us:</p>
+<p><span class="math display">\[
+\begin{align}
+p(\mathbf{\theta} | \mathcal{D}) &amp;\propto \prod_{i=1}^{m} \exp\Bigg[-\frac{1}{2\sigma^2} (y_i - X_{ik}\theta_k)^2 \Bigg] \prod_{j=1}^{n} \exp\Bigg[-\frac{\theta_j^2}{2\tau^2} \Bigg] \\
+\mathbf{\theta}_{MAP} &amp;= \arg\max_{\theta} \left\{ \sum_{i=1}^{m} -\frac{1}{\sigma^2} (y_i - X_{ik} \theta_k)^2 + \sum_{j=1}^{n} -\frac{\theta_j^2}{\tau^2} \right\} \\
 &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} (y_i - X_{ik} \theta_k)^2 + \lambda \sum_{j=1}^{n} \theta_j^2 \right\} \\
 \text{where } \lambda &amp;= \frac{\sigma^2}{\tau^2}
 \end{align}
 \]</span></p>
-<p>This is the <em>Ridge</em> regression which we interpret as punishing large coefficients (in a loss function sense). The analytic solution is now <span class="math inline">\(\vec{\theta} = (X^T X + \lambda \mathbb{I})^{-1}X^T \vec{y}\)</span>. A full bias-variance analysis (a topic for another post) reveals that this estimator is (unsurprisingly) biased but with lower variance. By restricting our search for parameters which also satisfy our assumption of the underlying parameter distribution, the spread of our optimal parameter will intuitively be smaller at the cost of bias.</p>
-<p>Another common assumption of the underlying distribution is the Laplace or double-exponential assumption. This corresponds to <span class="math inline">\(\mathbb{P}[\theta_j] = \frac{1}{2b}\exp [-\frac{|\theta_j|}{b}]\)</span>. This symmetric distribution is much narrower than a gaussian with a much sharper gradient around zero. This shape is useful if we assume that not only are weights evenly distributed about zero, but many weights are <em>exactly</em> zero. Such an assumption is present in cases where we know that only a small subset of our feature space is relevant at all (but we don’t know apriori which features these are so we measure all of them anyway). An identical treatment to the above discussion on Ridge gives:</p>
+<p>This is the <em>Ridge</em> regression which we interpret as punishing large coefficients (in a loss function sense). The analytic solution is now <span class="math inline">\(\mathbf{\theta} = (\matrix{X}^T \matrix{X} + \lambda \mathbb{I})^{-1}\matrix{X}^T \mathbf{y}\)</span>. A full bias-variance analysis (a topic for another post) reveals that this estimator is (unsurprisingly) biased but with lower variance. By restricting our search for parameters which also satisfy our assumption of the underlying parameter distribution, the spread of our optimal parameter will intuitively be smaller at the cost of bias.</p>
+<p>Another common assumption of the underlying distribution is the Laplace or double-exponential assumption. This corresponds to <span class="math inline">\(p(\theta_j) = \frac{1}{2b}\exp [-\frac{|\theta_j|}{b}]\)</span>. This symmetric distribution is much narrower than a gaussian with a much sharper gradient around zero. This shape is useful if we assume that not only are weights evenly distributed about zero, but many weights are <em>exactly</em> zero. Such an assumption is present in cases where we know that only a small subset of our feature space is relevant at all (but we don’t know apriori which features these are so we measure all of them anyway). An identical treatment to the above discussion on Ridge gives:</p>
 <p><span class="math display">\[
 \begin{align}
-\vec{\theta}^{\ast} &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m}(y_i - X_{ik}\theta_k)^2 + \lambda \sum_{j=1}^{n} |\theta_j| \right\} \\
+\mathbf{\theta}_{MAP} &amp;= \arg\min_{\theta} \left\{ \sum_{i=1}^{m}(y_i - X_{ik}\theta_k)^2 + \lambda \sum_{j=1}^{n} |\theta_j| \right\} \\
 \text{where } \lambda &amp;= \frac{2\sigma^2}{b}
 \end{align}
 \]</span></p>
-<p>This is the <em>Lasso</em> regression which also punishes large coefficients but is less forgiving for very small ones (unlike Ridge). The absolute value function is not differentiable at zero so there is no analytic solution for <span class="math inline">\(\vec{\theta}\)</span>. We usually proceed by sub-gradient descent (see <a href="https://davidrosenberg.github.io/mlcourse/Archive/2019/Lectures/03c.subgradient-descent-lasso.pdf">here</a>).</p>
+<p>This is the <em>Lasso</em> regression which also punishes large coefficients but is less forgiving for very small ones (unlike Ridge). The absolute value function is not differentiable at zero so there is no analytic solution for <span class="math inline">\(\mathbf{\theta}\)</span>. We usually proceed by sub-gradient descent (see <a href="https://davidrosenberg.github.io/mlcourse/Archive/2019/Lectures/03c.subgradient-descent-lasso.pdf">here</a>).</p>
 
 
 </section>
