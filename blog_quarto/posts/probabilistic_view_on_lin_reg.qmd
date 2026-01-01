@@ -148,7 +148,7 @@ $$
 \end{align}
 $$
 
-Thus, if $\matrix{X}$ is *rank-deficient* (has colinear columns), then the square matrix $\matrix{X}^T\matrix{X}$ is non-invertible (must have at least one zero eigenvalue). However, even in the non-extremal case of partial colinearity, we can still encounter numerical issues. We can analyse this in terms of the eigenvalues of $\matrix{X}^T\matrix{X} \equiv \matrix{S}$:
+Thus, if $\matrix{X}$ is *rank-deficient* (has colinear columns), then the square symmetric matrix $\matrix{X}^T\matrix{X}$ (which is in the regression estimator solution) is non-invertible (must have at least one zero eigenvalue). However, even in the non-extremal case of partial colinearity, we can still encounter numerical issues. We can analyse this in terms of the eigenvalues of $\matrix{X}^T\matrix{X} \equiv \matrix{S}$:
 
 $$
 \begin{align}
@@ -159,7 +159,7 @@ $$
 \end{align}
 $$
 
-In the partial colinearity case we have $||\matrix{X}\mathbf{v}|| \ll ||\mathbf{v}||$. Thus from the equality above we see that $\sum_{i=1}^m \lambda_i (v'_i)^2 \ll ||\mathbf{v}||^2$. We interpret this as there being directions (eigenvectors) of $\matrix{\Sigma}$ for which the eigenvalue is very small/vanishing. This means that numerical errors in $\matrix{\Sigma}^{-1}$ in OLS will blow up as they scale with $\sim \frac{1}{\lambda}$.
+In the partial colinearity case we have $||\matrix{X}\mathbf{v}|| \ll ||\mathbf{v}||$. Thus from the equality above we see that $\sum_{i=1}^m \lambda_i (v'_i)^2 \ll ||\mathbf{v}||^2$. We interpret this as there being directions (eigenvectors) of $\matrix{S}$ for which the eigenvalue is very small/vanishing. This means that numerical errors in $\matrix{S}^{-1}$ in OLS will blow up as they scale with $\sim \frac{1}{\lambda}$.
 
 In Ridge, our regression estimator is $(\matrix{X}^T \matrix{X} + \lambda_{Ridge} \mathbb{I})^{-1}\matrix{X}^T \mathbf{y}$. The addition of the $\lambda\mathbb{I}$ term pushes any small eigenvalues away from zero. We can see this as a *damping* effect by writing the estimators in terms of the eigenbasis of $\matrix{S}$ $\{\mathbf{u}_i \}_{i=1}^n$ for $\mathbf{u}_i \in \mathbb{R}^n$:
 

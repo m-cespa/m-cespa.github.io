@@ -302,7 +302,7 @@ p(\mathbf{\theta} | \mathcal{D}) &amp;\propto \prod_{i=1}^{m} \exp\Bigg[-\frac{1
 \iff (\matrix{X}^T\matrix{X})\mathbf{v} &amp;= \mathbf{0} \\
 \end{align}
 \]</span></p>
-<p>Thus, if <span class="math inline">\(\matrix{X}\)</span> is <em>rank-deficient</em> (has colinear columns), then the square matrix <span class="math inline">\(\matrix{X}^T\matrix{X}\)</span> is non-invertible (must have at least one zero eigenvalue). However, even in the non-extremal case of partial colinearity, we can still encounter numerical issues. We can analyse this in terms of the eigenvalues of <span class="math inline">\(\matrix{X}^T\matrix{X} \equiv \matrix{S}\)</span>:</p>
+<p>Thus, if <span class="math inline">\(\matrix{X}\)</span> is <em>rank-deficient</em> (has colinear columns), then the square symmetric matrix <span class="math inline">\(\matrix{X}^T\matrix{X}\)</span> (which is in the regression estimator solution) is non-invertible (must have at least one zero eigenvalue). However, even in the non-extremal case of partial colinearity, we can still encounter numerical issues. We can analyse this in terms of the eigenvalues of <span class="math inline">\(\matrix{X}^T\matrix{X} \equiv \matrix{S}\)</span>:</p>
 <p><span class="math display">\[
 \begin{align}
 \matrix{S} &amp;= \matrix{U}\matrix{\Lambda}\matrix{U}^T \\
@@ -311,7 +311,7 @@ p(\mathbf{\theta} | \mathcal{D}) &amp;\propto \prod_{i=1}^{m} \exp\Bigg[-\frac{1
 &amp;= \frac{1}{m}||\matrix{X}\mathbf{v}||^2 \\
 \end{align}
 \]</span></p>
-<p>In the partial colinearity case we have <span class="math inline">\(||\matrix{X}\mathbf{v}|| \ll ||\mathbf{v}||\)</span>. Thus from the equality above we see that <span class="math inline">\(\sum_{i=1}^m \lambda_i (v'_i)^2 \ll ||\mathbf{v}||^2\)</span>. We interpret this as there being directions (eigenvectors) of <span class="math inline">\(\matrix{\Sigma}\)</span> for which the eigenvalue is very small/vanishing. This means that numerical errors in <span class="math inline">\(\matrix{\Sigma}^{-1}\)</span> in OLS will blow up as they scale with <span class="math inline">\(\sim \frac{1}{\lambda}\)</span>.</p>
+<p>In the partial colinearity case we have <span class="math inline">\(||\matrix{X}\mathbf{v}|| \ll ||\mathbf{v}||\)</span>. Thus from the equality above we see that <span class="math inline">\(\sum_{i=1}^m \lambda_i (v'_i)^2 \ll ||\mathbf{v}||^2\)</span>. We interpret this as there being directions (eigenvectors) of <span class="math inline">\(\matrix{S}\)</span> for which the eigenvalue is very small/vanishing. This means that numerical errors in <span class="math inline">\(\matrix{S}^{-1}\)</span> in OLS will blow up as they scale with <span class="math inline">\(\sim \frac{1}{\lambda}\)</span>.</p>
 <p>In Ridge, our regression estimator is <span class="math inline">\((\matrix{X}^T \matrix{X} + \lambda_{Ridge} \mathbb{I})^{-1}\matrix{X}^T \mathbf{y}\)</span>. The addition of the <span class="math inline">\(\lambda\mathbb{I}\)</span> term pushes any small eigenvalues away from zero. We can see this as a <em>damping</em> effect by writing the estimators in terms of the eigenbasis of <span class="math inline">\(\matrix{S}\)</span> <span class="math inline">\(\{\mathbf{u}_i \}_{i=1}^n\)</span> for <span class="math inline">\(\mathbf{u}_i \in \mathbb{R}^n\)</span>:</p>
 <p><span class="math display">\[
 \begin{align}
