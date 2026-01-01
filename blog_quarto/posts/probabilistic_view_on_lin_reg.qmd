@@ -9,10 +9,7 @@ format: html
 
 # Introduction
 
-This is by no means a new topic nor a particularly complex one, but I generally like to know where stuff in math or science really comes from. 
-If you're reading this, you are probably familiar with Linear Regression or Least Squares Regression (or whatever other name you've heard it called). 
-The premise is that if we have some data points $y_i$ and we measure a series of features $\vec{x}^{(i)}$, if our features are relevant predictors of our data, 
-there might exist a linear (or affine) model which relates them:
+This is by no means a new topic nor a particularly complex one, but I generally like to know where stuff in math or science really comes from. If you're reading this, you are probably familiar with Linear Regression or Least Squares Regression (or whatever other name you've heard it called). The premise is that for each data point in our population, we measure some label $y_i$ (for simplicity we take this to be scalar) and the values of some set of features associated to this label $\mathbf{x}_i \in \mathbb{R}^n$. We can then aim to fit some function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ such that $f(\mathbf{x}_i) \approx y_i$.
 
 $$
 \begin{align}
@@ -20,7 +17,7 @@ y_i = \theta_1 x^{(i)}_1 + \theta_2 x^{(i)}_2 + ... = \mathbf{\theta} \cdot \mat
 \end{align}
 $$
 
-We should think of $y_i$ as the output, and each entry ($n$ in total) of $\vec{x}^{(i)}$ as some feature. As good statisticians, we might measure $m$ such outputs $y_i$ and for each, their corresponding input feature vector $\mathbf{x}_i$. It is convenient to concatenate our $y_i$ into a column vector $\mathbf{y} \in \mathbb{R}^m$ and our $\mathbf{x}_i$ vectors as rows of a matrix $X \in \mathbb{R}^{m \times n}$. For every pair $(y_i, \mathbf{x}_i)$ we will still use the same summation coefficients $\mathbf{\theta} \in \mathbb{R}^n$ (this is the premise of linear regression).
+As good statisticians, we might measure $m$ such outputs $y_i$ and for each, their corresponding feature vector $\mathbf{x}_i$. It is convenient to concatenate our $y_i$ into a column vector $\mathbf{y} \in \mathbb{R}^m$ and our $\mathbf{x}_i$ vectors as rows of a matrix $X \in \mathbb{R}^{m \times n}$. For every pair $(y_i, \mathbf{x}_i)$ we will still use the same summation coefficients $\mathbf{\theta} \in \mathbb{R}^n$ (this is the premise of linear regression).
 
 $$
 \begin{align}
@@ -52,7 +49,7 @@ $$
 \end{align}
 $$
 
-Our goal parameter $\theta_j^{\ast}$ is inside the distribution's mean. If we had many such vectors $\mathbf{y}_i$ all drawn from the same data matrix $\matrix{X}$, the job of finding the mean would be straightforward (we'll get back to this later). We generally only measure one such $\mathbf{y}$. Writing out the gaussian noise explicitly we have:
+Our goal parameter $\theta_j^{\ast}$ is inside the distribution's mean. If we had many such vectors $\mathbf{y}_i$ all drawn from the same data matrix $\matrix{X}$, the job of finding the mean would be straightforward (we'll get back to this later). We generally only measure one such $\mathbf{y}$. Writing out this gaussian distribution over our labels $y_i$ we have:
 
 $$
 \begin{align}
@@ -60,7 +57,9 @@ p_{\matrix{X}, \mathbf{\theta}}(y_i) \propto \exp\Bigg[-\frac{1}{2} &(y_i - X_{i
 \end{align}
 $$
 
-We of course want the maximum likelihood estimator (MLE) of our parameter vector $\mathbf{\theta}_{MLE}$. For a string of $m$ such iid samples we can maximise the log-likelihood, omitting constant terms like the variance $\sigma^2$ or the normalisation factors, we have:
+Note that I am choosing to write $p_{\matrix{X}, \mathbf{\theta}}(y_i)$ rather than $p(y_i | \matrix{X}, \mathbf{\theta})$. This is simply to make clear what is and isn't random in the model (most texts will opt for the latter notation).
+
+We now seek the maximum likelihood estimator (MLE) of our parameter vector $\mathbf{\theta}_{MLE}$. For a string of $m$ such iid samples we can maximise the log-likelihood of the labels. Omitting constant factors like the variance $\sigma^2$ or the normalisation factors, we have:
 
 $$
 \begin{align}
@@ -70,8 +69,6 @@ $$
 &= \arg\min_{\theta} \left\{ \sum_{i=1}^{m} (y_i - X_{ik} \theta_k)^2 \right\}
 \end{align}
 $$
-
-Note that I am explicitly writing $p_{\matrix{X}, \mathbf{\theta}}(y_i)$ rather than $p(y_i | \matrix{X}, \mathbf{\theta})$. To keep things rigorous, we should only condition on random variables.
 
 This is now the familiar form of the problem with solution $\mathbf{\theta} = (\matrix{X}^T \matrix{X})^{-1}\matrix{X}^T \mathbf{y}$. Now we can revisit the suggestion of arriving at this answer by collecting lots of sample vectors $\mathbf{y}_i$ (all from the same data matrix $\matrix{X}$) and finding their arithemtic mean. The process would like like this:
 
