@@ -76,13 +76,13 @@ $$
 \end{align}
 $$
 
-This is now the familiar form of the problem with solution $\mathbf{\theta} = (\matrix{X}^T \matrix{X})^{-1}\matrix{X}^T \mathbf{y}$. Now we can revisit the suggestion of arriving at this answer by collecting lots of sample vectors $\mathbf{y}_i$ (all from the same data matrix $\matrix{X}$) and finding their arithemtic mean. The process would like like this:
+This is now the familiar form of the problem with solution $\mathbf{\theta} = (\matrix{X}^{\top} \matrix{X})^{-1}\matrix{X}^{\top} \mathbf{y}$. Now we can revisit the suggestion of arriving at this answer by collecting lots of sample vectors $\mathbf{y}_i$ (all from the same data matrix $\matrix{X}$) and finding their arithemtic mean. The process would like like this:
 
 $$
 \begin{align}
 \langle \mathbf{y} \rangle &= \frac{1}{N} \sum_{i=1}^{N} \mathbf{y}_i \\
 &= \matrix{X}\mathbf{\theta}_{MLE} \\
-\rightarrow \mathbf{\theta}_{MLE} &= (\matrix{X}^T \matrix{X})^{-1}\matrix{X}^T \langle \mathbf{y} \rangle
+\rightarrow \mathbf{\theta}_{MLE} &= (\matrix{X}^{\top} \matrix{X})^{-1}\matrix{X}^{\top} \langle \mathbf{y} \rangle
 \end{align}
 $$
 
@@ -121,7 +121,7 @@ p(\mathbf{\theta} | \mathcal{D}) &\propto \prod_{i=1}^{m} \exp\Bigg[-\frac{1}{2\
 \end{align}
 $$
 
-This is the *Ridge* regression which we interpret as punishing large coefficients (in a loss function sense). The analytic solution is now $\mathbf{\theta} = (\matrix{X}^T \matrix{X} + \lambda \mathbb{I})^{-1}\matrix{X}^T \mathbf{y}$. A full bias-variance analysis (a topic for another post) reveals that this estimator is (unsurprisingly) biased but with lower variance. By restricting our search for parameters which also satisfy our assumption of the underlying parameter distribution, the spread of our optimal parameter will intuitively be smaller at the cost of bias.
+This is the *Ridge* regression which we interpret as punishing large coefficients (in a loss function sense). The analytic solution is now $\mathbf{\theta} = (\matrix{X}^{\top} \matrix{X} + \lambda \mathbb{I})^{-1}\matrix{X}^{\top} \mathbf{y}$. A full bias-variance analysis (a topic for another post) reveals that this estimator is (unsurprisingly) biased but with lower variance. By restricting our search for parameters which also satisfy our assumption of the underlying parameter distribution, the spread of our optimal parameter will intuitively be smaller at the cost of bias.
 
 Another common assumption of the underlying distribution is the Laplace or double-exponential assumption. This corresponds to $p(\theta_j) = \frac{1}{2b}\exp [-\frac{|\theta_j|}{b}]$. This symmetric distribution is much narrower than a gaussian with a much sharper gradient around zero. This shape is useful if we assume that not only are weights evenly distributed about zero, but many weights are *exactly* zero. Such an assumption is present in cases where we know that only a small subset of our feature space is relevant at all (but we don't know apriori which features these are so we measure all of them anyway). An identical treatment to the above discussion on Ridge gives:
 
@@ -143,17 +143,17 @@ I will quickly present why colinearity in the columns of a rectangular matrix ca
 $$
 \begin{align}
 \matrix{X}\mathbf{v} &= \mathbf{0} \\
-\iff \matrix{X}^T(\matrix{X}\mathbf{v}) &= \mathbf{0} \\
-\iff (\matrix{X}^T\matrix{X})\mathbf{v} &= \mathbf{0} \\
+\iff \matrix{X}^{\top}(\matrix{X}\mathbf{v}) &= \mathbf{0} \\
+\iff (\matrix{X}^{\top}\matrix{X})\mathbf{v} &= \mathbf{0} \\
 \end{align}
 $$
 
-Thus, if $\matrix{X}$ is *rank-deficient* (has colinear columns), then the square symmetric matrix $\matrix{X}^T\matrix{X}$ (which is in the regression estimator solution) is non-invertible (must have at least one zero eigenvalue). However, even in the non-extremal case of partial colinearity, we can still encounter numerical issues. We can analyse this in terms of the eigenvalues of $\matrix{X}^T\matrix{X} \equiv \matrix{S}$:
+Thus, if $\matrix{X}$ is *rank-deficient* (has colinear columns), then the square symmetric matrix $\matrix{X}^{\top}\matrix{X}$ (which is in the regression estimator solution) is non-invertible (must have at least one zero eigenvalue). However, even in the non-extremal case of partial colinearity, we can still encounter numerical issues. We can analyse this in terms of the eigenvalues of $\matrix{X}^{\top}\matrix{X} \equiv \matrix{S}$:
 
 $$
 \begin{align}
-\matrix{S} &= \matrix{U}\matrix{\Lambda}\matrix{U}^T \\
-\mathbf{v}^T\matrix{S}\mathbf{v} &= \mathbf{v'}^T\matrix{\Lambda}\mathbf{v'} \\
+\matrix{S} &= \matrix{U}\matrix{\Lambda}\matrix{U}^{\top} \\
+\mathbf{v}^{\top}\matrix{S}\mathbf{v} &= \mathbf{v'}^{\top}\matrix{\Lambda}\mathbf{v'} \\
 &= \sum_{i=1}^m \lambda_i (v'_i)^2 \\
 &= \frac{1}{m}||\matrix{X}\mathbf{v}||^2 \\
 \end{align}
@@ -161,16 +161,16 @@ $$
 
 In the partial colinearity case we have $||\matrix{X}\mathbf{v}|| \ll ||\mathbf{v}||$. Thus from the equality above we see that $\sum_{i=1}^m \lambda_i (v'_i)^2 \ll ||\mathbf{v}||^2$. We interpret this as there being directions (eigenvectors) of $\matrix{S}$ for which the eigenvalue is very small/vanishing. This means that numerical errors in $\matrix{S}^{-1}$ in OLS will blow up as they scale with $\sim \frac{1}{\lambda}$.
 
-In Ridge, our regression estimator is $(\matrix{X}^T \matrix{X} + \lambda_{Ridge} \mathbb{I})^{-1}\matrix{X}^T \mathbf{y}$. The addition of the $\lambda\mathbb{I}$ term pushes any small eigenvalues away from zero. We can see this as a *damping* effect by writing the estimators in terms of the eigenbasis of $\matrix{S}$ $\{\mathbf{u}_i \}_{i=1}^n$ for $\mathbf{u}_i \in \mathbb{R}^n$:
+In Ridge, our regression estimator is $(\matrix{X}^{\top} \matrix{X} + \lambda_{Ridge} \mathbb{I})^{-1}\matrix{X}^{\top} \mathbf{y}$. The addition of the $\lambda\mathbb{I}$ term pushes any small eigenvalues away from zero. We can see this as a *damping* effect by writing the estimators in terms of the eigenbasis of $\matrix{S}$ $\{\mathbf{u}_i \}_{i=1}^n$ for $\mathbf{u}_i \in \mathbb{R}^n$:
 
 $$
 \begin{align}
-\mathbf{\theta}_{OLS} &= \sum_{i=1}^n \frac{\mathbf{u}^T_i \matrix{X}^T \mathbf{y}}{\lambda_i} \mathbf{u}_i \\
-\mathbf{\theta}_{Ridge} &= \sum_{i=1}^n \frac{\mathbf{u}^T_i \matrix{X}^T \mathbf{y}}{\lambda_i + \lambda_{Ridge}} \mathbf{u}_i
+\mathbf{\theta}_{OLS} &= \sum_{i=1}^n \frac{\mathbf{u}^{\top}_i \matrix{X}^{\top} \mathbf{y}}{\lambda_i} \mathbf{u}_i \\
+\mathbf{\theta}_{Ridge} &= \sum_{i=1}^n \frac{\mathbf{u}^{\top}_i \matrix{X}^{\top} \mathbf{y}}{\lambda_i + \lambda_{Ridge}} \mathbf{u}_i
 \end{align}
 $$
 
-The unstable directions are now dampened with an increased denominator in the eigenbasis expansion. We can interpret these directions rather nicely. The directions of small eigenvalues correspond to directions in $\mathbb{R}^n$ which are nearly orthogonal to all the rows of $\matrix{X}$.
+The unstable directions are now dampened with an increased denominator in the eigenbasis expansion. We can interpret these directions rather nicely. The directions of small eigenvalues correspond to directions in $\mathbb{R}^n$ which are nearly orthogonal to all the rows of $\matrix{X}$. More simply, we can observe that $\matrix{X}^{\top}\matrix{X}$ is symmetric positive semi-definite and $\mathbb{I}$ is symmetric positive definite (SPD) thus the weighted sum of the two is SPD which guarantees the inverse exists.
 
 
 
