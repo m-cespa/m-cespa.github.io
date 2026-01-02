@@ -31,13 +31,13 @@ $$
 
 This lends a useful geometric interpretation, although that isn't the focus of this post. We can consider the vector of labels as being expressed as a linear combination of the column space of $\matrix{X}$. Each vector in this column space can be interpreted as the vector of one feature's values for all samples in our dataset. This linear algebra interpretation quickly points to where problems might arise - maybe $\mathbf{y}$ lies outside the span of the column-space. Another common problem is having high colinearity between vectors in this column space which renders the linear mapping represented by the matrix $\matrix{X}$ non-invertible - this can harm numerical stability of solutions or simply make the solution non-existent in the extremal case. We will address this issue later.
 
-I personally prefer working in index notation (the arguments scale easily to arbitrary dimensions) so I'll stick to that. Now that we have our equations formalised, we turn to a probabilistic interpretation to motivate the least \textit{squares} optimisation.
+I personally prefer working in index notation (the arguments scale easily to arbitrary dimensions) so I'll stick to that. Now that we have our equations formalised, we turn to a probabilistic interpretation to motivate the least *squares* optimisation.
 
 ![Whiteboard musings from this morning](images/prob_view_on_lin_reg.jpeg){fig-alt="some whiteboard doodles" width=60% fig-align="left"}
 
 # Why Least Squares?
 
-We define our dataset to be $\mathcal{D} = \{(y_i, \mathbf{x}_i)\}_{i=1}^{N}$. In regression, we generally take the \textit{labels} $y_i$ to be random variables whilst the feature vectors $\mathbf{x}_i$ are treated as exact non-random quantities (this is of course a modelling over-simplification). We must assume some randomness in $y_i$ otherwise the conditional distribution over the labels collapses to a delta cone which we cannot make much use of. It should also be intuitively sensible to assume that our label measurements will be noisy. For the \textit{Ordinary Least Squares} (or OLS) solution, we simply seek to maximise the likelihood of our probabilistic labels given our choice of parameters.
+We define our dataset to be $\mathcal{D} = \{(y_i, \mathbf{x}_i)\}_{i=1}^{N}$. In regression, we generally take the *labels* $y_i$ to be random variables whilst the feature vectors $\mathbf{x}_i$ are treated as exact non-random quantities (this is of course a modelling over-simplification). We must assume some randomness in $y_i$ otherwise the conditional distribution over the labels collapses to a delta cone which we cannot make much use of. It should also be intuitively sensible to assume that our label measurements will be noisy. For the *Ordinary Least Squares* (or OLS) solution, we simply seek to maximise the likelihood of our probabilistic labels given our choice of parameters.
 
 We generally take the noise in our labels to be zero mean-gaussian. This is equivalent to writing $y_i = \mu_i + \xi_i$ where $\xi_i \sim \mathcal{N}(0, \sigma^2)$ and $\mu_i = X_{ij}\theta_j$. This is sumarrised below. 
 
@@ -90,7 +90,7 @@ Seeing as our vectors $\mathbf{y}_i$ are sampled from a gaussian, the arithmetic
 
 # Incorporating Priors
 
-We will now promote the parameters $\theta_j$ to random variables. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, ..., annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or *weighting* than others. More generally, we want to make use of any prior knowledge of the distribution of $\mathbf{\theta}$. This is known as regularisation. We now require a more rigorous Bayesian treatment of the problem. Ultimately, we want to extract a \textit{posterior} distribution over our parameters $\mathbf{\theta}$ given the observed dataset $\mathcal{D}$.
+We will now promote the parameters $\theta_j$ to random variables. Suppose we are trying to predict height in a sample of people. We might collect feature data for each person including: parent height, person weight, parent weight, ..., annual salary etc. Intuitively, some feature variables will be more important and require larger summation coefficient or *weighting* than others. More generally, we want to make use of any prior knowledge of the distribution of $\mathbf{\theta}$. This is known as regularisation. We now require a more rigorous Bayesian treatment of the problem. Ultimately, we want to extract a *posterior* distribution over our parameters $\mathbf{\theta}$ given the observed dataset $\mathcal{D}$.
 
 We first require the standard Bayesian inference step to reach the posterior:
 
@@ -101,7 +101,7 @@ p(\mathbf{\theta} | \mathcal{D}) &= \frac{p(\mathcal{D} | \mathbf{\theta}) p(\ma
 \end{align}
 $$
 
-When optimising in the Bayesian framework, we can drop the $p(\mathcal{D})$ term as it is not a function of $\mathbf{\theta}$ and thus will vanish under any differentiation. Our estimator will now be the maximum a-posteriori estimator (MAP) rather than the MLE. 
+When optimising in the Bayesian framework, we can often drop the $p(\mathcal{D})$ term as it is not a function of $\mathbf{\theta}$ and thus will vanish under any differentiation. Our estimator will now be the maximum a-posteriori estimator (MAP) rather than the MLE. We could alternatively evaluate the exact posterior distribution $p(\mathbf{\theta} | \mathcal{D})$ and evaluate the expectation $\mathbb{E}[\mathbf{\theta} | \mathcal{D}]$. There are few other exact distributions we can extract using the Bayes rule - such as $p_{\mathbf{x}^{\ast}}(y^{\ast} | \mathcal{D}) = \int p_{\mathbf{x}^{\ast}}(y^{\ast} | \mathcal{D}, \mathbf{\theta})p(\mathbf{\theta} | \mathcal{D}) d\mathbf{\theta}$, the *posterior predictive* distribution. Unfortunately these distributions are often computationally expensive to recover due to the integrals involved. We thus proceed with the simpler MAP point estimator.
 
 $$
 \begin{align}
