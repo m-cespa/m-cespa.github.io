@@ -1,0 +1,177 @@
+---
+title: "How to dodge rain, relativistically?"
+author: "Michele Cespa"
+date: "January 13, 2026"
+format: html
+---
+
+*"Study hard what interests you the most in the most undisciplined, irreverent and original manner possible." Richard P. Feynman*
+
+# Introduction
+
+This post is motivated by boredom and the fact I just got extremely wet cycling in the rain. Under the astute recommendation of Feynman, I'll indulge in a rather irreverent discussion. The question is rather simple. Suppose we are moving at relativistic speeds from A to B orthogonal to some relativistic rain, what is the best strategy to avoid getting wet in this transit?
+
+# Special Relativity
+
+I am not going to try and re-derive the bulk of special relativity (for that I recommend David Tong's [notes](https://www.damtp.cam.ac.uk/user/tong/relativity/seven.pdf)). I will provide a few reminders of the useful objects we'll use. We need the concept of a 4-vector which is a 4-dimensional vector whose components transform under the [Lorentz Transform](https://en.wikipedia.org/wiki/Lorentz_transformation). Staying in line with the general notation in relativity, I'll stick to indices. Let $x^{\mu}$ be some 4-vector and our Lorentz Transform be $\Lambda^{\mu}_{\nu}$, then:
+
+$$
+\begin{align}
+x'^{\mu} &= \Lambda^{\mu}_{\nu}x^{\nu}
+\end{align}
+$$
+
+These 4-vectors live in a vector space for which we need to define some metric (to evaluate inner products). It turns out that for special relativity (non-accelerating relativistic bodies), this is the Minkowski metric:
+
+$$
+\begin{align}
+\eta^{\mu\nu} = \begin{bmatrix} -1 & 0 & 0 & 0 \\
+                                0 & 1 & 0 & 0 \\
+                                0 & 0 & 1 & 0 \\
+                                0 & 0 & 0 & 1 \end{bmatrix}
+\end{align}
+$$
+
+The length of a 4-vector is thus defined by the contraction with the components of this metric:
+
+$$
+\begin{align}
+l = \eta_{\mu\nu}x^{\mu}x^{\nu} \equiv x^{\mu}x_{\mu}
+\end{align}
+$$
+
+This length is a scalar with respect to the Lorentz Transform and we generally refer to it as a *Lorentz Scalar*. The Lorentz Transform is the relativistic equivalent of the simpler Galilean Transform which maps coordinates between one frame of reference $S$ and another frame $S'$ moving at some velocity with respect to $S$. Thus these vector contractions are the same in all frames due to their invariance under the transform. This is an incredibly useful property which lets us verify whether something is in fact a 4-vector. The transform between frames can be represented (as mentioned above) through $\Lambda^{\mu}_{\nu}$ which for a transform by a velocity $v$ along the $x$-axis has components:
+
+$$
+\begin{align}
+\Lambda^{\mu}_{\nu} &= \begin{bmatrix} \gamma_v & -\gamma_v \frac{v}{c} & 0 & 0 \\
+                                        -\gamma_v \frac{v}{c} & \gamma_v & 0 & 0 \\
+                                        0 & 0 & 1 & 0 \\
+                                        0 & 0 & 0 & 1
+                                        \end{bmatrix}
+\end{align}
+$$
+
+I'll now introduce one such 4-vector: the 4-velocity (for a derivation of its structure see [here](https://phys.libretexts.org/Courses/University_of_California_Davis/UCD%3A_Physics_9HB__Special_Relativity_and_Thermal_Statistical_Physics/3%3A_Spacetime/3.3%3A_Velocity_and_Acceleration_4-Vectors)). We generally denote the 4-velocity as $u^{\mu}$:
+
+$$
+\begin{align}
+u^{\mu} = \gamma_u (c, \vec{u})
+\end{align}
+$$
+
+The $\gamma_u$ is the (hopefully) familiar Lorentz factor concretely defined as $\gamma_u = \frac{dt}{d\tau}$ where $\tau$ is the proper time as measured by an observer travelling at velocity $u$ and $t$ is the time measured by an outside observer. The *formula* for this factor is:
+
+$$
+\begin{align}
+\gamma_u = \frac{1}{\sqrt{1 - u^2/c^2}}
+\end{align}
+$$
+
+# Particle Flux
+
+A simple model of the rain is as a flux of particles. Classically we can define flux $\vec{\phi} = n\vec{u}$ where $n$ is our particle density and $\vec{u}$ is our velocity. We can postulate a form of an analagous 4-flux using the 4-velocity. We can then adjust any scalar factors by imposing the contraction invariance. Let's suppose that:
+
+$$
+\begin{align}
+\phi^{\mu} = nu^{\mu}
+\end{align}
+$$
+
+We noted that the contraction $\phi^{\mu}\phi_{\mu}$ is invariant in any frame. It is most convenient to evaluate this in the instantaneous rest frame (IRF) of the rain particles in which $u'^{\mu} = (c, \vec{0})$ ($\gamma_{\text{IRF}} = 1$) thus $\phi'^{\mu}\phi'_{\mu} = (n_0c)^2$, denoting the particle density in the IRF as $n_0$. In some general frame of measurement this contraction is:
+
+$$
+\begin{align}
+\phi^{\mu}\phi_{\mu} = n^2\gamma_u^2 (c^2 - u^2) = (nc)^2
+\end{align}
+$$
+
+Equating the invariants we see that the correct factor to put in front of $u^{\mu}$ is simply $n_0$, the IRF density. Thus our 4-vector is $\phi^{\mu} = n_0 u^{\mu}$.
+
+Let's consider a purely vertically travelling flux such that $\vec{u} = (0, 0, u)$. Suppose the unfortunate traveller under this rain is moving at some constant speed $\vec{v} = (v, 0, 0)$ which is orthogonal to $\vec{u}$. We can transform $\phi^{\mu}$ to the traveller's rest frame using $\Lambda^{\mu}_{\nu}$:
+
+$$
+\begin{align}
+\phi'^{\mu} &= \Lambda^{\mu}_{\nu}\phi^{\nu} \\
+&= n_0 \gamma_u (\gamma_v c, -\gamma_v\ v, 0, u)
+\end{align}
+$$
+
+If we model the traveller as some cuboid (cue the physics jokes) we can simply integrate this flux over the surface area of the cuboid. We need not worry about length contractions provided we have the dimensions of the cuboid as measured by the traveller in their rest frame. Let's take a cuboid with dimension $l \times w \times d$ and let $Q$ be the total particles absorbed on the surface per unit time (observer time $\tau$):
+
+$$
+\begin{align}
+Q = n_0 \gamma_u (\gamma_v v lw + u wd)
+\end{align}
+$$
+
+# How to not get wet
+
+Suppose the distance to travel is $L$ measured by the stationary observer meaning this observer measures a time $t = L/v$ for the traveller to complete the trip. In the traveller's frame we must map to $\tau$ the *proper time* (seeing as we have defined $Q$ in the traveller frame). The proper time is $\tau = t/\gamma_v$. Then the total absorbed number of rain particles $N$ is:
+
+$$
+\begin{align}
+N &= Q\tau \\
+&= \frac{L}{\gamma_v v} n_0 \gamma_u (\gamma_v v lw + u wd) \\
+&= Ln_0 \gamma_u w(l + \frac{ud}{\gamma_v v}) \\
+&\propto l + ud \sqrt{\frac{1}{v^2} - \frac{1}{c^2}}
+\end{align}
+$$
+
+We need not even differentiate to see that even if the traveller moves at the speed of light $c$, they will still get a bit wet. Higher velocities will always be favourable to absorb fewer rain particles. There are of course some funky caveats to do with a large body moving at $c$ which I am very much ignoring. I am also ignoring effects to do with angular aberrations.
+
+Up until now I have ignored any $x$ or $y$ components to the rain flux. Let's reintroduce those to make a more accurate model:
+
+$$
+\begin{align}
+\phi'^{\mu} = n_0 \gamma_u (\gamma_v c(1 - \frac{vu_x}{c^2}), \gamma_v(u_x - v), u_y, u_z)
+\end{align}
+$$
+
+Recomputing our flux integral and particle count gives:
+
+$$
+\begin{align}
+Q &\propto \gamma_v|u_x - v|lw + u_y ld + u_z wd \\
+N &\propto a\frac{|u_x - v|}{v} + b\sqrt{\frac{1}{v^2} - \frac{1}{c^2}} \\
+a &= lw \\
+b &= u_yld + u_zwd
+\end{align}
+$$
+
+The second term is monotonically decreasing in $v$ just like before. The term of interest is the first with the absolute value (which is introduced to ensure that we are always absorbing particles and not emitting them). This absolute value introduces a kink in our function which makes the behaviour more interesting by introducing a kink at $v=u_x$. We can visually convince ourselves that the optimal value is $v = u_x$ if the kink is a minimum, otherwise the traveller must simply travel as fast as possible, an unfortunate fate. When does the kink give us a minimum?
+
+$$
+\begin{align}
+\frac{dN}{dv} \propto 
+    \begin{cases}
+        \frac{1}{v^2}(-au_x - b\gamma_v) \text{ for } v \lt u_x \\
+        \frac{1}{v^2}(au_x - b\gamma_v) \text{ for } v \geq u_x
+    \end{cases}
+\end{align}
+$$
+
+Approaching $v=u_x$ from below we see that the derivative is always decreasing, so far so good. Approaching from above we need $\frac{dN}{dv}|_{v\rightarrow u_x^+} \gt 0$ for a minimum at $v=u_x$. This is satisfied if $au_x \gt b\gamma_{u_x}$. In the classical limit we can take $\gamma \approx 1$ which reduces this inequality to:
+
+$$
+\begin{align}
+u_x lw \gt u_y ld + u_z wd
+\end{align}
+$$
+
+We interpret this as saying that if the body area parallel to the direction of motion ($lw$) times the orthogonal rain velocity is greater than the sum of the velocity-area product for the traveller's top and side, then $v = u_x$ is a minimum.
+
+# Some advice
+
+If the rain has a velocity component anti-parallel to your direction of travel, you should always match that velocity. If instead the rain only has a vertical component, you should travel as fast as you can. And if the rain is travelling parallel to your direction of travel, I will let you do some thinking as to what is optimal.
+
+
+
+
+
+
+
+
+
+
+
