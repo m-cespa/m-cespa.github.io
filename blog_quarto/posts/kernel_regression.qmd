@@ -1,0 +1,225 @@
+---
+title: "From Embeddings to Kernels"
+author: "Michele Cespa"
+date: "January 31, 2026"
+format: html
+---
+
+*"Say you were standing with one foot in the oven and one foot in an ice bucket. According to the percentage people, you should be perfectly comfortable." Bobby Bragan*
+
+# Introduction
+Linear regression is an exceedingly useful and popular statistical tool permitting modelling of arbitrarily non-linear functions, up to some error. The way we "bake in" these non-linearities is really the same trickery which drives Neural Networks, except when we do it "properly" we give it a fancy name: kernel methods. Kernel methods provide a vast scope of modelling power and I want to try and give an intuition for why, starting from the familiar problem of linear regression.
+
+# Regression with Embedded Features {#sec-ridge_embed}
+
+As a quick reminder, linear regression posits the following problem:
+$$
+\begin{align}
+y = f(\mathbf{x}) + \xi
+\end{align}
+$$
+
+where $\mathbf{x} \in \mathbb{R}^n$, $y \in \mathbb{R}$ and $\xi$ is some random noise. Importantly, we posit (in a sort of frequentist manner) that there $f \in \mathcal{F}$ where $\mathcal{F}$ is some class of functions. Typically, we take $\mathcal{F}$ to be the class of functions linear in both coefficients $\theta \in \mathbb{R}^n$ and $\mathbf{x}$:
+
+$$
+\begin{align}
+f(\mathbf{x}) = \theta^{\top}\mathbf{x}
+\end{align}
+$$
+
+Provided $f$ is linear in the coefficients $\theta$, the optimisation problem we will end up solving is still a linear programming problem with well-posed solution. This permits us to extend $\mathcal{F}$ to be the class of functions linear in $\theta$ but arbitrarily non-linear in $\mathbf{x}$. We encode this non-linearity by a *basis expansion*:
+
+$$
+\begin{align}
+\phi: \mathbb{R}^n \rightarrow \mathbb{R}^m
+\end{align}
+$$
+
+where typically $m \gt n$ (otherwise we would probably call $\phi$ a projection to a lower-dimensional subspace). We might define one such $\phi$ as:
+
+$$
+\begin{align}
+\phi(\mathbf{x}) = \begin{bmatrix}
+                    x_1 \\
+                    x_1^2 \\
+                    \vdots \\
+                    x_n \\
+                    x_n^2
+                    \end{bmatrix}
+\text{ where $m = 2n$}
+\end{align}
+$$
+
+Any such expansion lets us encode non-linearity in the features. Suppose our dataset is $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$ then we can write the matrix of all these *embedded* feature vectors as $\Phi \in \mathbb{R}^{N \times m}$. The regression solution for the optimal coefficients remains structurally identical seeing as the optimisation problem is unchaned with respect to $\theta$:
+
+$$
+\begin{align}
+\theta^{\ast} = (\Phi^{\top}\Phi)^{-1}\Phi^{\top}\mathbf{y}
+\end{align}
+$$
+
+If we had performed Ridge Regression, the solution would similarly inherit the familiar regularisation term:
+
+$$
+\begin{align}
+\theta_{ridge} = (\Phi^{\top}\Phi + \lambda \mathbb{I})^{-1}\Phi^{\top}\mathbf{y}
+\end{align}
+$$
+
+This all seems very promising, except that we have no idea how to define the right $\phi$ mapping. We could posit a specific function class such as polynomials of some finite degree, or even hand-craft a mapping informed by domain specific knowledge of the features. The answer has of course to do with kernels.
+
+# Kernels {#sec-kernels}
+
+Let $\mathcal{X}$ be a non-empty set and $k: \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ a symmetric function. $k$ is a symmetric positive definite (SPD) kernel if for any $n \in \mathbb{N}$, $(c_1, \ldots, c_n) \subset \mathbb{R}^n$ and $(x_1, \ldots, x_n) \subset \mathcal{X}^n$:
+
+$$
+\begin{align}
+\sum_{i=1}^n \sum_{j=1}^n c_i c_j k(x_i, x_j) \geq 0
+\end{align}
+$$
+
+This definition can equivalently be phrased in terms of linear algebra by letting $\matrix{K} \in \mathbb{R}^{n \times n}$ be the matrix with elements $K_{ij} = k(x_i, x_j)$. Then $k$ is a SPD kernel if $\matrix{K}$ is a SPD matrix. We sometimes call $\matrix{K}$ the kernel or Gram matrix. A common example of a kernel is the Gaussian or RBF (Radial Basis Function) kernel which for $\mathcal{X} \subset \mathbb{R}^d$ and $\gamma \gt 0$ is defined as:
+
+$$
+\begin{align}
+k(x, x') = \exp(-\frac{||x-x'||^2}{\gamma^2})
+\end{align}
+$$
+
+We can think of the kernel generally as a *similarity* measure between two points in our feature space. The functional form of the kernel will end up informing the types of function we can define over this feature space as domain. To see why kernels are useful, we might think of expanding the above gaussian as a Taylor Series to recognise that it encodes an infinite sum of polynomial differences between the features of $x$ and $x'$. This will do away with much of the problem of choosing what embedding map $\phi$ to use.
+
+# Abstract Functions
+
+A common feature of the literature around these sorts of devices is the notion of an abstract function or function symbol. Concretely we say that $f: \mathcal{X} \rightarrow \mathbb{R}$ is the abstract function or function symbol - which for example is the object at the centre of attention in Gaussian Processes. The evaluation of the function $f(x)$ is then simply an element in the range of $f$.
+
+# Reproducing Kernel Hilbert Space (RKHS)
+
+Given a non-empty set $\mathcal{X}$ and a valid kernel $k$ over this set, we can build a [Hilbert Space](https://en.wikipedia.org/wiki/Hilbert_space#:~:text=In%20mathematics%2C%20a%20Hilbert%20space,Euclidean%20space%20to%20infinite%20dimensions.) $\mathcal{H}_k$ of functions on $\mathcal{X}$ equipped with an inner product $\langle \cdot, \cdot \rangle_{\mathcal{H}_k}$ which is an RKHS if:
+
+\begin{list}
+\item[(i)] $\forall x \in \mathcal{X}: \text{ } k(\cdot, x) \in \mathcal{H}_k$ (the basis vectors)
+\item[(ii)] $\forall x \in \mathcal{X}, \forall f \in \mathcal{H}_k: \text{ } f(x) = \langle f, k(\cdot, x) \rangle_{\mathcal{H}_k}$ (the reproducing property)
+\end{list}
+
+From these two properties it follows that:
+$$
+\begin{align}
+k(x, y) = \langle k(\cdot, x), k(\cdot, y) \rangle_{\mathcal{H}_k}
+\end{align}
+$$
+
+The functions $k(\cdot, x)$ are referred to as the *Canonical Feature Map*. To liken this to our earlier embeddings let $\phi(x) = k(\cdot, x)$. We must note that this is an abstract function thus $\phi(x): \mathcal{X} \rightarrow \mathbb{R}$ whereas $\phi: \mathcal{X} \rightarrow \mathcal{H}_k$. The evaluation of this feature map would be $\phi(x)(y) = k(y, x)$. We can think of this $\phi(x)$ as an infinite dimensional array of elements $k(y_i, x)$ where $x$ is fixed and $y_i$ runs over all elements in $\mathcal{X}$. Thus the evaluation $\phi(x)(y)$ is like indexing one of these elements of the infinite dimensional array. With this in mind we can rewrite the inner product above as:
+
+$$
+\begin{align}
+k(x, y) = \langle \phi(x), \phi(y) \rangle_{\mathcal{H}_k}
+\end{align}
+$$
+
+which is now starting to look like a Gram matrix.
+
+The last bit of theory we need here is how to construct $\mathcal{H}_k$ from the set $\mathcal{X}$ and associated kernel $k$:
+$$
+\begin{align}
+\mathcal{H}_0 &= \text{span}\{k(\cdot, x): x \in \mathcal{X} \} \\
+&= \{f = \sum_{i=1}^n c_i k(\cdot, x_i): n \in \mathbb{N}, (c_1, \ldots, c_n) \in \mathbb{R}^n, (x_1, \ldots, x_n) \in \mathcal{X}^n \}
+\end{align}
+$$
+
+We then equip this space with an inner product between its elements. For any $f = \sum_{i=1}^n a_i k(\cdot, x_i)$ and $g = \sum_{j=1}^m b_j k(\cdot, y_j)$ both elements of $\mathcal{H}_0$:
+$$
+\begin{align}
+\langle f, g \rangle_{\mathcal{H}_0} &= \sum_{i=1}^n \sum_{j=1}^m a_i b_j \langle k(\cdot, x_i), k(\cdot, y_j) \rangle_{\mathcal{H}_0} \\
+&= \sum_{i=1}^n \sum_{j=1}^m a_i b_j k(x_i, y_j) \text{ - reproducing property}
+\end{align}
+$$
+
+The RKHS is then the space $\mathcal{H}_0$ under closure of finite norms induced by this inner product. Something to note is that the norm $|| f ||_{\mathcal{H}_k}$ is also a measure of smoothness, with smoother functions having smaller norm.
+
+# Representer Theorem
+For any strictly increasing $\Omega: [0, \infty) \rightarrow \mathbb{R}$ and an empirical risk function $\hat{R}$, the regularised risk:
+$$
+\begin{align}
+\hat{R}(f(x_1), \dots, f(x_N)) + \Omega(||f||_{\mathcal{H}_k})
+\end{align}
+$$
+
+has optimal solution $f^{\ast} = \sum_{i=1}^N \alpha_i k(\cdot, x_i)$ for $\alpha_i \in \mathbb{R}$.
+
+To prove this we split $f$ into $f_{||}$ (in the basis function span) and $f_{\perp}$ (orthogonal to this span):
+$$
+\begin{align}
+f_{||} &\in \text{span}\{k(\cdot, x_i): i=1,\ldots,N \} \\
+f_{\perp} &\in \{f: \langle f_{\perp}, k(\cdot, x_i) \rangle_{\mathcal{H}_k} = 0, i=1\ldots,N\}
+\end{align}
+$$
+
+By the reproducing property $f_{\perp}(x_i) = \langle f_{\perp}, k(\cdot, x_i) \rangle_{\mathcal{H}_k} = 0$. Thus $f(x_i) = f_{||}(x_i)$ by definition. Thus the regulariser term in $\Omega$ is *always* increased if $f_{\perp} \not\equiv 0$. The function yielding the minimum must only have tangential components and thus can be written as a linear combination of basis functions.
+
+# Kernel Ridge Regression (KRR)
+
+In this regression, we posit that the target function $f \in \mathcal{H}_k$. Our optimum is then:
+$$
+\begin{align}
+\hat{R}(f, \lambda) &= \frac{1}{N}\sum_{i=1}^N (f(x_i) - y_i)^2 + \lambda || f ||^2_{\mathcal{H}_k} \\
+f^{\ast} &= \arg\min_{f \in \mathcal{H}_k} \hat{R}(f, \lambda)
+\end{align}
+$$
+
+The regulariser term can be interpreted as punishing less smooth functions. This optimisation looks impossible at first, being over an infinite dimensional space. This turns out not to be a problem thanks to the Representer Theorem. We can substitute the linear basis function expansion into our regularised empirical risk:
+$$
+\begin{align}
+\hat{R}(f, \lambda) &= \frac{1}{N}\sum_{i=1}^N [\sum_{j=1}^N \alpha_i k(x_i, x_j) - y_i]^2 + \lambda \langle f, f \rangle_{\mathcal{H}_k} \\
+&= \frac{1}{N}[\alpha^{\top}\matrix{K}^2\alpha - 2\alpha^{\top}\matrix{K}\mathbf{y} + ||\mathbf{y}||^2] + \lambda \alpha^{\top}\matrix{K}\alpha \\
+\rightarrow \frac{\partial \hat{R}}{\partial \alpha} &= \frac{1}{N}[2\matrix{K}^2\alpha - 2\matrix{K}\mathbf{y} + 2N\lambda\matrix{K}\alpha ] = 0 \\
+\rightarrow \alpha^{\ast} &= (\matrix{K} + N\lambda\mathbb{I}_N)^{-1}\mathbf{y} \\
+\end{align}
+$$
+
+This solution for the optimal linear weights should feel familiar. Substituting these optimal weights into our linear basis expansion allows us to recover our optimal answer function:
+$$
+\begin{align}
+f^{\ast}(x) &= \sum_{i=1}^N \alpha_i k(x, x_i) \\
+&= \mathbf{k}(x, X)^{\top}(\matrix{K} + N\lambda\mathbb{I})^{-1}\mathbf{y}
+\end{align}
+$$
+
+To connect this back to the embedded regression in @sec-ridge_embed setting, we posit the following. Suppose there exists some embedding mapping $\phi: \mathcal{X} \rightarrow \mathbb{R}^m$ where $m$ could be countably infinite such that $k(x_i, x_j) = \matrix{K}_{ij} = \phi(x_i)^{\top}\phi(x_j)$. Note that in our defining kernels in @sec-kernels, we never specified what properties $\mathcal{X}$ ought to have other than being non-empty. Thus the mapping $\phi$ may need to assign a coordinate representation to the elements of $\mathcal{X}$. With this in mind, we can proceed and define the matrix of embedded elements:
+
+$$
+\begin{align}
+\Phi = \begin{bmatrix}
+        \phi(x_1)^{\top} \\
+        \vdots \\
+        \phi(x_N)^{\top}
+        \end{bmatrix} \in \mathbb{R}^{N \times m}
+\end{align}
+$$
+
+Thus the Gram matrix becomes $\matrix{K} = \Phi\Phi^{\top}$. Substituting this into our expression for the optimal KRR function gives:
+
+$$
+\begin{align}
+f^{\ast}(x) &= \mathbf{k}(x, X)^{\top}(\matrix{K} + N\lambda\mathbb{I})^{-1}\mathbf{y} \\
+&= \phi(x)^{\top}\Phi^{\top}(\Phi\Phi^{\top} + N\lambda\mathbb{I})^{-1}\mathbf{y} \\
+&= \phi(x)^{\top}\theta_{ridge}
+\end{align}
+$$
+
+Using the [Woodbury Identity](https://en.wikipedia.org/wiki/Woodbury_matrix_identity) lets us rearrange this into the familiar form:
+
+$$
+\begin{align}
+\theta_{ridge} &= \Phi^{\top}(\Phi\Phi^{\top} + N\lambda\mathbb{I})^{-1}\mathbf{y} \\
+&= (\Phi^{\top}\Phi + N\lambda\mathbb{I})^{-1}\Phi^{\top}\mathbf{y}
+\end{align}
+$$
+
+Now the KRR formulation very clearly coincides exactly with the embedded regression solution. Importantly, we did not need to explicitly specify what the embedding mapping was. We instead inherit the potentially infinite dimensional basis function expansion property directly from the kernel. An important feature to note is that the kernel formulation makes operations scale with the size of the dataset $N$ whereas the embedding formulation scales with the data dimensionality $n$. Often, $N \gg n$ and the analytical kernel method becomes impractically expensive to conduct inference with. Techniques exist to produce finite dimensional approximations of the mapping $\phi \approx \hat{\phi}$ which best satisfies $k(x_i, x_j) \approx \hat{\phi}(x_i)^{\top}\hat{\phi}(x_j)$ to translate the problem to the embedding setting to reduce computational cost (see [here](https://papers.nips.cc/paper_files/paper/2007/hash/013a006f03dbc5392effeb8f18fda755-Abstract.html)).
+
+
+
+
+
+
+
