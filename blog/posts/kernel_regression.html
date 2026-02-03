@@ -228,7 +228,7 @@ f(\mathbf{x}) = \theta^{\top}\mathbf{x}
 \text{ where $m = 2n$}
 \end{align}
 \]</span></p>
-<p>Any such expansion lets us encode non-linearity in the features. Suppose our dataset is <span class="math inline">\(\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N\)</span> then we can write the matrix of all these <em>embedded</em> feature vectors as <span class="math inline">\(\Phi \in \mathbb{R}^{N \times m}\)</span>. The regression solution for the optimal coefficients remains structurally identical seeing as the optimisation problem is unchaned with respect to <span class="math inline">\(\theta\)</span>:</p>
+<p>Any such expansion lets us encode non-linearity in the features. Suppose our dataset is <span class="math inline">\(\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N\)</span> then we can write the matrix of all these <em>embedded</em> feature vectors as <span class="math inline">\(\Phi \in \mathbb{R}^{N \times m}\)</span>. The regression solution for the optimal coefficients remains structurally identical seeing as the optimisation problem is unchanged with respect to <span class="math inline">\(\theta\)</span>:</p>
 <p><span class="math display">\[
 \begin{align}
 \theta^{\ast} = (\Phi^{\top}\Phi)^{-1}\Phi^{\top}\mathbf{y}
