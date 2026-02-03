@@ -50,7 +50,7 @@ $$
 \end{align}
 $$
 
-Any such expansion lets us encode non-linearity in the features. Suppose our dataset is $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$ then we can write the matrix of all these *embedded* feature vectors as $\Phi \in \mathbb{R}^{N \times m}$. The regression solution for the optimal coefficients remains structurally identical seeing as the optimisation problem is unchaned with respect to $\theta$:
+Any such expansion lets us encode non-linearity in the features. Suppose our dataset is $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$ then we can write the matrix of all these *embedded* feature vectors as $\Phi \in \mathbb{R}^{N \times m}$. The regression solution for the optimal coefficients remains structurally identical seeing as the optimisation problem is unchanged with respect to $\theta$:
 
 $$
 \begin{align}
