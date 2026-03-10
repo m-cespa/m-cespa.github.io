@@ -371,24 +371,7 @@ section {
     margin: auto 0;
 }
 
-/* EXPERIENCE SECTION */
-
-#experience {
-    position: relative;
-}
-
-.experience-sub-title {
-    color: rgb(85, 85, 85);
-    font-weight: 600;
-    font-size: 1.75rem;
-    margin-bottom: 1rem;    
-}
-
-.experience-details-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
+/* ICONS & ARTICLES */
 
 .article-container {
     display: flex;
