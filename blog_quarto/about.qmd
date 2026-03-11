@@ -28,4 +28,4 @@ I recently got a whiteboard and find myself working on random problems,
 often over breakfast. I find it useful to write down what I work on - 
 explaining stuff tends to help the explain-er just as much as the explain-ee. 
 Some posts might be longer discussions on bits of maths/CS/physics I stumble across, 
-others might be a one-off interesting problem. That's the jist of this blog.
+others might be a one-off interesting problem. That's the gist of this blog.
