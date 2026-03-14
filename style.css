@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Luxurious+Roman&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
 
 /* Page layout */
 * {
@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: "Poppins", "sans-serif";
+    font-family: "Titillium Web", sans-serif;
     background-color: rgb(245, 245, 235); 
 }
 
@@ -161,7 +161,7 @@ a:hover {
 
 section {
     padding-top: 4vh;
-    height: 96vh;
+    height: 60vh;
     margin: 0 10rem;
     box-sizing: border-box;
     min-height: fit-content;
@@ -177,7 +177,7 @@ section {
     display: flex;
     justify-content: center;
     gap: 5rem;
-    height: 80vh;
+    height: 70vh !important;
     flex-wrap: wrap; /* Allows content to wrap on smaller screens */
     padding: 1rem; /* Adds spacing on smaller screens */
 }
@@ -270,7 +270,7 @@ section {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     margin: 1em auto 0 auto; /* Center the container itself */
 }
 
@@ -278,6 +278,7 @@ section {
     width: 100%;
     display: block; /* Changing from flex to block is often safer for single-paragraph centering */
     text-align: center;
+    font-size: 120%;
 }
 
 .text-container p {
@@ -286,6 +287,11 @@ section {
     width: 100%;
     line-height: 1.6; /* Improves readability */
     padding: 0 1em; /* Prevents text from touching edges on mobile */
+}
+
+.reading-list {
+    color: rgb(85, 85, 85);
+    display: block;
 }
 
 /* ICONS & ARTICLES */
