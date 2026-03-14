@@ -289,11 +289,6 @@ section {
     padding: 0 1em; /* Prevents text from touching edges on mobile */
 }
 
-.reading-list {
-    color: rgb(85, 85, 85);
-    display: block;
-}
-
 /* ICONS & ARTICLES */
 
 .article-container {
