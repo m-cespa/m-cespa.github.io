@@ -253,122 +253,39 @@ section {
 
 #about {
     position: relative;
-}
-
-.about-containers {
-    margin-top: 3rem;
-    display: flex;
-    gap: 2rem;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    width: 100%;
-  }  
-
-.about-details-container {
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    max-width: 700px;
-}
-
-.education-details-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 500px; /* wider than the default 700px */
-    gap: 2rem;
-}
-
-.about-containers,
-.about-details-container {
-  display: flex;
-}
-
-.about-pic {
-    border-radius: 2rem;
-    width: 350px;
-    height: 350px;
-}
-
-.details-container {
-    padding: 1.5rem;
-    flex: 1;
-    background: rgb(247, 247, 237);
-    border-radius: 2rem;
-    border: rgb(53, 53, 53) 0.1rem solid;
-    border-color: rgb(163, 163, 163);
-    text-align: left;
-}
-
-.custom-bullet-list {
-    list-style-type: none; /* Remove default list bullets */
-    padding: 0.3rem;
-    margin: 0;
-}
-
-.custom-bullet-item {
-    display: flex;
-    align-items: flex-start; /* Align the items at the top */
-    gap: 1rem; /* Space between the image and the text */
-    margin-bottom: 0.5rem; /* Add some space between list items */
-}
-
-.custom-bullet-item img {
-    object-fit: contain; /* Ensure the image fits without distortion */
-    flex-shrink: 0; /* Prevent shrinking the image */
-    width: 20px; /* Set the image size for Education section */
-    height: 20px; /* Set the image size for Education section */
-    margin-top: 0;
-    vertical-align: top;
-}
-
-.custom-bullet-item.type-1 img {
-    width: 25px; /* Set the image size for type-1 */
-    height: 25px; /* Set the image size for type-1 */
-}
-
-.custom-bullet-item.type-2 img {
-    margin-top: 0.13rem;
-    width: 15px; /* Set the image size for type-1 */
-    height: 15px; /* Set the image size for type-1 */
-}
-
-.custom-bullet-item.type-3 img {
-    margin-top: -0.25rem;
-    width: 30px;
-    height: 30px;
-}
-
-.custom-bullet-item .text-container {
-    display: flex;
-    flex-direction: column; /* Stack main text and secondary text vertically */
-    gap: 0.25rem; /* Space between main text and secondary text */
-    flex-grow: 1; /* Allow text container to take up the remaining space */
-}
-
-.custom-bullet-item .main-text {
-    display: block;
-    font-size: 0.82rem; /* Regular font size for the main text */
-    font-weight: normal; /* Bold for emphasis */
-    line-height: 1.5; /* Line height for readability */
-}
-
-.custom-bullet-item .secondary-text {
-    font-size: 0.72rem; /* Smaller font size for the second line */
-    color: #888; /* Grey color for the second line */
-    margin-top: 0.25rem; /* Add a small space between the lines */
+    padding-top: 0em;
 }
 
 .section-container {
-    gap: 4rem;
-    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    width: 100%; /* Ensure it takes full width to calculate the center correctly */
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
-.section__pic-container {
-    height: 400px;
-    width: 400px;
-    margin: auto 0;
+.about-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    margin: 1em auto 0 auto; /* Center the container itself */
+}
+
+.text-container {
+    width: 100%;
+    display: block; /* Changing from flex to block is often safer for single-paragraph centering */
+    text-align: center;
+}
+
+.text-container p {
+    display: inline-block; /* Allows the text to be centered as a block */
+    text-align: center;
+    width: 100%;
+    line-height: 1.6; /* Improves readability */
+    padding: 0 1em; /* Prevents text from touching edges on mobile */
 }
 
 /* ICONS & ARTICLES */
@@ -423,6 +340,16 @@ article div {
 
 #projects {
     position: relative;
+}
+
+.details-container {
+    padding: 1.5rem;
+    flex: 1;
+    background: rgb(247, 247, 237);
+    border-radius: 2rem;
+    border: rgb(53, 53, 53) 0.1rem solid;
+    border-color: rgb(163, 163, 163);
+    text-align: left;
 }
 
 .color-container {
