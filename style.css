@@ -376,16 +376,6 @@ article div {
     gap: 1rem;
 }
 
-/* .details-container {
-    padding: 1.5rem;
-    flex: 1;
-    background: white;
-    border-radius: 2rem;
-    border: rgb(53, 53, 53) 0.1rem solid;
-    border-color: rgb(163, 163, 163);
-    text-align: left;
-} */
-
 .projects-details-container {
     position: relative;
     flex: 0 0 300px; /* Fixed width for uniform size */
@@ -530,7 +520,6 @@ footer {
     padding: 2rem 0;
 }
 
-/* Blog intro section */
 .blog-intro-container-blog {
     display: flex;
     flex-direction: column;
@@ -556,9 +545,6 @@ footer {
     text-decoration: underline;
 }
 
-/* ----------------------------------------------
-   Simple clickable blog list
-   ---------------------------------------------- */
    .blog-list {
     list-style: none;
     padding: 0;
