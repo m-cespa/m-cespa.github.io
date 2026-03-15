@@ -210,6 +210,8 @@ section {
 .title {
     font-size: 3rem;
     text-align: center;
+    min-width: 300px;
+    min-height: 1.2em;
 }
 
 #socials-container {
