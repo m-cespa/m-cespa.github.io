@@ -387,7 +387,7 @@ article div {
 .projects-details-container {
     position: relative;
     flex: 0 0 300px; /* Fixed width for uniform size */
-    height: 400px; /* Fixed height */
+    height: 380px; /* Fixed height */
     border: 1px solid rgb(163, 163, 163); /* Light grey border */
     border-radius: 1rem; /* Rounded corners */
     background: rgb(247, 247, 237);
@@ -416,14 +416,14 @@ article div {
 .project-img {
     width: 100%; /* Make the image fill the width of the container */
     height: auto; /* Maintain aspect ratio */
-    max-height: 200px; /* Limit the height to ensure it doesn't become too tall */
+    max-height: 180px; /* Limit the height to ensure it doesn't become too tall */
     object-fit: cover; /* Ensure the image covers the area without distorting */
     border-radius: 1rem; /* Slightly rounded corners for a cleaner look */
 }
 
 .project-sub-title {
     position: absolute;
-    top: 14rem;
+    top: 13rem;
     color: rgb(85, 85, 85);
     font-weight: 600;
     font-size: 1.75rem;   
