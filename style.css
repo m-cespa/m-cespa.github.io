@@ -278,17 +278,18 @@ section {
 
 .text-container {
     width: 100%;
-    display: block; /* Changing from flex to block is often safer for single-paragraph centering */
+    display: block;
     text-align: center;
     font-size: 120%;
 }
 
 .text-container p {
-    display: inline-block; /* Allows the text to be centered as a block */
+    display: inline-block;
     text-align: center;
     width: 100%;
     line-height: 1.6; /* Improves readability */
-    padding: 0 1em; /* Prevents text from touching edges on mobile */
+    padding: 0;
+    margin: 0 auto;
 }
 
 
