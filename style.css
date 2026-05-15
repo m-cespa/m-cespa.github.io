@@ -354,7 +354,7 @@ article div {
     border-radius: 2rem;
     border: rgb(53, 53, 53) 0.1rem solid;
     border-color: rgb(163, 163, 163);
-    text-align: left;
+    text-align: center;
 }
 
 .color-container {
@@ -384,7 +384,7 @@ article div {
     border: 1px solid rgb(163, 163, 163); /* Light grey border */
     border-radius: 1rem; /* Rounded corners */
     background: rgb(247, 247, 237);
-    padding: 1rem; /* Padding for content spacing */
+    padding: 0.8rem; /* Padding for content spacing */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -407,11 +407,13 @@ article div {
 }
 
 .project-img {
-    width: 100%; /* Make the image fill the width of the container */
+    width: 80%; /* Make the image fill the width of the container */
     height: auto; /* Maintain aspect ratio */
-    max-height: 180px; /* Limit the height to ensure it doesn't become too tall */
+    max-height: 150px; /* Limit the height to ensure it doesn't become too tall */
     object-fit: cover; /* Ensure the image covers the area without distorting */
     border-radius: 1rem; /* Slightly rounded corners for a cleaner look */
+    position: absolute;
+    top: 3rem;
 }
 
 .project-sub-title {
@@ -425,6 +427,13 @@ article div {
 .project-title {
     margin: 1rem;
     color: black;
+}
+
+.project-date {
+    top: 0.8rem;
+    color: rgb(85, 85, 85);
+    font-weight: 600;
+    font-size: 1.2rem;   
 }
 
 .project-btn-container {
