@@ -19,7 +19,7 @@ y = f(\mathbf{x}) + \xi
 \end{align}
 $$
 
-where $\mathbf{x} \in \mathbb{R}^n$, $y \in \mathbb{R}$ and $\xi$ is some random noise. Importantly, we posit (in a sort of frequentist manner) that there $f \in \mathcal{F}$ where $\mathcal{F}$ is some class of functions. Typically, we take $\mathcal{F}$ to be the class of functions linear in both coefficients $\theta \in \mathbb{R}^n$ and $\mathbf{x}$:
+where $\mathbf{x} \in \mathbb{R}^n$, $y \in \mathbb{R}$ and $\xi$ is some random noise. Importantly, we posit (in a sort of frequentist manner) that there exists some $f \in \mathcal{F}$ where $\mathcal{F}$ is some class of functions. Typically, we take $\mathcal{F}$ to be the class of functions linear in both coefficients $\theta \in \mathbb{R}^n$ and $\mathbf{x}$:
 
 $$
 \begin{align}
@@ -70,7 +70,7 @@ This all seems very promising, except that we have no idea how to define the rig
 
 # Kernels {#sec-kernels}
 
-Let $\mathcal{X}$ be a non-empty set and $k: \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ a symmetric function. $k$ is a symmetric positive definite (SPD) kernel if for any $n \in \mathbb{N}$, $(c_1, \ldots, c_n) \subset \mathbb{R}^n$ and $(x_1, \ldots, x_n) \subset \mathcal{X}^n$:
+Let $\mathcal{X}$ be a non-empty set and $k: \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$ a symmetric function, $k$ is a symmetric positive definite (SPD) kernel if for any $n \in \mathbb{N}$, $(c_1, \ldots, c_n) \in \mathbb{R}^n$ and $(x_1, \ldots, x_n) \in \mathcal{X}^n$:
 
 $$
 \begin{align}
@@ -86,20 +86,20 @@ k(x, x') = \exp(-\frac{||x-x'||^2}{\gamma^2})
 \end{align}
 $$
 
-We can think of the kernel generally as a *similarity* measure between two points in our feature space. The functional form of the kernel will end up informing the types of function we can define over this feature space as domain. To see why kernels are useful, we might think of expanding the above gaussian as a Taylor Series to recognise that it encodes an infinite sum of polynomial differences between the features of $x$ and $x'$. This will do away with much of the problem of choosing what embedding map $\phi$ to use.
+(Note that we can use an arbitrary square norm in the above to accomodate for arbitrary spaces $\mathcal{X}$.)
+
+We can think of the kernel generally as a *similarity* measure between two points in our feature space. The functional form of the kernel will end up informing the types of function we can define over this feature space as domain. To see why kernels are useful, we might think of expanding the above RBF kernel as a Taylor Series to recognise that it encodes an infinite sum of polynomial differences between the features of $x$ and $x'$. This will do away with much of the problem of choosing what embedding map $\phi$ to use.
 
 # Abstract Functions
 
-A common feature of the literature around these sorts of devices is the notion of an abstract function or function symbol. Concretely we say that $f: \mathcal{X} \rightarrow \mathbb{R}$ is the abstract function or function symbol - which for example is the object at the centre of attention in Gaussian Processes. The evaluation of the function $f(x)$ is then simply an element in the range of $f$.
+For those unfamiliar with the notation, we briefly summarise the stricter idea of a function symbol or *abstract function* versus an *evaluated function*. Concretely we say that $f: \mathcal{X} \rightarrow \mathbb{R}$ is the abstract function -- which for example is the object at the centre of attention in Gaussian Processes. The evaluation of the function $f(x)$ is then simply an element in the range of $f$.
 
 # Reproducing Kernel Hilbert Space (RKHS)
 
 Given a non-empty set $\mathcal{X}$ and a valid kernel $k$ over this set, we can build a [Hilbert Space](https://en.wikipedia.org/wiki/Hilbert_space#:~:text=In%20mathematics%2C%20a%20Hilbert%20space,Euclidean%20space%20to%20infinite%20dimensions.) $\mathcal{H}_k$ of functions on $\mathcal{X}$ equipped with an inner product $\langle \cdot, \cdot \rangle_{\mathcal{H}_k}$ which is an RKHS if:
 
-\begin{list}
-\item[(i)] $\forall x \in \mathcal{X}: \text{ } k(\cdot, x) \in \mathcal{H}_k$ (the basis vectors)
-\item[(ii)] $\forall x \in \mathcal{X}, \forall f \in \mathcal{H}_k: \text{ } f(x) = \langle f, k(\cdot, x) \rangle_{\mathcal{H}_k}$ (the reproducing property)
-\end{list}
+1. $\forall x \in \mathcal{X}: k(\cdot, x) \in \mathcal{H}_k$ (the basis vectors)
+2. $\forall x \in \mathcal{X}, \forall f \in \mathcal{H}_k: f(x) = \langle f, k(\cdot, x) \rangle_{\mathcal{H}_k}$ (the reproducing property)
 
 From these two properties it follows that:
 $$
@@ -108,7 +108,7 @@ k(x, y) = \langle k(\cdot, x), k(\cdot, y) \rangle_{\mathcal{H}_k}
 \end{align}
 $$
 
-The functions $k(\cdot, x)$ are referred to as the *Canonical Feature Map*. To liken this to our earlier embeddings let $\phi(x) = k(\cdot, x)$. We must note that this is an abstract function thus $\phi(x): \mathcal{X} \rightarrow \mathbb{R}$ whereas $\phi: \mathcal{X} \rightarrow \mathcal{H}_k$. The evaluation of this feature map would be $\phi(x)(y) = k(y, x)$. We can think of this $\phi(x)$ as an infinite dimensional array of elements $k(y_i, x)$ where $x$ is fixed and $y_i$ runs over all elements in $\mathcal{X}$. Thus the evaluation $\phi(x)(y)$ is like indexing one of these elements of the infinite dimensional array. With this in mind we can rewrite the inner product above as:
+The function $k(\cdot, x)$ are referred to as the *Canonical Feature Map*. To liken this to our earlier embeddings let $\phi(x) = k(\cdot, x)$. We must note that this is an abstract function thus $\phi(x): \mathcal{X} \rightarrow \mathbb{R}$ whereas $\phi: \mathcal{X} \rightarrow \mathcal{H}_k$. The evaluation of this feature map would be $\phi(x)(y) = k(y, x)$. We can think of this $\phi(x)$ as an infinite dimensional array of elements $k(y_i, x)$ where $x$ is fixed and $y_i$ runs over all elements in $\mathcal{X}$. Thus the evaluation $\phi(x)(y)$ is like indexing one of these elements of the infinite dimensional array. With this in mind we can rewrite the inner product above as:
 
 $$
 \begin{align}
@@ -130,14 +130,14 @@ We then equip this space with an inner product between its elements. For any $f 
 $$
 \begin{align}
 \langle f, g \rangle_{\mathcal{H}_0} &= \sum_{i=1}^n \sum_{j=1}^m a_i b_j \langle k(\cdot, x_i), k(\cdot, y_j) \rangle_{\mathcal{H}_0} \\
-&= \sum_{i=1}^n \sum_{j=1}^m a_i b_j k(x_i, y_j) \text{ - reproducing property}
+&= \sum_{i=1}^n \sum_{j=1}^m a_i b_j k(x_i, y_j) \quad \text{(reproducing property)}
 \end{align}
 $$
 
-The RKHS is then the space $\mathcal{H}_0$ under closure of finite norms induced by this inner product. Something to note is that the norm $|| f ||_{\mathcal{H}_k}$ is also a measure of smoothness, with smoother functions having smaller norm.
+The RKHS is then the space $\mathcal{H}_0$ under closure of finite norms induced by this inner product. Something to note is that the norm $\|f\|_{\mathcal{H}_k}$ is also a measure of smoothness, with smoother functions having smaller norm.
 
 # Representer Theorem
-For any strictly increasing $\Omega: [0, \infty) \rightarrow \mathbb{R}$ and an empirical risk function $\hat{R}$, the regularised risk:
+We now consider a finite dataset of points $x_1, \ldots, x_N \in \mathcal{X}$ on which we can define a subspace of our RKHS $\tilde{\mathcal{H}}_k = \text{span}\{k(\cdot, x_i): i=1,\ldots,N \} \subset \mathcal{H}_k$. For any strictly increasing $\Omega: [0, \infty) \rightarrow \mathbb{R}$ and an empirical risk function $\hat{R}$, the regularised risk:
 $$
 \begin{align}
 \hat{R}(f(x_1), \dots, f(x_N)) + \Omega(||f||_{\mathcal{H}_k})
@@ -146,22 +146,22 @@ $$
 
 has optimal solution $f^{\ast} = \sum_{i=1}^N \alpha_i k(\cdot, x_i)$ for $\alpha_i \in \mathbb{R}$.
 
-To prove this we split $f$ into $f_{||}$ (in the basis function span) and $f_{\perp}$ (orthogonal to this span):
+To prove this we split $f$ into $f_{\parallel}$ (in the subspace) and $f_{\perp}$ (orthogonal to the subspace) -- defining $f_{\parallel}$ and $f_{\perp}$ such that $f(x) = f_{\parallel}(x) + f_{\perp}(x)$:
 $$
 \begin{align}
-f_{||} &\in \text{span}\{k(\cdot, x_i): i=1,\ldots,N \} \\
-f_{\perp} &\in \{f: \langle f_{\perp}, k(\cdot, x_i) \rangle_{\mathcal{H}_k} = 0, i=1\ldots,N\}
+f_{\parallel} &\in \tilde{\mathcal{H}}_k \\
+f_{\perp} &\in \{f': \langle f', k(\cdot, x_i) \rangle_{\mathcal{H}_k} = 0, i=1\ldots,N\}
 \end{align}
 $$
 
-By the reproducing property $f_{\perp}(x_i) = \langle f_{\perp}, k(\cdot, x_i) \rangle_{\mathcal{H}_k} = 0$. Thus $f(x_i) = f_{||}(x_i)$ by definition. Thus the regulariser term in $\Omega$ is *always* increased if $f_{\perp} \not\equiv 0$. The function yielding the minimum must only have tangential components and thus can be written as a linear combination of basis functions.
+By the reproducing property $f_{\perp}(x_i) = \langle f_{\perp}, k(\cdot, x_i) \rangle_{\mathcal{H}_k} = 0$. Thus the norm splits into components $\|f\|^2_{\mathcal{H}_k} = \|f_{\parallel}\|^2_{\mathcal{H}_k} + \|f_{\perp}\|^2_{\mathcal{H}_k}$ and for any $x_i$ in our finite dataset, $f(x_i) = f_{\parallel}(x_i)$ by definition. Thus the regulariser term in $\Omega$ is *always* increased if $f_{\perp} \not\equiv 0$. The function yielding the minimum must then be a linear combination of basis functions $k(\cdot, x_i)$ from the subspace.
 
 # Kernel Ridge Regression (KRR)
 
 In this regression, we posit that the target function $f \in \mathcal{H}_k$. Our optimum is then:
 $$
 \begin{align}
-\hat{R}(f, \lambda) &= \frac{1}{N}\sum_{i=1}^N (f(x_i) - y_i)^2 + \lambda || f ||^2_{\mathcal{H}_k} \\
+\hat{R}(f, \lambda) &= \frac{1}{N}\sum_{i=1}^N (f(x_i) - y_i)^2 + \lambda \|f\|^2_{\mathcal{H}_k} \\
 f^{\ast} &= \arg\min_{f \in \mathcal{H}_k} \hat{R}(f, \lambda)
 \end{align}
 $$
@@ -169,10 +169,10 @@ $$
 The regulariser term can be interpreted as punishing less smooth functions. This optimisation looks impossible at first, being over an infinite dimensional space. This turns out not to be a problem thanks to the Representer Theorem. We can substitute the linear basis function expansion into our regularised empirical risk:
 $$
 \begin{align}
-\hat{R}(f, \lambda) &= \frac{1}{N}\sum_{i=1}^N [\sum_{j=1}^N \alpha_i k(x_i, x_j) - y_i]^2 + \lambda \langle f, f \rangle_{\mathcal{H}_k} \\
-&= \frac{1}{N}[\alpha^{\top}\matrix{K}^2\alpha - 2\alpha^{\top}\matrix{K}\mathbf{y} + ||\mathbf{y}||^2] + \lambda \alpha^{\top}\matrix{K}\alpha \\
-\rightarrow \frac{\partial \hat{R}}{\partial \alpha} &= \frac{1}{N}[2\matrix{K}^2\alpha - 2\matrix{K}\mathbf{y} + 2N\lambda\matrix{K}\alpha ] = 0 \\
-\rightarrow \alpha^{\ast} &= (\matrix{K} + N\lambda\mathbb{I}_N)^{-1}\mathbf{y} \\
+\hat{R}(f, \lambda) &= \frac{1}{N}\sum_{i=1}^N [\sum_{j=1}^N \alpha_j k(x_i, x_j) - y_i]^2 + \lambda \langle f, f \rangle_{\mathcal{H}_k} \\
+&= \frac{1}{N}[\alpha^{\top}\matrix{K}^2\alpha - 2\alpha^{\top}\matrix{K}\mathbf{y} + \|\mathbf{y}\|^2] + \lambda \alpha^{\top}\matrix{K}\alpha \\
+\Rightarrow \frac{\partial \hat{R}}{\partial \alpha} &= \frac{1}{N}[2\matrix{K}^2\alpha - 2\matrix{K}\mathbf{y} + 2N\lambda\matrix{K}\alpha ] = 0 \\
+\Rightarrow \alpha^{\ast} &= (\matrix{K} + N\lambda\mathbb{I}_N)^{-1}\mathbf{y} \\
 \end{align}
 $$
 
