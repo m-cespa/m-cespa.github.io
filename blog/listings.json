@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/probabilistic_view_on_lin_reg.html",
+      "/posts/dynamicprog.html",
       "/posts/kernel_regression.html",
       "/posts/relativistic_rain.html",
       "/posts/blackjack.html",

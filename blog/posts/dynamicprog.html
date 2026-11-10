@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Michele Cespa">
+<meta name="dcterms.date" content="2026-11-10">
+
+<title>A Tutorial on Dynamic Programming – myblog</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d31a0c91b01e363be7b7a36e602e2c70.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">myblog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/m-cespa"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">A Tutorial on Dynamic Programming</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Michele Cespa </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 10, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#the-bellman-equation" id="toc-the-bellman-equation" class="nav-link" data-scroll-target="#the-bellman-equation">The Bellman Equation</a></li>
+  <li><a href="#solution-by-backwards-induction" id="toc-solution-by-backwards-induction" class="nav-link" data-scroll-target="#solution-by-backwards-induction">Solution by Backwards Induction</a>
+  <ul class="collapse">
+  <li><a href="#example-1-transportation-problem" id="toc-example-1-transportation-problem" class="nav-link" data-scroll-target="#example-1-transportation-problem">Example 1: Transportation Problem</a></li>
+  <li><a href="#example-2-tree-cutting" id="toc-example-2-tree-cutting" class="nav-link" data-scroll-target="#example-2-tree-cutting">Example 2: Tree Cutting</a></li>
+  <li><a href="#example-3-probabilistic-parking-problem" id="toc-example-3-probabilistic-parking-problem" class="nav-link" data-scroll-target="#example-3-probabilistic-parking-problem">Example 3: Probabilistic Parking Problem</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<p><em>“Dynamic Programming is hard…” many a SWE interview candidate</em></p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>I am far from a competititve programmer and perhaps that will make my explanations and examples more amenable to the non-initiated. I never came across Dynamic Programming (or more generally Backwards Induction) in my Physics undergrad so it was quite unfamiliar turf when I started learning. Ironically I now quite enjoy these types of problems as a “respite” from the more mathematically involved stuff that comes up in my studies. Anyhow, I am far from the first to have had the rude awakening at some point that without a little practice, you can be great at a lot of maths and suck at Dynamic Programming – <a href="https://www.reddit.com/r/learnprogramming/comments/3tz9a3/is_it_just_me_or_is_dynamic_programming_very/">here</a> is an old subreddit on the topic.</p>
+<p>Over the year or so, I’ve been accruing a bank of problems I’ve quite liked, simple problems that don’t require textbook proofs. Eventually I want to make all these problems and their worked solutions available on my website in a perhaps more organised format than a blog post. As an introduction to the educational blogpost genre, I want to tackle Dynamic Programming.</p>
+</section>
+<section id="the-bellman-equation" class="level1">
+<h1>The Bellman Equation</h1>
+<p>A quick scroll through <a href="https://en.wikipedia.org/wiki/Richard_Bellman">Richard Bellman’s</a> wikipedia is a good place to start to get a sense of where Dynamic Programming (and its modern much more involved counterpart, Reinforcement Learning) come from. We label states as <span class="math inline">\(s \in \mathcal{S}\)</span> and for every state we can define a set of valid actions <span class="math inline">\(\mathcal{A}(s)\)</span>. We then define two useful functions:</p>
+<ol type="1">
+<li>The optimal state value function <span class="math inline">\(V(s)\)</span></li>
+<li>The action value function <span class="math inline">\(Q(a; s)\)</span> – where we write <span class="math inline">\((a; s)\)</span> as a notational reminder that <span class="math inline">\(a \in \mathcal{A}(s)\)</span> and there is a dependence on the state</li>
+<li>The state transition function <span class="math inline">\(T(s, a)\)</span></li>
+</ol>
+<p>The idea proposed by Bellman is that we should seek an “optimal substructure”. This natively lends itself to a recursive definition which I think makes most sense in form of an equation:</p>
+<p><span class="math display">\[
+\begin{equation}
+V(s) = \max_{a \in \mathcal{A}(s)} \{ Q(a; s) + V(T(s, a)) \}
+\end{equation}
+\]</span></p>
+<p>Breaking the equation up, it says:</p>
+<p><em>“The action defining the optimal value at state s is the action with sum of action value and next state optimal value which is maximal”</em></p>
+<p>This definition works because we are consider the <em>optimal</em> state value at all possible next states. Thus if an action’s action value added with the transitioned state’s optimal state value is maximal, the current state’s value is maximal if taking this action – perhaps verbose but give this a think and it does in fact make sense. We note that we can have <em>negative</em> action value which we might think of as an action <em>cost</em>. In simpler problems, the action value is explicitly defined by the problem. In other settings, the action value may not be so obvious and may itself need defining through some recursion. We will tackle these simpler problems first.</p>
+</section>
+<section id="solution-by-backwards-induction" class="level1">
+<h1>Solution by Backwards Induction</h1>
+<p>We could solve the Bellman Equation recursively, but if you are familiar with recursion you will also be familiar with the exponential compute scaling. Instead, we want to proceed by <em>Backwards Induction</em>. We may have some domain knowledge of the problem (or “boundary conditions”) which fix the optimal value of certain states. Any such states are known as <em>terminal</em> states. Terminal states have the property that <span class="math inline">\(\mathcal{A}(s) = \emptyset\)</span> and thus the Bellman Equation does not apply to them – their value must be defined by the problem itself. Once defined, the value of any states which neighbour only terminal states can be readily evaluated too…and so on. Any state which neighbours states with optimal value already evaluated, can itself be evaluated. Hopefully the <em>backwards</em> direction of this strategy is apparent.</p>
+<p>I will now present some examples in escalating difficulty.</p>
+<section id="example-1-transportation-problem" class="level2">
+<h2 class="anchored" data-anchor-id="example-1-transportation-problem">Example 1: Transportation Problem</h2>
+<p><strong>Problem:</strong> You start at node <span class="math inline">\(1\)</span> of <span class="math inline">\(N\)</span>. Walking from state <span class="math inline">\(n\)</span> to <span class="math inline">\(n+1\)</span> takes <span class="math inline">\(1\)</span> minute. Taking a magic tram from state <span class="math inline">\(n\)</span> to <span class="math inline">\(2n\)</span> takes 2 minutes. You can only take the magic tram if <span class="math inline">\(2n \leq N\)</span>. What is the shortest time to travel from <span class="math inline">\(1\)</span> to <span class="math inline">\(N\)</span>?</p>
+<p>We begin by defining the state space <span class="math inline">\(\mathcal{S} = \{1, \ldots, N\}\)</span>. The terminal state here is <span class="math inline">\(N\)</span> with <span class="math inline">\(V(N) = 0\)</span>. The problem asks for <span class="math inline">\(V(1)\)</span>. We can also write the action value function for <span class="math inline">\(\mathcal{A}(s) = \{0, 1\}\)</span> where <span class="math inline">\(0\)</span> denotes walking and <span class="math inline">\(1\)</span> denotes taking the magic tram. <span class="math display">\[
+\begin{align}
+Q(0; s) &amp;= 1 \quad \text{with} \quad T(s, 0) = s+1 \\
+Q(1; s) &amp;= 2 \quad \text{with} \quad T(s, 1) = 2s
+\end{align}
+\]</span></p>
+<p>Now writing the Bellman Equation results in (noting that here we seek to <em>minimise</em> state value): <span class="math display">\[
+\begin{equation}
+    V(s) = \min \{V(s+1) + 1, V(2s) + 2 \}
+\end{equation}
+\]</span></p>
+<p>We can program this easily (taking into account trams which would go out of bounds):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> transportation_problem(N: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> (N<span class="op">+</span><span class="dv">1</span>) <span class="co"># leave 0th cell blank for convenience so we can 1-index</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        can_two_step <span class="op">=</span> <span class="dv">2</span><span class="op">*</span>i <span class="op">&lt;=</span> N</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        two_step <span class="op">=</span> V[<span class="dv">2</span><span class="op">*</span>i] <span class="op">+</span> <span class="dv">2</span> <span class="cf">if</span> can_two_step <span class="cf">else</span> <span class="bu">float</span>(<span class="st">'inf'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        one_step <span class="op">=</span> V[i<span class="op">+</span><span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        V[i] <span class="op">=</span> <span class="bu">min</span>(one_step, two_step)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="example-2-tree-cutting" class="level2">
+<h2 class="anchored" data-anchor-id="example-2-tree-cutting">Example 2: Tree Cutting</h2>
+<p><strong>Problem:</strong> Given an array <span class="math inline">\(\texttt{prices}\)</span> where <span class="math inline">\(\texttt{prices}[i]\)</span> denotes the price you can sell a log of length <span class="math inline">\(i\)</span> (we are 1-indexing to avoid confusion) and an integer <span class="math inline">\(N\)</span> which denotes the total length of tree log you have to start with, what is the optimal way to cut this log to maximise value?</p>
+<p>We again start by identifying the state space <span class="math inline">\(\mathcal{S} = \{0, \ldots, N\}\)</span> where trivially <span class="math inline">\(V(0) = 0\)</span> as no value can be obtained from a log of zero length. The question is asking for <span class="math inline">\(V(N)\)</span>. The action set at some state <span class="math inline">\(s\)</span> is thus <span class="math inline">\(\mathcal{A}(s) = \{\text{cut 1}, \text{cut 2}, \ldots, \text{cut s} \}\)</span> which represents all possible cuts you can perform. The action value function is then defined by the value of selling the left-most of the two pieces resulting from a cut. You may be confused at this definition – what about selling the right-most piece? If we consider all cuts, the symmetry about the log centre will force us to consider selling both ends of the log. Thus we can write the action value function as: <span class="math display">\[
+\begin{align}
+    Q(\text{cut 1}, s) &amp;= \texttt{prices}[1] \\
+    \ldots \\
+    Q(\text{cut s}, s) &amp;= \texttt{prices}[s]
+\end{align}
+\]</span></p>
+<p>Finally, we can again write the Bellman Equation as follows: <span class="math display">\[
+\begin{equation}
+    V(s) = \max \{ \texttt{prices}[1] + V(s-1), \texttt{prices}[2] + V(s-2), \ldots, \texttt{prices}[s-1] + V(1), \texttt{prices}[s]\}
+\end{equation}
+\]</span></p>
+<p>We note that we excluded the action “cut 0” from our action set to avoid infinite recursion. Cutting zero would mean that <span class="math inline">\(Q(\text{cut 0}, s) + V(T(s, \text{cut 0})) = V(s)\)</span> which clearly is not ideal for our Bellman Equation. Again, a programmatic solution is shown below:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tree_cutting(prices: <span class="bu">list</span>[<span class="bu">int</span>], N: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> (N <span class="op">+</span> <span class="dv">1</span>) <span class="co"># leave 0th cell blank for convenience so we can 1-index</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> <span class="bu">len</span>(prices)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, N <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        max_val <span class="op">=</span> <span class="op">-</span><span class="bu">float</span>(<span class="st">'inf'</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">min</span>(i, m) <span class="op">+</span> <span class="dv">1</span>): <span class="co"># bellman equation</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            max_val <span class="op">=</span> <span class="bu">max</span>(max_val, prices[j <span class="op">-</span> <span class="dv">1</span>] <span class="op">+</span> V[i <span class="op">-</span> j])</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        V[i] <span class="op">=</span> max_val</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[n]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You may have noticed now the common use of <span class="math inline">\(\pm \infty\)</span> in helping us distinguish valid from invalid state transitions. This quite a common trick as it removes the need for explicit flagging as an infinity will collapse any <span class="math inline">\(\min\)</span> or <span class="math inline">\(\max\)</span> operation downstream to the only valid candidate state transition. You can alternatively explicitly flag with some boolean variable when a transition is valid.</p>
+</section>
+<section id="example-3-probabilistic-parking-problem" class="level2">
+<h2 class="anchored" data-anchor-id="example-3-probabilistic-parking-problem">Example 3: Probabilistic Parking Problem</h2>
+<p><strong>Problem:</strong> We have an array of probabilities <span class="math inline">\(\texttt{arr}\)</span> where the <span class="math inline">\(i^{\text{th}}\)</span> element denotes the probability that the <span class="math inline">\(i^{\text{th}}\)</span> parking slot on a one-way road is available. There is a restaurant located at index <span class="math inline">\(m\)</span>. We would like to park as close as possible to the restaurant but once we drive past a slot, we cannot turn back. If we drive to the end of the road (index <span class="math inline">\(N + 1 \geq m\)</span> where <span class="math inline">\(N = \texttt{len}(\texttt{arr})\)</span>) there is a guaranteed parking spot with cost <span class="math inline">\(K\)</span> (which we presume is large). Find the optimal strategy given that you start at index <span class="math inline">\(0\)</span>.</p>
+<p>The state space is trivially <span class="math inline">\(\mathcal{S} = \{0, \ldots, m, \ldots, N\}\)</span>. We also denote by <span class="math inline">\(a=0\)</span> an attempt at parking and by <span class="math inline">\(a=1\)</span> a move to the next slot. We should now take care given the probabilistic setting. What we really want here is the optimal expected state value function. This is not to be confused with the expected optimal state value function. The latter would be constructed by considering some <span class="math inline">\(V(s \mid X)\)</span> where <span class="math inline">\(X\)</span> is a random variable indexing some draw of the probability array, and then taking the expectation over <span class="math inline">\(X\)</span>. This would be equivalent to considering lots of samples of the array, solving the deterministic problem for each (where we know which parking spots are free or not) and then averaging over the state value function at each state. Intuitively, this is not the same as the optimal expected state value. This can be made formal through Jensen’s inequality: <span class="math display">\[
+\begin{equation}
+    \mathbb{E}[\min_a \{ Q(a; s \mid X) + V(T(s, a) \mid X) \}] \leq \min_a \mathbb{E}[Q(a; s \mid X) + V(T(s, a) \mid X)]
+\end{equation}
+\]</span></p>
+<p>The LHS is a sort of “hindsight” lower bound to the problem we actually want to solve on the RHS. Having (hopefully) made this distinction intuitive, we proceed to solve the problem on the RHS. For convenience, we let <span class="math inline">\(V(s) = \mathbb{E}[V(s \mid X)]\)</span> and <span class="math inline">\(Q(a; s) = \mathbb{E}[Q(a; s \mid X)]\)</span>. Note that the Bellman Equation holds only for <span class="math inline">\(V(s)\)</span> and <strong>not</strong> for <span class="math inline">\(V(s \mid X)\)</span>. We also denote the <span class="math inline">\(i^{\text{th}}\)</span> element of by <span class="math inline">\(p_i\)</span> and denote by <span class="math inline">\(Z_i\)</span> the Bernoulli random variable with probability <span class="math inline">\(p_i\)</span> of taking value 0 (spot is free). We can identify the terminal state <span class="math inline">\(V(N) = K\)</span>. The expected action value is subtle and we consider it below: <span class="math display">\[
+\begin{align}
+    Q(a; s \mid Z_s = 0) &amp;= \begin{cases}
+        \vert s - m \vert &amp;\quad a = 0 \\
+        0 &amp;\quad a = 1
+    \end{cases} \\
+    Q(a; s \mid Z_s = 1) &amp;= \begin{cases}
+        V(s+1) &amp;\quad a = 0 \\
+        0 &amp;\quad a = 1
+    \end{cases} \\
+    Q(a; s) &amp;= \begin{cases}
+        p_s\vert s - m \vert + (1 - p_s)V(s+1) &amp;\quad a = 0 \\
+        0 &amp;\quad a = 1
+    \end{cases} \\
+\end{align}
+\]</span></p>
+<p>We note that the action value (or more intuitively cost) associated with <span class="math inline">\(a=1\)</span> – i.e.&nbsp;skipping to the next slot – is always zero. If we choose to move on, there is no walking cost to the restaurant associated with this action. Any walking cost we will eventually incur by parking at a later state will be captured by the state value of that later state. It should be intuitive also that <span class="math inline">\(V(T(s, a=0)) = 0\)</span> seeing as all cost is captured by the action cost of walking when <span class="math inline">\(a=0\)</span>. Similarly <span class="math inline">\(V(T(s, a=1)) = V(s + 1)\)</span>. Putting all of this together, we arrive at our Bellman Equation: <span class="math display">\[
+\begin{equation}
+    V(s) = \min \{ p_s\vert s - m\vert + (1 - p_s)V(s+1), V(s+1) \}
+\end{equation}
+\]</span></p>
+<p>To get from this state value function to a strategy or <em>policy</em> is perhaps intuitive but I’ll illustrate it anyway. We notice that our Bellman Equation contains the term <span class="math inline">\(V(s+1)\)</span> twice and thus we can rewrite it as follows: <span class="math display">\[
+\begin{equation}
+    V(s) = V(s+1) + p_s \min \{0, \vert s-m\vert - V(s+1) \}
+\end{equation}
+\]</span></p>
+<p>From this reformulation reveals more clearly what the policy should be. You should always attempt to park at state <span class="math inline">\(s\)</span> if <span class="math inline">\(\vert s-m\vert &lt; V(s+1)\)</span> i.e.&nbsp;if the cost of parking is strictly less than the expected future cost. This is in fact the intuitive solution.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> probablistic_parking_problem(arr: <span class="bu">list</span>[<span class="bu">float</span>], m: <span class="bu">int</span>, K: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[<span class="bu">float</span>, <span class="bu">list</span>[<span class="bu">int</span>]]:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> <span class="bu">len</span>(arr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> (N <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    V[<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> K</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    policy <span class="op">=</span> [<span class="va">None</span>] <span class="op">*</span> (N <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    policy[<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> <span class="dv">0</span> <span class="co"># always failsafe attempt to park here</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(N<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">abs</span>(i <span class="op">-</span> m) <span class="op">&lt;</span> V[i <span class="op">+</span> <span class="dv">1</span>]:</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>            policy[i] <span class="op">=</span> <span class="dv">0</span> <span class="co"># park here</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            policy[i] <span class="op">=</span> <span class="dv">1</span> <span class="co"># skip to next</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        V[i] <span class="op">=</span> V[i<span class="op">+</span><span class="dv">1</span>] <span class="op">+</span> arr[i] <span class="op">*</span> <span class="bu">min</span>(<span class="dv">0</span>, <span class="bu">abs</span>(i <span class="op">-</span> m) <span class="op">-</span> V[i<span class="op">+</span><span class="dv">1</span>])</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[<span class="dv">0</span>], policy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/m-cespa\.github\.io\/myblog\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
