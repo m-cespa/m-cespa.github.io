@@ -5,6 +5,6 @@ date: "November 10, 2026"
 format: html
 ---
 
-*"Dynamic Programming is hard" some CS student*
+*"Dynamic Programming is hard..." many a SWE interview candidate*
 
 # Introduction
