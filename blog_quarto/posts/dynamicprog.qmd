@@ -8,3 +8,25 @@ format: html
 *"Dynamic Programming is hard..." many a SWE interview candidate*
 
 # Introduction
+I am far from a competititve programmer and perhaps that will make my explanations and examples more amenable to the non-initiated. I never came across Dynamic Programming (or more generally Backwards Induction) in my Physics undergrad so it was quite unfamiliar turf when I started learning. Ironically I now quite enjoy these types of problems as a “respite” from the more mathematically involved stuff that comes up in my studies. Anyhow, I am far from the first to have had the rude awakening at some point that without a little practice, you can be great at a lot of maths and suck at Dynamic Programming – here is an old subreddit on the topic.
+
+Over the year or so, I’ve been accruing a bank of problems I’ve quite liked, simple problems that don’t require textbook proofs. Eventually I want to make all these problems and their worked solutions available on my website in a perhaps more organised format than a blog post. As an introduction to the educational blogpost genre, I want to tackle Dynamic Programming.
+
+The Bellman Equation
+A quick scroll through Richard Bellman’s wikipedia is a good place to start to get a sense of where Dynamic Programming (and its modern much more involved counterpart, Reinforcement Learning) come from. We label states as 
+ and for every state we can define a set of valid actions 
+. We then define two useful functions:
+
+The optimal state value function 
+The action value function 
+ – where we write 
+ as a notational reminder that 
+ and there is a dependence on the state
+The state transition function 
+The idea proposed by Bellman is that we should seek an “optimal substructure”. This natively lends itself to a recursive definition which I think makes most sense in form of an equation:
+
+ 
+
+Breaking the equation up, it says:
+
+“The action defining the optimal value at state s is the action which takes you to the neighbouring state with maximal optimal value”
