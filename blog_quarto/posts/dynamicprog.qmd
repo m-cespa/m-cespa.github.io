@@ -29,7 +29,149 @@ $$
 
 Breaking the equation up, it says:
 
-*“The action defining the optimal value at state s is the action which takes you to the neighbouring state with maximal optimal value”*
+*“The action defining the optimal value at state s is the action with sum of action value and next state optimal value which is maximal”*
+
+This definition works because we are consider the *optimal* state value at all possible next states. Thus if an action's action value added with the transitioned state's optimal state value is maximal, the current state's value is maximal if taking this action -- perhaps verbose but give this a think and it does in fact make sense. We note that we can have *negative* action value which we might think of as an action *cost*. In simpler problems, the action value is explicitly defined by the problem. In other settings, the action value may not be so obvious and may itself need defining through some recursion. We will tackle these simpler problems first.
+
+# Solution by Backwards Induction
+We could solve the Bellman Equation recursively, but if you are familiar with recursion you will also be familiar with the exponential compute scaling. Instead, we want to proceed by *Backwards Induction*. We may have some domain knowledge of the problem (or "boundary conditions") which fix the optimal value of certain states. Any such states are known as *terminal* states. Terminal states have the property that $\mathcal{A}(s) = \emptyset$ and thus the Bellman Equation does not apply to them -- their value must be defined by the problem itself. Once defined, the value of any states which neighbour only terminal states can be readily evaluated too...and so on. Any state which neighbours states with optimal value already evaluated, can itself be evaluated. Hopefully the *backwards* direction of this strategy is apparent.
+
+I will now present some examples in escalating difficulty.
+
+## Example 1: Transportation Problem
+**Problem:** You start at node $1$ of $N$. Walking from state $n$ to $n+1$ takes $1$ minute. Taking a magic tram from state $n$ to $2n$ takes 2 minutes. You can only take the magic tram if $2n \leq N$. What is the shortest time to travel from $1$ to $N$?
+
+We begin by defining the state space $\mathcal{S} = \{1, \ldots, N\}$. The terminal state here is $N$ with $V(N) = 0$. The problem asks for $V(1)$. We can also write the action value function for $\mathcal{A}(s) = \{0, 1\}$ where $0$ denotes walking and $1$ denotes taking the magic tram.
+$$
+\begin{align}
+Q(0; s) &= 1 \quad \text{with} \quad T(s, 0) = s+1 \\
+Q(1; s) &= 2 \quad \text{with} \quad T(s, 1) = 2s
+\end{align}
+$$
+
+Now writing the Bellman Equation results in (noting that here we seek to *minimise* state value):
+$$
+\begin{equation}
+    V(s) = \min \{V(s+1) + 1, V(2s) + 2 \}
+\end{equation}
+$$
+
+We can program this easily (taking into account trams which would go out of bounds):
+
+```python
+def transportation_problem(N: int) -> int:
+    V = [0] * (N+1) # leave 0th cell blank for convenience so we can 1-index
+
+    for i in range(N-1, 0, -1):
+        can_two_step = 2*i <= N
+        two_step = V[2*i] + 2 if can_two_step else float('inf')
+        one_step = V[i+1] + 1
+        V[i] = min(one_step, two_step)
+
+    return V[1]
+```
+
+## Example 2: Tree Cutting
+**Problem:** Given an array $\texttt{prices}$ where $\texttt{prices}[i]$ denotes the price you can sell a log of length $i$ (we are 1-indexing to avoid confusion) and an integer $N$ which denotes the total length of tree log you have to start with, what is the optimal way to cut this log to maximise value?
+
+We again start by identifying the state space $\mathcal{S} = \{0, \ldots, N\}$ where trivially $V(0) = 0$ as no value can be obtained from a log of zero length. The question is asking for $V(N)$. The action set at some state $s$ is thus $\mathcal{A}(s) = \{\text{cut 1}, \text{cut 2}, \ldots, \text{cut s} \}$ which represents all possible cuts you can perform. The action value function is then defined by the value of selling the left-most of the two pieces resulting from a cut. You may be confused at this definition -- what about selling the right-most piece? If we consider all cuts, the symmetry about the log centre will force us to consider selling both ends of the log. Thus we can write the action value function as:
+$$
+\begin{align}
+    Q(\text{cut 1}, s) &= \texttt{prices}[1] \\
+    \ldots \\
+    Q(\text{cut s}, s) &= \texttt{prices}[s]
+\end{align}
+$$
+
+Finally, we can again write the Bellman Equation as follows:
+$$
+\begin{equation}
+    V(s) = \max \{ \texttt{prices}[1] + V(s-1), \texttt{prices}[2] + V(s-2), \ldots, \texttt{prices}[s-1] + V(1), \texttt{prices}[s]\}
+\end{equation}
+$$
+
+We note that we excluded the action "cut 0" from our action set to avoid infinite recursion. Cutting zero would mean that $Q(\text{cut 0}, s) + V(T(s, \text{cut 0})) = V(s)$ which clearly is not ideal for our Bellman Equation. Again, a programmatic solution is shown below:
+
+```python
+def tree_cutting(prices: list[int], N: int) -> int:
+    V = [0] * (N + 1) # leave 0th cell blank for convenience so we can 1-index
+    m = len(prices)
+    
+    for i in range(1, N + 1):
+        max_val = -float('inf')
+        for j in range(1, min(i, m) + 1): # bellman equation
+            max_val = max(max_val, prices[j - 1] + V[i - j])
+        V[i] = max_val
+    
+    return V[n]
+```
+
+You may have noticed now the common use of $\pm \infty$ in helping us distinguish valid from invalid state transitions. This quite a common trick as it removes the need for explicit flagging as an infinity will collapse any $\min$ or $\max$ operation downstream to the only valid candidate state transition. You can alternatively explicitly flag with some boolean variable when a transition is valid.
+
+## Example 3: Probabilistic Parking Problem
+**Problem:** We have an array of probabilities $\texttt{arr}$ where the $i^{\text{th}}$ element denotes the probability that the $i^{\text{th}}$ parking slot on a one-way road is available. There is a restaurant located at index $m$. We would like to park as close as possible to the restaurant but once we drive past a slot, we cannot turn back. If we drive to the end of the road (index $N + 1 \geq m$ where $N = \texttt{len}(\texttt{arr})$) there is a guaranteed parking spot with cost $K$ (which we presume is large). Find the optimal strategy given that you start at index $0$.
+
+The state space is trivially $\mathcal{S} = \{0, \ldots, m, \ldots, N\}$. We also denote by $a=0$ an attempt at parking and by $a=1$ a move to the next slot. We should now take care given the probabilistic setting. What we really want here is the optimal expected state value function. This is not to be confused with the expected optimal state value function. The latter would be constructed by considering some $V(s \mid X)$ where $X$ is a random variable indexing some draw of the probability array, and then taking the expectation over $X$. This would be equivalent to considering lots of samples of the array, solving the deterministic problem for each (where we know which parking spots are free or not) and then averaging over the state value function at each state. Intuitively, this is not the same as the optimal expected state value. This can be made formal through Jensen's inequality:
+$$
+\begin{equation}
+    \mathbb{E}[\min_a \{ Q(a; s \mid X) + V(T(s, a) \mid X) \}] \leq \min_a \mathbb{E}[Q(a; s \mid X) + V(T(s, a) \mid X)]
+\end{equation}
+$$
+
+The LHS is a sort of "hindsight" lower bound to the problem we actually want to solve on the RHS. Having (hopefully) made this distinction intuitive, we proceed to solve the problem on the RHS. For convenience, we let $V(s) = \mathbb{E}[V(s \mid X)]$ and $Q(a; s) = \mathbb{E}[Q(a; s \mid X)]$. Note that the Bellman Equation holds only for $V(s)$ and **not** for $V(s \mid X)$. We also denote the $i^{\text{th}}$ element of \texttt{arr} by $p_i$ and denote by $Z_i$ the Bernoulli random variable with probability $p_i$ of taking value 0 (spot is free). We can identify the terminal state $V(N) = K$. The expected action value is subtle and we consider it below:
+$$
+\begin{align}
+    Q(a; s \mid Z_s = 0) &= \begin{cases}
+        \vert s - m \vert &\quad a = 0 \\
+        0 &\quad a = 1
+    \end{cases} \\
+    Q(a; s \mid Z_s = 1) &= \begin{cases}
+        V(s+1) &\quad a = 0 \\
+        0 &\quad a = 1
+    \end{cases} \\
+    Q(a; s) &= \begin{cases}
+        p_s\vert s - m \vert + (1 - p_s)V(s+1) &\quad a = 0 \\
+        0 &\quad a = 1
+    \end{cases} \\
+\end{align}
+$$
+
+We note that the action value (or more intuitively cost) associated with $a=1$ -- i.e. skipping to the next slot -- is always zero. If we choose to move on, there is no walking cost to the restaurant associated with this action. Any walking cost we will eventually incur by parking at a later state will be captured by the state value of that later state. It should be intuitive also that $V(T(s, a=0)) = 0$ seeing as all cost is captured by the action cost of walking when $a=0$. Similarly $V(T(s, a=1)) = V(s + 1)$. Putting all of this together, we arrive at our Bellman Equation:
+$$
+\begin{equation}
+    V(s) = \min \{ p_s\vert s - m\vert + (1 - p_s)V(s+1), V(s+1) \}
+\end{equation}
+$$
+
+To get from this state value function to a strategy or *policy* is perhaps intuitive but I'll illustrate it anyway. We notice that our Bellman Equation contains the term $V(s+1)$ twice and thus we can rewrite it as follows:
+$$
+\begin{equation}
+    V(s) = V(s+1) + p_s \min \{0, \vert s-m\vert - V(s+1) \}
+\end{equation}
+$$
+
+From this reformulation reveals more clearly what the policy should be. You should always attempt to park at state $s$ if $\vert s-m\vert < V(s+1)$ i.e. if the cost of parking is strictly less than the expected future cost. This is in fact the intuitive solution.
+
+```python
+def probablistic_parking_problem(arr: list[float], m: int, K: float) -> tuple[float, list[int]]:
+    N = len(arr)
+    V = [0] * (N + 1)
+    V[-1] = K
+
+    policy = [None] * (N + 1)
+    policy[-1] = 0 # always failsafe attempt to park here
+
+    for i in range(N-1, -1, -1):
+        if abs(i - m) < V[i + 1]:
+            policy[i] = 0 # park here
+        else:
+            policy[i] = 1 # skip to next
+
+        V[i] = V[i+1] + arr[i] * min(0, abs(i - m) - V[i+1])
+
+    return V[0], policy
+```
+
 
 
 
