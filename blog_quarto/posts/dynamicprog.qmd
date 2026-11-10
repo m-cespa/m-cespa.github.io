@@ -1,0 +1,10 @@
+---
+title: "A Tutorial on Dynamic Programming"
+author: "Michele Cespa"
+date: "November 10, 2026"
+format: html
+---
+
+*"Dynamic Programming is hard" some CS student*
+
+# Introduction
