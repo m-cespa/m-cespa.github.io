@@ -1,0 +1,185 @@
+---
+title: "Solving Blackjack"
+author: "Michele Cespa"
+date: "September 22, 2026"
+format: html
+---
+
+*"Probability Theory is nothing but common sense reduced to calculation." Pierre-Simon Laplace*
+
+# Introduction
+
+There's a lot of crazy stuff going on in the world at the moment, especially in relation to A.I. and the state of mathematics. I've found it quite cathartic to make a return to simpler problems -- no Deep Learning, no LLMS, just pen and paper. I'm by no means an expert in casino games but I'm familiar enough with backwards induction problem solving (or to the software engineers *dynamic programming*) to enjoy "solving" simple card games. I watched the movie [21](https://en.wikipedia.org/wiki/21_(2008_film)) some days ago (yes, I am quite late to watching this) and paid enough attention to realise that widely popular game of [Blackjack](https://en.wikipedia.org/wiki/Blackjack) is actually really quite simple, both in rules and in strategy. To anyone who finds card games interesting and has a taste for simple backwards induction, stick around to see how you can "solve" Blackjack.
+
+# Rules
+
+For a comprehensive introduction to the rules, I think the [Blackjack Wikipedia page](https://en.wikipedia.org/wiki/Blackjack) is no bad place to start. To make things simple, we're going to stick with a standard 52-card deck and allow the player to only make one of two moves:
+
+1. "Hit": Take another card from the deck
+2. "Stand": Take no further cards, making it the dealer's turn
+
+There is of course also the option to "Split" but to make the discussions less faffy, we'll ignore it. As a summary of the card values we have:
+
+- 2--9: face value
+- 10, J, Q, K: 10 (we will denote these for brevity as "10" cards as they are equivalent)
+- Ace: 1 or 11 (11 if the hand value is less than or equal to 21)
+
+The player is dealt two face-up cards whilst the dealer has one face-up card (the *upcard*) and one face-down card (the *holecard*). The player can choose to hit as many times as they wish, with their turn ending once they either choose to stand, or "go bust" -- i.e. their hand value exceeds 21. If the player goes bust, the dealer automatically wins. If the player stands, it is now the dealer's turn. The standard rule is that the dealer takes cards until their hand value equals or exceeds 17. The dealer plays their turn under this rule until they either satisfy the criteria or go bust. In the event that neither player or dealer goes bust, the higher value hand wins. One caveat is the "Blackjack" hand, an Ace and a 10-value card (10, J, Q or K). A Blackjack wins over a non-Blackjack hand of value 21 (e.g. 8, 8, 5). There is also the less interesting event of a tie which we will need to account for.
+
+# Formalising
+
+We will denote by $c_P$ the set of cards the player (P) has and by $c_D$ the set of cards the dealer (D) has. We also define a hand valuation function $\text{val}(\cdot)$ such that:
+$$
+\begin{align}
+\text{val}(c) = \begin{cases}
+z \quad &\text{if } z = \sum_i c_i \leq 21, c \neq \{10, \text{Ace}\} \\
+22 \quad &\text{if } c = \{10, \text{Ace}\} \\
+0 \quad &\text{if } z = \sum_i c_i > 21
+\end{cases}
+\end{align}
+$$
+
+For brevity we will let $s = \text{val}(c_P)$ and $d = \text{val}(c_D)$. We note that for the duration of the player's turn, $c_D = \{\text{known upcard}, \text{unknown holecard}\}$. We then define the terminal state value function $V(\cdot, \cdot)$ which defines the winning/losing conditions given the hand values of P and D.
+
+$$
+\begin{align}
+V(s, d) = \begin{cases}
++1 \quad &s > d \\
++1 \quad &d=0, s\neq0 \\
+0 \quad &s=d \\
+-1 \quad &s=0 \\
+-1 \quad &s<d
+\end{cases}
+\end{align}
+$$
+
+We note here the asymmettry of the game -- the dealer wins if the player ever goes bust irrespective of what the dealer's hand might end up being. We will now assume a general deterministic stopping rule for the dealer:
+
+::: {style="text-align: center;"}
+*The dealer hits until $\text{val}(c_D) \geq t$*
+:::
+
+We will deal with this general threshold $t$ and then solve for why the optimal value is $t$. We note that during the player's turn, the information coming from $c_D$ is really only coming from the upcard -- we thus reduce the state space to $c_P$ and $u$ for an upcard $u$ rather than considering $c_D$. For any general value of $t$ and upcard $u$, we can define the optimal strategy for the player. We finally define some auxiliary functions:
+
+$$
+\begin{align}
+V_i(c_P \mid u; t): &\text{ intermediate value function} \\
+Q(c_P, a \mid u; t): &\text{ action value function, $a \in \{0, 1\}$}
+\end{align}
+$$
+(where $a=1$ is equivalent to hitting and $a=0$ to standing)
+
+Using this action value function, we can define the update rules for each action:
+$$
+\begin{align}
+Q(c_P, a=1 \mid u; t) &= \sum_c p(c \mid u, c_P) V_i(c_P \cup c \mid u; t) \\
+Q(c_P, a=0 \mid u; t) &= \sum_d p_D(d \mid u, c_P; t) V(\text{val}(c_P), d)
+\end{align}
+$$
+
+Here we introduced $p(c \mid u, c_P)$ -- the probability of drawing card $c$ from the deck given a dealer upcard and player hand -- and $p_D(d \mid u, t, c_P)$ -- the probability of the dealer's final hand value being $d$ given their upcard, threshold and player hand. Looking at the presence of the terminal value function in the second relation, we can see how the backwards induction can propagate. We can now write the optimal update rule for the intermediate value function:
+
+$$
+\begin{equation}
+V_i(c_P \mid u; t) = \max_a \,Q(c_P, a \mid u; t)
+\end{equation}
+$$
+
+Similarly, the optimal *policy* $\pi(c_P \mid u; t)$ for which action the player should take with a hand $c_P$ against a dealer with upcard $u$ and fixed threshold $t$ can be defined as:
+
+$$
+\begin{equation}
+\pi(c_P \mid u; t) = \underset{a}{\arg\max} \,Q(c_P, a \mid u; t)
+\end{equation}
+$$
+
+# Deriving the dealer's rule
+
+We now have the player's optimal policy and optimal value function. The dealer would like to *minimise* the player's expected final value function. The joint distribution of final states can be decomposed as follows:
+
+$$
+\begin{equation}
+p(s, d \mid u; t) = \sum_{\text{val}(c_P) = s} p_{\pi}(c_P \mid u; t) p_D(d \mid u, c_P; t)
+\end{equation}
+$$
+
+We have now introduced $p_{\pi}(c_P \mid u, t)$ which is the probability that the player's hand is $c_P$ when employing optimal strategy $\pi$. We should note that this can be expanded over the ordered set of player cards $c_1, \ldots, c_m$ by noting that:
+
+$$
+\begin{equation}
+p_{\pi}(c_P \mid u; t) = p_{\pi}(c_m \mid c_{1:m-1}, u; t) \ldots p(c_2 \mid c_1, u; t) p(c_1 \mid u; t)
+\end{equation}
+$$
+
+We can make an important notational simplification here. Technically, the final two terms are *independent* of the optimal strategy, because the dealer always deals the player a starting set of two cards. But, seeing as one cannot go bust with only two cards, the optimal strategy (in a game where you start with no cards) would always involve hitting twice to start. We can further note that the optimal strategy is really just a string of $m$ ones and a final $0$ denoting when to stand. So for a final hand length $m$, the hand distribution $p_{\pi}(c_P \mid u; t)$ can be written more simply as:
+
+$$
+\begin{align}
+p_{\pi}(c_P \mid u, t) &= p_{\pi}(c_m \mid c_{1:m-1}, u; t) \ldots p_{\pi}(c_1 \mid u; t) \\
+&\equiv p_{a=1}(c_m \mid c_{1:m-1}, u; t) \ldots p_{a=1}(c_1 \mid u; t) \\
+&\equiv p(c_m \mid c_{1:m-1}, u; t) \ldots p(c_1 \mid u; t)
+\end{align}
+$$
+
+With this entire framework formalised, the dealer seeks the threshold $t^*$ which minimises the expected risk $R(t)$ which we define below:
+
+$$
+\begin{align}
+t^* &= \underset{t}{\arg\min} \,R(t) \\
+&= \underset{t}{\arg\min} \, \sum_u p(u) \mathbb{E}[ V(S, D) \mid u; t]
+\end{align}
+$$
+
+In words: averaging over all possible upcards, the dealer seeks to minimise the expected earnings of the player. We can in fact expand this expectation to simplify this risk function $R(t)$:
+
+$$
+\begin{align}
+\mathbb{E}[V(S, D) \mid u, t] &= \sum_{c_P} p_{\pi}(c_P \mid u; t)p_D(d \mid u, c_P; t) V(\text{val}(c_P), d) \\
+&= \sum_{c_P} p_{\pi}(c_P \mid u; t) Q(c_P, a=0 \mid u; t)
+\end{align}
+$$
+
+To simplify things, we focus on the inner term. We can think of this as the expected value of standing with final hand $c_P$ given an upcard $u$ and threshold $t$. We recall our expansion of the final hand optimal distribution and write:
+
+$$
+\begin{align}
+&\sum_{c_P} p_{\pi}(c_P \mid u; t) Q(c_P, a=0 \mid u; t) \\
+&= \sum_{c_P={\{c_1, \ldots c_m\}}} p(c_m \mid c_{1:m-1}, u; t) \ldots p(c_1 \mid u; t) Q(c_P, a=0 \mid u; t) \\
+&= Q(c_P=\emptyset, a=1 \mid u; t)
+\end{align}
+$$
+
+Putting it all together in terms of the action value function, the expected risk to the dealer is:
+
+$$
+\begin{align}
+R(t) &= \sum_u p(u) \mathbb{E}[ V(S, D) \mid u; t] \\
+&= \sum_u p(u) Q(c_P=\emptyset, a=1 \mid u; t)
+\end{align}
+$$
+
+This final expression makes computing the risk function especially easy as we can recursively evaluate the action value function starting from an empty hand. With some clever memoization, we can try evaluating this risk for some sensible values of $t$. 
+
+| $t$ | $13$ | $14$ | $15$ | $16$ | $17$ | $18$ | $19$ |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **$R(t)$** | $0.123$ | $0.069$ | $0.018$ | $-0.025$ | $-0.043$ | $0.008$ | $0.136$ |
+
+Table: Expected dealer risk $R(t)$ for various thresholds $t$ {#tbl-rt-values}
+
+Looking at @tbl-rt-values, we find a minimum in the expected risk to the dealer when $t=17$. (Un)coincidentally, this is precisely the threshold stated in the standard rules of Blackjack. An interesting corollary here is that even if the player plays optimally (in this simplified world with no other players or the option to split the hand), the expected value of the game is *negative* for the player -- this is perhaps obvious in hindsight, otherwise casinos would not be particularly profitable.
+
+# Basic Strategy
+
+Unfortunately, it is quite hard for a person to actually compute the action value function on the fly. The standard approach to this is to introduce some coarse graining. Considering only the value of a hand $s = \text{val}(c_P)$ and the dealer's upcard $u$, we can define a pseudo-optimal strategy called "Basic Strategy". The coarse graining here arises because technically, same valued hands *will* present different strategies -- getting a score of $15$ from a $J$ and a $5$ will clearly not thin the deck much, whereas scoring $15$ with $1, 2, 3, 4, 5$ will. Typically dealers will use *shoes* of multiple decks aggregated, so these thinning effects wane and the coarse graining approximation holds. What we will consider for Basic Strategy is the mean action value function:
+
+$$
+\begin{align}
+\bar{Q}(s, a \mid u; t) = \sum_{\text{val}(c_P) = s} p(c_P \mid s) Q(c_P, a \mid u; t)
+\end{align}
+$$
+
+Working with $\bar{Q}$ makes life easier. We simply need to chart when for a player-dealer state $(s, u)$ the action value of hitting ($a=1$) exceeds that of standing ($a=0$) and for all such states we hit and otherwise stand. The Texas A&M University has a [document](https://people.tamu.edu/~phoward/m442/strategy21.pdf) summarising this notion (and bizzarly other casino related mind-game advice). 
+
+# Conclusion
+
+There really isn't much of a conclusion here. I have not memorised the Basic Strategy chart or any other chart and so despite this bizarre Blackjack sidequest, I am upsettingly not much better at Blackjack.

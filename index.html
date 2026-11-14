@@ -17,7 +17,7 @@
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contacts</a></li>
+                <li><a href="#contact">Contact</a></li>
                 <li><a href="blog_page.html">Blog</a></li>
             </ul>
         </div>
@@ -44,7 +44,9 @@
         </div>
         <div class="section__text">
             <p class="section__text__p1">Hello, I'm</p>
-            <h1 class="title">Michele Cespa</h1>
+            <h1 class="title">
+                <span id="typewriter-text">Michele Cespa</span>
+            </h1>
             <p class="section__text__p2">Physics & ML Student</p>
             <div class="btn-container">
                 <img 
@@ -78,43 +80,30 @@
         <p class="section__text__p1">Get To Know More</p>
         <h1 class="title">About Me</h1>
         <div class="section-container">
-            <div class="section__pic-container">
-                <img src="./assets/about-pic-modified.png" alt="Profile picture" />
-            </div>
-            <div class="about-details-container">
-                <div class="about-containers">
-                    <div class="education-details-container">
-                        <div class="details-container">
-                            <h3>Education</h3>
-                            <ul class="custom-bullet-list">
-                                <li class="custom-bullet-item type-1">
-                                    <img src="./assets/education.png" alt="Experience icon" class="icon">
-                                    <div class="text-container">
-                                        <div class="main-text">BA (Hons) in Natural Sciences (Physics), 2022–2025 (1st Class, 14th in 129)</div>
-                                        <div class="secondary-text">University of Cambridge</div>
-                                    </div>
-                                </li>
-                                <li class="custom-bullet-item type-1">
-                                    <img src="./assets/education.png" alt="Experience icon" class="icon">
-                                    <div class="text-container">
-                                        <div class="main-text">MSc in Artificial Intelligence & Machine Learning 2025-2026</div>
-                                        <div class="secondary-text">Imperial College London</div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>                    
+            <div class="about-details-container">              
                 <div class="text-container">
                     <p>
-                        I'm currently studying Machine Learning at Imperial after graduating from Physics at Cambridge. 
-                        My interests are ever evolving but some things I'm particularly interested in at the moment are: 
-                        statistical theories of learning, information theory, information geometry and inference frameworks.
+                        I'm currently part of the <a href="https://statml.io/">StatML CDT</a> programme working towards 
+                        my DPhil at Jesus College Oxford. Before coming to Oxford, I did a Master's in Machine Learning at Imperial. 
+                        And before that, I did my undergrad in Physics at Cambridge. 
                         <br><br>
-                        If my name didn't give it away, I am Italian. I was
-                        born in Barcelona, grew up in Salerno and then moved to
-                        London in time to pick up an English accent. When I'm not working 
-                        I am probably: playing music (electric guitar), training calisthenics, 
-                        cycling or the recent endeavour of reading religious texts.
+                        As of late I've been working on problems relating to: distribution shift adaptation, causal inference & 
+                        classifier calibration. Much of this stems from my work with <a href="https://prelego.ai/">Prelego.ai</a>, 
+                        a MedTech startup I currently work for as a part-time ML researcher. 
+                        <br><br>
+                        Some other areas that interest me include: information geometry & sequential/on-line decision making.
+                        <br><br>
+                        Occasionally, I try and share some thoughts on 
+                        things I'm thinking about on my <a href="blog_page.html">blog</a>.
+                        <br><br>
+                        If my name didn't give it away, I'm Italian. I was born in Barcelona, grew up in Salerno and 
+                        then moved to London in time to pick up an English accent. Some things I get up to when I'm not 
+                        working include: playing guitar (probably Steely Dan), training calisthenics, cycling somewhere 
+                        (most recently across Wales), baking bread and trying to read more. 
+                        <br><br>
+                        (I will try to keep the below up to date)
+                        <br><br>
+                        Currently reading: The Selfish Gene (Richard Dawkins)
                     </p>
                 </div>
             </div>
@@ -126,72 +115,58 @@
         <h1 class="title">Projects</h1>
         <div class="scrollable-details-container">
             <div class="projects-details-container color-container">
-                <div class="article-container">
-                    <video 
-                        src="assets/ddm_video_example.mp4"
-                        class="project-img"
-                        controls
-                    ></video>
-                </div>
-                <h2 class="project-sub-title">
-                    Light Scattering in Colloid Suspensions
-                    <br>
-                    <small>(if all goes well the video works)</small>
-                </h2>                
-                <div class="project-btn-container">
-                    <img 
-                    src="./assets/internet_logo.png" 
-                    alt="Math" 
-                    class="project-btn-logo" 
-                    onclick="window.open('assets/light_scatter.pdf', '_blank')"
-                    >
-                </div>
-            </div>
-            <div class="projects-details-container color-container">
+                <h2 class="project-date">
+                    <small>[2026]</small>
+                </h2>
                 <div class="article-container">
                     <img 
-                        src="assets/automatic_diff.png"
+                        src="assets/olmo_logo.png"
                         alt="Project 6"
                         class="project-img"
                     />
                 </div>
-                <h2 class="project-sub-title">Automatic Differentiation <br> from scratch</h2>
-                <div class="project-btn-container">
-                    <img 
-                    src="./assets/internet_logo.png" 
-                    alt="Math" 
-                    class="project-btn-logo" 
-                    onclick="window.open('assets/autograd_derivations.pdf', '_blank')"
-                    >
-                </div>
-            </div>
-            <div class="projects-details-container color-container">
-                <div class="article-container">
-                    <img 
-                        src="assets/PINN.png"
-                        alt="Project 5"
-                        class="project-img"
-                    />
-                </div>
-                <h2 class="project-sub-title">Pure NumPy PINN (Physics-Informed Neural Network)</h2>
+                <h2 class="project-sub-title">
+                    OhLMo (Open-hydra Language Model)
+                    <br>
+                    <small>An LLM with verifiable trustworthiness signals</small>
+                </h2> 
                 <div class="project-btn-container">
                     <img 
                     src="./assets/github.png" 
                     alt="GitHub" 
                     class="project-btn-logo" 
-                    onclick="window.open('https://github.com/m-cespa/Learning_ML/tree/main/NN_from_scratch', '_blank')"
+                    onclick="window.open('https://github.com/msc-ai-mmmjo/tap', '_blank')"
+                    >
+                    <img 
+                    src="./assets/internet_logo.png" 
+                    alt="Web-page" 
+                    class="project-btn-logo" 
+                    onclick="window.open('https://tap-al9.pages.dev/', '_blank')"
+                    >
+                    <img
+                    src="./assets/scroll-icon.png"
+                    alt="Docs"
+                    class="project-btn-logo"
+                    onclick="window.open('https://msc-ai-mmmjo.github.io/tap/', '_blank')"
                     >
                 </div>
             </div>
             <div class="projects-details-container color-container">
+                <h2 class="project-date">
+                    <small>[2025]</small>
+                </h2>
                 <div class="article-container">
                     <img 
                         src="assets/dcf.png"
-                        alt="Project 4"
+                        alt="Project 5"
                         class="project-img"
                     />
                 </div>
-                <h2 class="project-sub-title"> Dynamic Differential Microscopy (DDM)</h2>
+                <h2 class="project-sub-title">
+                    Dynamic Differential Microscopy (DDM)
+                    <br>
+                    <small>A small Python library</small>
+                </h2>
                 <div class="project-btn-container">
                     <img 
                     src="./assets/github.png" 
@@ -202,14 +177,71 @@
                 </div>
             </div>
             <div class="projects-details-container color-container">
+                <h2 class="project-date">
+                    <small>[2025]</small>
+                </h2>
                 <div class="article-container">
                     <img 
-                        src="assets/random_forest.png"
+                        src="assets/automatic_diff.png"
+                        alt="Project 4"
+                        class="project-img"
+                    />
+                </div>
+                <h2 class="project-sub-title">
+                    Automatic Differentiation
+                    <br>
+                    <small>A whole lot of backpropagation</small>
+                </h2>
+                <div class="project-btn-container">
+                    <img 
+                    src="./assets/internet_logo.png" 
+                    alt="Math" 
+                    class="project-btn-logo" 
+                    onclick="window.open('assets/autograd_derivations.pdf', '_blank')"
+                    >
+                </div>
+            </div>
+            <div class="projects-details-container color-container">
+                <h2 class="project-date">
+                    <small>[2025]</small>
+                </h2>
+                <div class="article-container">
+                    <img 
+                        src="assets/PINN.png"
                         alt="Project 3"
                         class="project-img"
                     />
                 </div>
-                <h2 class="project-sub-title">Pure NumPy Random Forest (& Single Decision Trees)</h2>
+                <h2 class="project-sub-title">
+                    Pure NumPy PINN
+                    <br>
+                    <small>Adding physics regularisers to loss functions</small>
+                </h2>
+                <div class="project-btn-container">
+                    <img 
+                    src="./assets/github.png" 
+                    alt="GitHub" 
+                    class="project-btn-logo" 
+                    onclick="window.open('https://github.com/m-cespa/Learning_ML/tree/main/NN_from_scratch', '_blank')"
+                    >
+                </div>
+            </div>
+            <div class="projects-details-container color-container">
+                <h2 class="project-date">
+                    <small>[2024]</small>
+                </h2>
+                <div class="article-container">
+                    <img 
+                        src="assets/random_forest.png"
+                        alt="Project 2"
+                        class="project-img"
+                    />
+                </div>
+                <h2 class="project-sub-title">
+                    Pure NumPy Random Forest
+                    <br>
+                    <small>A simple groundup implementation</small>
+                </h2>
                 <div class="project-btn-container">
                     <img 
                     src="./assets/github.png" 
@@ -220,14 +252,21 @@
                 </div>
             </div>
             <div class="projects-details-container color-container">
+                <h2 class="project-date">
+                    <small>[2024]</small>
+                </h2>
                 <div class="article-container">
                     <img 
                         src="assets/gr_helper.png"
-                        alt="Project 2"
+                        alt="Project 1"
                         class="project-img"
                     />
                 </div>
-                <h2 class="project-sub-title">General Relativity Helper</h2>
+                <h2 class="project-sub-title">
+                    General Relativity Helper
+                    <br>
+                    <small>A small webapp to compute riemannian tensors</small>
+                </h2>
                 <div class="project-btn-container">
                     <img 
                     src="./assets/github.png" 
@@ -244,14 +283,21 @@
                 </div>
             </div>
             <div class="projects-details-container color-container">
+                <h2 class="project-date">
+                    <small>[2024]</small>
+                </h2>
                 <div class="article-container">
                     <img 
                         src="assets/rpi_reactors.png"
-                        alt="Project 1"
+                        alt="Project 0"
                         class="project-img"
                     />
                 </div>
-                <h2 class="project-sub-title">RPi Bioreactors</h2>
+                <h2 class="project-sub-title">
+                    RPi Bioreactors
+                    <br>
+                    <small>What I got up to in my 2nd year summer</small>
+                </h2>
                 <div class="project-btn-container">
                     <img 
                     src="./assets/github.png" 
