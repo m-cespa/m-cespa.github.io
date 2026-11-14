@@ -221,8 +221,15 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#example-1-transportation-problem" id="toc-example-1-transportation-problem" class="nav-link" data-scroll-target="#example-1-transportation-problem">Example 1: Transportation Problem</a></li>
   <li><a href="#example-2-tree-cutting" id="toc-example-2-tree-cutting" class="nav-link" data-scroll-target="#example-2-tree-cutting">Example 2: Tree Cutting</a></li>
-  <li><a href="#example-3-probabilistic-parking-problem" id="toc-example-3-probabilistic-parking-problem" class="nav-link" data-scroll-target="#example-3-probabilistic-parking-problem">Example 3: Probabilistic Parking Problem</a></li>
+  <li><a href="#sec-probparking" id="toc-sec-probparking" class="nav-link" data-scroll-target="#sec-probparking">Example 3: Probabilistic Parking Problem</a></li>
   </ul></li>
+  <li><a href="#d-dynamic-programming" id="toc-d-dynamic-programming" class="nav-link" data-scroll-target="#d-dynamic-programming">2D Dynamic Programming</a>
+  <ul class="collapse">
+  <li><a href="#example-1-maximum-weighted-path" id="toc-example-1-maximum-weighted-path" class="nav-link" data-scroll-target="#example-1-maximum-weighted-path">Example 1: Maximum Weighted Path</a></li>
+  <li><a href="#example-2-card-flipping-game" id="toc-example-2-card-flipping-game" class="nav-link" data-scroll-target="#example-2-card-flipping-game">Example 2: Card Flipping Game</a></li>
+  <li><a href="#example-3-maximum-substring" id="toc-example-3-maximum-substring" class="nav-link" data-scroll-target="#example-3-maximum-substring">Example 3: Maximum Substring</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
   </ul>
 </nav>
     </div>
@@ -255,12 +262,12 @@ V(s) = \max_{a \in \mathcal{A}(s)} \{ Q(a; s) + V(T(s, a)) \}
 \]</span></p>
 <p>Breaking the equation up, it says:</p>
 <p><em>“The action defining the optimal value at state s is the action with sum of action value and next state optimal value which is maximal”</em></p>
-<p>This definition works because we are consider the <em>optimal</em> state value at all possible next states. Thus if an action’s action value added with the transitioned state’s optimal state value is maximal, the current state’s value is maximal if taking this action – perhaps verbose but give this a think and it does in fact make sense. We note that we can have <em>negative</em> action value which we might think of as an action <em>cost</em>. In simpler problems, the action value is explicitly defined by the problem. In other settings, the action value may not be so obvious and may itself need defining through some recursion. We will tackle these simpler problems first.</p>
+<p>This definition works because we are considering the <em>optimal</em> state value at all possible next states. Thus if an action’s action value added with the transitioned state’s optimal state value is maximal, the current state’s value is maximal when taking this action – perhaps verbose but give this a think and it does in fact make sense. We note that we can have <em>negative</em> action value which we might think of as a <em>cost</em>. In simpler problems, the action value is explicitly defined by the problem. In other settings, the action value may not be so obvious and may itself need defining through some recursion. We will focus on the simpler problems here – see my blog post on Blackjack <a href="https://m-cespa.github.io/blog/posts/blackjack.html">here</a> for a more involved example.</p>
 </section>
 <section id="solution-by-backwards-induction" class="level1">
 <h1>Solution by Backwards Induction</h1>
-<p>We could solve the Bellman Equation recursively, but if you are familiar with recursion you will also be familiar with the exponential compute scaling. Instead, we want to proceed by <em>Backwards Induction</em>. We may have some domain knowledge of the problem (or “boundary conditions”) which fix the optimal value of certain states. Any such states are known as <em>terminal</em> states. Terminal states have the property that <span class="math inline">\(\mathcal{A}(s) = \emptyset\)</span> and thus the Bellman Equation does not apply to them – their value must be defined by the problem itself. Once defined, the value of any states which neighbour only terminal states can be readily evaluated too…and so on. Any state which neighbours states with optimal value already evaluated, can itself be evaluated. Hopefully the <em>backwards</em> direction of this strategy is apparent.</p>
-<p>I will now present some examples in escalating difficulty.</p>
+<p>We could solve the Bellman Equation recursively, but if you are familiar with recursion you will also be familiar with the exponential compute scaling. Instead, we want to proceed by <em>Backwards Induction</em>. We may have some domain knowledge of the problem (or “boundary conditions”) which fix the optimal value of certain states. Any such states are known as <em>terminal</em> states. Terminal states have the property that <span class="math inline">\(\mathcal{A}(s) = \emptyset\)</span> and thus the Bellman Equation does not apply to them – their value must be defined by the problem itself. Once defined, the value of any states which neighbour only terminal states can be readily evaluated too…and so on. Any state which neighbours states with optimal value already evaluated, can itself be evaluated. Hopefully the <em>backwards</em> feel of this strategy is apparent.</p>
+<p>I will now present some examples in escalating difficulty. For each example I will provide a worked solution and discussion. I have also included python solutions which if you are keen, may be worth trying to figure out yourself given the discussion already given.</p>
 <section id="example-1-transportation-problem" class="level2">
 <h2 class="anchored" data-anchor-id="example-1-transportation-problem">Example 1: Transportation Problem</h2>
 <p><strong>Problem:</strong> You start at node <span class="math inline">\(1\)</span> of <span class="math inline">\(N\)</span>. Walking from state <span class="math inline">\(n\)</span> to <span class="math inline">\(n+1\)</span> takes <span class="math inline">\(1\)</span> minute. Taking a magic tram from state <span class="math inline">\(n\)</span> to <span class="math inline">\(2n\)</span> takes 2 minutes. You can only take the magic tram if <span class="math inline">\(2n \leq N\)</span>. What is the shortest time to travel from <span class="math inline">\(1\)</span> to <span class="math inline">\(N\)</span>?</p>
@@ -275,7 +282,18 @@ Q(1; s) &amp;= 2 \quad \text{with} \quad T(s, 1) = 2s
     V(s) = \min \{V(s+1) + 1, V(2s) + 2 \}
 \end{equation}
 \]</span></p>
-<p>We can program this easily (taking into account trams which would go out of bounds):</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Python Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> transportation_problem(N: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> (N<span class="op">+</span><span class="dv">1</span>) <span class="co"># leave 0th cell blank for convenience so we can 1-index</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -286,6 +304,9 @@ Q(1; s) &amp;= 2 \quad \text{with} \quad T(s, 1) = 2s
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        V[i] <span class="op">=</span> <span class="bu">min</span>(one_step, two_step)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
 </section>
 <section id="example-2-tree-cutting" class="level2">
 <h2 class="anchored" data-anchor-id="example-2-tree-cutting">Example 2: Tree Cutting</h2>
@@ -302,7 +323,19 @@ Q(1; s) &amp;= 2 \quad \text{with} \quad T(s, 1) = 2s
     V(s) = \max \{ \texttt{prices}[1] + V(s-1), \texttt{prices}[2] + V(s-2), \ldots, \texttt{prices}[s-1] + V(1), \texttt{prices}[s]\}
 \end{equation}
 \]</span></p>
-<p>We note that we excluded the action “cut 0” from our action set to avoid infinite recursion. Cutting zero would mean that <span class="math inline">\(Q(\text{cut 0}, s) + V(T(s, \text{cut 0})) = V(s)\)</span> which clearly is not ideal for our Bellman Equation. Again, a programmatic solution is shown below:</p>
+<p>We note that we excluded the action “cut 0” from our action set to avoid infinite recursion. Cutting zero would mean that <span class="math inline">\(Q(\text{cut 0}, s) + V(T(s, \text{cut 0})) = V(s)\)</span> which clearly is not ideal for our Bellman Equation.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Python Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tree_cutting(prices: <span class="bu">list</span>[<span class="bu">int</span>], N: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> (N <span class="op">+</span> <span class="dv">1</span>) <span class="co"># leave 0th cell blank for convenience so we can 1-index</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> <span class="bu">len</span>(prices)</span>
@@ -314,10 +347,13 @@ Q(1; s) &amp;= 2 \quad \text{with} \quad T(s, 1) = 2s
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        V[i] <span class="op">=</span> max_val</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[n]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You may have noticed now the common use of <span class="math inline">\(\pm \infty\)</span> in helping us distinguish valid from invalid state transitions. This quite a common trick as it removes the need for explicit flagging as an infinity will collapse any <span class="math inline">\(\min\)</span> or <span class="math inline">\(\max\)</span> operation downstream to the only valid candidate state transition. You can alternatively explicitly flag with some boolean variable when a transition is valid.</p>
+</div>
+</div>
+</div>
+<p>You may have noticed now the common use of <span class="math inline">\(\pm \infty\)</span> in helping us distinguish valid from invalid actions. This quite a common programmatic trick as it removes the need for explicit definition of the action set <span class="math inline">\(\mathcal{A}(s)\)</span> because an infinity will collapse the <span class="math inline">\(\min\)</span> or <span class="math inline">\(\max\)</span> operations downstream to the only valid candidate action. You can alternatively explicitly flag with some boolean variable when an action is valid.</p>
 </section>
-<section id="example-3-probabilistic-parking-problem" class="level2">
-<h2 class="anchored" data-anchor-id="example-3-probabilistic-parking-problem">Example 3: Probabilistic Parking Problem</h2>
+<section id="sec-probparking" class="level2">
+<h2 class="anchored" data-anchor-id="sec-probparking">Example 3: Probabilistic Parking Problem</h2>
 <p><strong>Problem:</strong> We have an array of probabilities <span class="math inline">\(\texttt{arr}\)</span> where the <span class="math inline">\(i^{\text{th}}\)</span> element denotes the probability that the <span class="math inline">\(i^{\text{th}}\)</span> parking slot on a one-way road is available. There is a restaurant located at index <span class="math inline">\(m\)</span>. We would like to park as close as possible to the restaurant but once we drive past a slot, we cannot turn back. If we drive to the end of the road (index <span class="math inline">\(N + 1 \geq m\)</span> where <span class="math inline">\(N = \texttt{len}(\texttt{arr})\)</span>) there is a guaranteed parking spot with cost <span class="math inline">\(K\)</span> (which we presume is large). Find the optimal strategy given that you start at index <span class="math inline">\(0\)</span>.</p>
 <p>The state space is trivially <span class="math inline">\(\mathcal{S} = \{0, \ldots, m, \ldots, N\}\)</span>. We also denote by <span class="math inline">\(a=0\)</span> an attempt at parking and by <span class="math inline">\(a=1\)</span> a move to the next slot. We should now take care given the probabilistic setting. What we really want here is the optimal expected state value function. This is not to be confused with the expected optimal state value function. The latter would be constructed by considering some <span class="math inline">\(V(s \mid X)\)</span> where <span class="math inline">\(X\)</span> is a random variable indexing some draw of the probability array, and then taking the expectation over <span class="math inline">\(X\)</span>. This would be equivalent to considering lots of samples of the array, solving the deterministic problem for each (where we know which parking spots are free or not) and then averaging over the state value function at each state. Intuitively, this is not the same as the optimal expected state value. This can be made formal through Jensen’s inequality: <span class="math display">\[
 \begin{equation}
@@ -351,6 +387,18 @@ Q(1; s) &amp;= 2 \quad \text{with} \quad T(s, 1) = 2s
 \end{equation}
 \]</span></p>
 <p>From this reformulation reveals more clearly what the policy should be. You should always attempt to park at state <span class="math inline">\(s\)</span> if <span class="math inline">\(\vert s-m\vert &lt; V(s+1)\)</span> i.e.&nbsp;if the cost of parking is strictly less than the expected future cost. This is in fact the intuitive solution.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Python Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> probablistic_parking_problem(arr: <span class="bu">list</span>[<span class="bu">float</span>], m: <span class="bu">int</span>, K: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[<span class="bu">float</span>, <span class="bu">list</span>[<span class="bu">int</span>]]:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> <span class="bu">len</span>(arr)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [<span class="dv">0</span>] <span class="op">*</span> (N <span class="op">+</span> <span class="dv">1</span>)</span>
@@ -368,9 +416,160 @@ Q(1; s) &amp;= 2 \quad \text{with} \quad T(s, 1) = 2s
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        V[i] <span class="op">=</span> V[i<span class="op">+</span><span class="dv">1</span>] <span class="op">+</span> arr[i] <span class="op">*</span> <span class="bu">min</span>(<span class="dv">0</span>, <span class="bu">abs</span>(i <span class="op">-</span> m) <span class="op">-</span> V[i<span class="op">+</span><span class="dv">1</span>])</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[<span class="dv">0</span>], policy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-
-
+</div>
+</div>
+</div>
 </section>
+</section>
+<section id="d-dynamic-programming" class="level1">
+<h1>2D Dynamic Programming</h1>
+<p>The previous examples all presented a state space which could be indexed by single integers – i.e.&nbsp;the state space was 1D. In harder or more abstract Dynamic Programming problems, the state space will be more involved and states will need to be labelled by more than just 1 integer. Consider for example a state space defining a player’s position in a maze; clearly each state is indexed by 2 coordinates (or perhaps 3 if the maze is 3D). The logic for solving such problems is still the same. The main difference is that identifying terminal states and allowed actions may be less trivial – there are simply more directions in state space to consider. I’ll now present another 3 examples of higher dimensional state space problems.</p>
+<p>For these multi-dimensional problems, I’ll stick to 0-indexing and programming conventions for stating array dimensions – e.g.&nbsp;an <span class="math inline">\(m\times n\)</span> matrix has index <span class="math inline">\([0, 0]\)</span> at the top left and <span class="math inline">\([m-1, n-1]\)</span> on the bottom right.</p>
+<section id="example-1-maximum-weighted-path" class="level2">
+<h2 class="anchored" data-anchor-id="example-1-maximum-weighted-path">Example 1: Maximum Weighted Path</h2>
+<p><strong>Problem:</strong> Given an <span class="math inline">\(m\times n\)</span> matrix <span class="math inline">\(M\)</span>, starting from index <span class="math inline">\((0, 0)\)</span> and moving only down or right, find the maximum weighted path to <span class="math inline">\((m-1, n-1)\)</span>.</p>
+<p>The state space here is clearly the indices in the matrix <span class="math inline">\(\mathcal{S} = \{(i, j): 0 \leq i &lt; m, 0 \leq j &lt; n\}\)</span>. To make the recursive substructure clear, we consider the general class of subproblems of finding the maximum weighted path from some state <span class="math inline">\((i, j) \in \mathcal{S}\)</span> to <span class="math inline">\((m-1, n-1)\)</span>. So by <span class="math inline">\(V(i, j)\)</span> we mean the maximum weighted path you can achieve from <span class="math inline">\((i, j)\)</span>. This readily gives us our terminal states with <span class="math inline">\(V(m-1, n-1) = M_{m-1, n-1}\)</span> and by noting that the allowed actions are only down or right, we can populate the bottom row and far right column with <span class="math inline">\(V(m-1, j) = M_{m-1, j} + V(m-1, j+1)\)</span> and similarly <span class="math inline">\(V(i, n-1) = M_{i, n-1} + V(i+1, n-1)\)</span>. From here we can hopefully see how the Bellman Equation is going to appear. Clearly the maximal path from <span class="math inline">\((i, j)\)</span> is equal to the cell value <span class="math inline">\(M_{ij}\)</span> added to the largest of the optimal state values for the two neighbouring states. Writing this formally we have: <span class="math display">\[
+\begin{equation}
+    V(i, j) = M_{ij} + \max\{V(i+1, j), V(i, j+1) \}
+\end{equation}
+\]</span></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Python Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> maximum_weighted_path(M: <span class="bu">list</span>[<span class="bu">list</span>[<span class="bu">int</span>]]) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    m, n <span class="op">=</span> <span class="bu">len</span>(M), <span class="bu">len</span>(M[<span class="dv">0</span>])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [[<span class="dv">0</span>] <span class="op">*</span> n <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(m)]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    V[<span class="op">-</span><span class="dv">1</span>][<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> M[<span class="op">-</span><span class="dv">1</span>][<span class="op">-</span><span class="dv">1</span>] <span class="co"># bottom right cell</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(m<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        V[i][<span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> M[i][<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> V[i<span class="op">+</span><span class="dv">1</span>][<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        V[<span class="op">-</span><span class="dv">1</span>][j] <span class="op">=</span> M[<span class="op">-</span><span class="dv">1</span>][j] <span class="op">+</span> V[<span class="op">-</span><span class="dv">1</span>][j<span class="op">+</span><span class="dv">1</span>]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(m<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>            V[i][j] <span class="op">=</span> M[i][j] <span class="op">+</span> <span class="bu">max</span>(V[i<span class="op">+</span><span class="dv">1</span>][j], V[i][j<span class="op">+</span><span class="dv">1</span>])</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[<span class="dv">0</span>][<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-2-card-flipping-game" class="level2">
+<h2 class="anchored" data-anchor-id="example-2-card-flipping-game">Example 2: Card Flipping Game</h2>
+<p><strong>Problem:</strong> You have a standard 52 card deck. Each turn you can choose to flip a card from the top or stop the game. Flipping a black card earns you 1 point, flipping a red card loses you 1 point. What is the optimal strategy to maximise your score?</p>
+<p>(This wouldn’t be a Dynamic Programming tutorial without some card game featuring…)</p>
+<p>Let the state space be <span class="math inline">\(\mathcal{S} = \{(b, r): 0 \leq b \leq 26, 0 \leq r \leq 26\}\)</span> where a state <span class="math inline">\((b, r)\)</span> denotes having <span class="math inline">\(b\)</span> black cards and <span class="math inline">\(r\)</span> red cards left in the deck. The problem seeks <span class="math inline">\(V(26, 26)\)</span> i.e.&nbsp;the optimal value starting from the whole deck. Hopefully you are getting a sense of how important it is to specify the state space properly. The recursive substructure usually becomes obvious once you start thinking about the states in the right way. In this setting, we can clearly identify terminal states as: <span class="math inline">\(V(b, 0) = 0\)</span> for any <span class="math inline">\(b\)</span> or <span class="math inline">\(V(0, r) = r\)</span> for any <span class="math inline">\(r\)</span>. To unpack these: if you have drawn all reds and have <span class="math inline">\(b\)</span> black cards left, the best you can do is reach a score of <span class="math inline">\(0\)</span> by drawing all the remaining blacks. Similarly if you have drawn all the blacks, clearly you should stop the game here and win a score of <span class="math inline">\(26 - (26 - r) = r\)</span>.</p>
+<p>Our actions are two: draw (<span class="math inline">\(a=1\)</span>) or stop (<span class="math inline">\(a=0\)</span>). Of course when drawing, we must account for the randomness by considering expectations (as we did in <a href="#sec-probparking" class="quarto-xref">Section&nbsp;3.3</a>). For clarity, we explicitly write the action value function at some state <span class="math inline">\((b, r)\)</span>: <span class="math display">\[
+\begin{align}
+    Q(0; (b, r)) &amp;= 0 \\
+    Q(1; (b, r)) &amp;= \frac{b}{b+r} - \frac{r}{b+r}
+\end{align}
+\]</span></p>
+<p>We note that because when <span class="math inline">\(a=1\)</span>, the state transition is random, we need to consider the expectation of the next state value function. On the other hand, when <span class="math inline">\(a=0\)</span> our point total is simply <span class="math inline">\(r-b\)</span> (having drawn <span class="math inline">\(26 - b\)</span> blacks and <span class="math inline">\(26 - r\)</span> reds). Putting these considerations together into the Bellman Equation gives: <span class="math display">\[
+\begin{equation}
+    V(b, r) = \max \{r - b, \frac{b}{b+r}\left[ V(b-1, r) + 1 \right] + \frac{r}{b+r}\left[ V(b, r-1) - 1 \right] \}
+\end{equation}
+\]</span></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Python Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> card_flipping_game() <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [[<span class="dv">0</span>] <span class="op">*</span> <span class="dv">27</span> <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">27</span>)] <span class="co"># 0 and 26 included</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">27</span>):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        V[b][<span class="dv">0</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">27</span>):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        V[<span class="dv">0</span>][r] <span class="op">=</span> r</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> b <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">27</span>):</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">27</span>):</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            draw_black <span class="op">=</span> (b <span class="op">*</span> (V[b<span class="op">-</span><span class="dv">1</span>][r] <span class="op">+</span> <span class="dv">1</span>)) <span class="op">/</span> (b <span class="op">+</span> r)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>            draw_red <span class="op">=</span> (r <span class="op">*</span> (V[b][r<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span>)) <span class="op">/</span> (b <span class="op">+</span> r)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>            V[b][r] <span class="op">=</span> <span class="bu">max</span>(r <span class="op">-</span> b, draw_black <span class="op">+</span> draw_red)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[<span class="op">-</span><span class="dv">1</span>][<span class="op">-</span><span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-3-maximum-substring" class="level2">
+<h2 class="anchored" data-anchor-id="example-3-maximum-substring">Example 3: Maximum Substring</h2>
+<p><strong>Problem:</strong> Given a string of <span class="math inline">\(N\)</span> digits <span class="math inline">\((d_i)_{1 \leq i \leq N}\)</span>, find the maximum substring of <span class="math inline">\(M \leq N\)</span> digits.</p>
+<p>We should note that substrings need to be in order (left to right) <strong>but</strong> need not consistent of adjacent elements. It helps to illustrate this with an example:</p>
+<p>For the string <span class="math inline">\(\,3989547\)</span> with <span class="math inline">\(N=7\)</span> and <span class="math inline">\(M=4\)</span>, the maximum substring is <span class="math inline">\(\,9957\)</span>.</p>
+<p>The recursive substructure is a little harder to spot. With problems where the substructure is not immediately apparent, it helps to think of the family of such problems and how they might be subproblems. Consider for example constructing a maximal substring of <span class="math inline">\(m \leq M\)</span> digits using only the first <span class="math inline">\(n \leq N\)</span> digits. This is in the same problem family <em>and</em> it is a subproblem. So we should try defining the state space as <span class="math inline">\(\mathcal{S} = \{(m, n): (m, n \in \mathbb{N}) \land (0 \leq m \leq M) \land (0 \leq n \leq N) \land (m \leq n) \}\)</span>. Clearly setting <span class="math inline">\(m=0\)</span> for any <span class="math inline">\(n\)</span> will give us terminal states with <span class="math inline">\(V(0, n) = 0\)</span> and similarly <span class="math inline">\(V(m, 0)=0\)</span>. One final terminal state is <span class="math inline">\(V(1, n)\)</span> which for <span class="math inline">\(n&gt;0\)</span> evaluates to the maximum digit in the string.</p>
+<p>In some problems, the notion of action or action value will be really quite abstract and it can help, if you’re comfortable enough with the Backwards Induction way of thinking, to try and write the Bellman Equation right away. This is one of those problems. If we look at the state <span class="math inline">\((m, n)\)</span>, its maximal substring can either be the same as it was for state <span class="math inline">\((m, n-1)\)</span> (the <span class="math inline">\(d_n\)</span> digit is lower than the current final digit in our substring) <em>or</em> from state <span class="math inline">\((m-1, n-1)\)</span>, we multiply <span class="math inline">\(V(m-1, n-1)\)</span> by <span class="math inline">\(10\)</span> (shifting the decimal place) and pick up the new digit <span class="math inline">\(d_n\)</span>. We of course want the maximum of these two options and thus the Bellman Equation is: <span class="math display">\[
+\begin{equation}
+    V(m, n) = \begin{cases}
+        \max \{10 \cdot V(m-1, n-1) + d_n, V(m, n-1) \} \quad m \leq n-1 \\
+        V(m-1, n-1) + 10\cdot d_n \quad \text{otherwise}
+    \end{cases}
+\end{equation}
+\]</span></p>
+<p>We explicitly show the case by case structure here which could instead be summarised by taking the maximum over the action set <span class="math inline">\(\mathcal{A}(s)\)</span>.</p>
+<p>We could also consider the actions explicitly. The actions of interest are in the decreasing direction of either <span class="math inline">\(m\)</span> or <span class="math inline">\(n\)</span> (to reach the terminal states). We can consider moving <span class="math inline">\((m, n) \rightarrow (m-1, n-1)\)</span> or <span class="math inline">\((m, n) \rightarrow (m, n-1)\)</span>. Note that moving <span class="math inline">\((m, n) \rightarrow (m-1, n)\)</span> is <em>not</em> an allowed action as it does not preserve optimality – consider in the example above, the maximum substring with <span class="math inline">\(m=3\)</span> would be <span class="math inline">\(997\)</span> which has skipped the digit <span class="math inline">\(5\)</span> needed to make <span class="math inline">\(9957\)</span> when <span class="math inline">\(m=4\)</span>. We can consider the allowed actions as diagonally left or vertically down on an <span class="math inline">\(m\times n\)</span> grid. To formalise the action values, let <span class="math inline">\(a=0\)</span> denote the diagonally left action and <span class="math inline">\(a=1\)</span> denote vertically down: <span class="math display">\[
+\begin{align}
+    Q(0; (m, n)) &amp;= 9 \cdot V(m-1, n-1) + d_n \\
+    Q(1; (m, n)) &amp;= 0
+\end{align}
+\]</span></p>
+<p>This would in fact recover the Bellman Equation but clearly these action values are not particularly insightful. The reason is that our state value is not accumulated in the canonical sense, there is a multiplication by <span class="math inline">\(10\)</span> incurred from moving a decimal place. The canonical Bellman Equation decomposition does not lend itself to this structure. We can however spot recursive substructure and solve the problem with Dynamic Programming.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Python Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> maximum_substring(digits: <span class="bu">list</span>[<span class="bu">int</span>], M: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    V <span class="op">=</span> [[<span class="dv">0</span>] <span class="op">*</span> N <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(M<span class="op">+</span><span class="dv">1</span>)] <span class="co"># 1-indexing </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># V(0, n) = 0 already covered</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># m &gt; n cases = 0 already covered</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># V(1, n) = max(digits[:n])</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, N):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        V[<span class="dv">1</span>][n] <span class="op">=</span> <span class="bu">max</span>(digits[:n])</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, N):</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> m <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, M<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> m <span class="op">&lt;=</span> n:</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                V[m][n] <span class="op">=</span> <span class="bu">max</span>(V[m<span class="op">-</span><span class="dv">1</span>][n<span class="op">-</span><span class="dv">1</span>] <span class="op">*</span> <span class="dv">10</span> <span class="op">+</span> digits[n], V[m][n<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                V[m][n] <span class="op">=</span> V[m<span class="op">-</span><span class="dv">1</span>][n<span class="op">-</span><span class="dv">1</span>] <span class="op">*</span> <span class="dv">10</span> <span class="op">+</span> digits[n]</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> V[<span class="op">-</span><span class="dv">1</span>][<span class="op">-</span><span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<p>Hopefully this brief tutorial can be of use to someone other than an LLM scraping the internet. Crucially, I hope this tutorial helped build a sort of intuition for how these problems can be tackled. At some point I will make available a larger repository of problems (largely programming in nature) that I’ve come across over the last year or so.</p>
+
+
 </section>
 
 </main> <!-- /main -->

@@ -31,12 +31,12 @@ Breaking the equation up, it says:
 
 *“The action defining the optimal value at state s is the action with sum of action value and next state optimal value which is maximal”*
 
-This definition works because we are consider the *optimal* state value at all possible next states. Thus if an action's action value added with the transitioned state's optimal state value is maximal, the current state's value is maximal if taking this action -- perhaps verbose but give this a think and it does in fact make sense. We note that we can have *negative* action value which we might think of as an action *cost*. In simpler problems, the action value is explicitly defined by the problem. In other settings, the action value may not be so obvious and may itself need defining through some recursion. We will tackle these simpler problems first.
+This definition works because we are considering the *optimal* state value at all possible next states. Thus if an action's action value added with the transitioned state's optimal state value is maximal, the current state's value is maximal when taking this action -- perhaps verbose but give this a think and it does in fact make sense. We note that we can have *negative* action value which we might think of as a *cost*. In simpler problems, the action value is explicitly defined by the problem. In other settings, the action value may not be so obvious and may itself need defining through some recursion. We will focus on the simpler problems here -- see my blog post on Blackjack [here](https://m-cespa.github.io/blog/posts/blackjack.html) for a more involved example.
 
 # Solution by Backwards Induction
-We could solve the Bellman Equation recursively, but if you are familiar with recursion you will also be familiar with the exponential compute scaling. Instead, we want to proceed by *Backwards Induction*. We may have some domain knowledge of the problem (or "boundary conditions") which fix the optimal value of certain states. Any such states are known as *terminal* states. Terminal states have the property that $\mathcal{A}(s) = \emptyset$ and thus the Bellman Equation does not apply to them -- their value must be defined by the problem itself. Once defined, the value of any states which neighbour only terminal states can be readily evaluated too...and so on. Any state which neighbours states with optimal value already evaluated, can itself be evaluated. Hopefully the *backwards* direction of this strategy is apparent.
+We could solve the Bellman Equation recursively, but if you are familiar with recursion you will also be familiar with the exponential compute scaling. Instead, we want to proceed by *Backwards Induction*. We may have some domain knowledge of the problem (or "boundary conditions") which fix the optimal value of certain states. Any such states are known as *terminal* states. Terminal states have the property that $\mathcal{A}(s) = \emptyset$ and thus the Bellman Equation does not apply to them -- their value must be defined by the problem itself. Once defined, the value of any states which neighbour only terminal states can be readily evaluated too...and so on. Any state which neighbours states with optimal value already evaluated, can itself be evaluated. Hopefully the *backwards* feel of this strategy is apparent.
 
-I will now present some examples in escalating difficulty.
+I will now present some examples in escalating difficulty. For each example I will provide a worked solution and discussion. I have also included python solutions which if you are keen, may be worth trying to figure out yourself given the discussion already given.
 
 ## Example 1: Transportation Problem
 **Problem:** You start at node $1$ of $N$. Walking from state $n$ to $n+1$ takes $1$ minute. Taking a magic tram from state $n$ to $2n$ takes 2 minutes. You can only take the magic tram if $2n \leq N$. What is the shortest time to travel from $1$ to $N$?
@@ -56,8 +56,9 @@ $$
 \end{equation}
 $$
 
-We can program this easily (taking into account trams which would go out of bounds):
 
+::: {.callout-tip collapse="true"}
+## Python Solution
 ```python
 def transportation_problem(N: int) -> int:
     V = [0] * (N+1) # leave 0th cell blank for convenience so we can 1-index
@@ -70,6 +71,7 @@ def transportation_problem(N: int) -> int:
 
     return V[1]
 ```
+:::
 
 ## Example 2: Tree Cutting
 **Problem:** Given an array $\texttt{prices}$ where $\texttt{prices}[i]$ denotes the price you can sell a log of length $i$ (we are 1-indexing to avoid confusion) and an integer $N$ which denotes the total length of tree log you have to start with, what is the optimal way to cut this log to maximise value?
@@ -90,8 +92,10 @@ $$
 \end{equation}
 $$
 
-We note that we excluded the action "cut 0" from our action set to avoid infinite recursion. Cutting zero would mean that $Q(\text{cut 0}, s) + V(T(s, \text{cut 0})) = V(s)$ which clearly is not ideal for our Bellman Equation. Again, a programmatic solution is shown below:
+We note that we excluded the action "cut 0" from our action set to avoid infinite recursion. Cutting zero would mean that $Q(\text{cut 0}, s) + V(T(s, \text{cut 0})) = V(s)$ which clearly is not ideal for our Bellman Equation.
 
+::: {.callout-tip collapse="true"}
+## Python Solution
 ```python
 def tree_cutting(prices: list[int], N: int) -> int:
     V = [0] * (N + 1) # leave 0th cell blank for convenience so we can 1-index
@@ -105,10 +109,11 @@ def tree_cutting(prices: list[int], N: int) -> int:
     
     return V[n]
 ```
+:::
 
-You may have noticed now the common use of $\pm \infty$ in helping us distinguish valid from invalid state transitions. This quite a common trick as it removes the need for explicit flagging as an infinity will collapse any $\min$ or $\max$ operation downstream to the only valid candidate state transition. You can alternatively explicitly flag with some boolean variable when a transition is valid.
+You may have noticed now the common use of $\pm \infty$ in helping us distinguish valid from invalid actions. This quite a common programmatic trick as it removes the need for explicit definition of the action set $\mathcal{A}(s)$ because an infinity will collapse the $\min$ or $\max$ operations downstream to the only valid candidate action. You can alternatively explicitly flag with some boolean variable when an action is valid.
 
-## Example 3: Probabilistic Parking Problem
+## Example 3: Probabilistic Parking Problem {#sec-probparking}
 **Problem:** We have an array of probabilities $\texttt{arr}$ where the $i^{\text{th}}$ element denotes the probability that the $i^{\text{th}}$ parking slot on a one-way road is available. There is a restaurant located at index $m$. We would like to park as close as possible to the restaurant but once we drive past a slot, we cannot turn back. If we drive to the end of the road (index $N + 1 \geq m$ where $N = \texttt{len}(\texttt{arr})$) there is a guaranteed parking spot with cost $K$ (which we presume is large). Find the optimal strategy given that you start at index $0$.
 
 The state space is trivially $\mathcal{S} = \{0, \ldots, m, \ldots, N\}$. We also denote by $a=0$ an attempt at parking and by $a=1$ a move to the next slot. We should now take care given the probabilistic setting. What we really want here is the optimal expected state value function. This is not to be confused with the expected optimal state value function. The latter would be constructed by considering some $V(s \mid X)$ where $X$ is a random variable indexing some draw of the probability array, and then taking the expectation over $X$. This would be equivalent to considering lots of samples of the array, solving the deterministic problem for each (where we know which parking spots are free or not) and then averaging over the state value function at each state. Intuitively, this is not the same as the optimal expected state value. This can be made formal through Jensen's inequality:
@@ -152,6 +157,8 @@ $$
 
 From this reformulation reveals more clearly what the policy should be. You should always attempt to park at state $s$ if $\vert s-m\vert < V(s+1)$ i.e. if the cost of parking is strictly less than the expected future cost. This is in fact the intuitive solution.
 
+::: {.callout-tip collapse="true"}
+## Python Solution
 ```python
 def probablistic_parking_problem(arr: list[float], m: int, K: float) -> tuple[float, list[int]]:
     N = len(arr)
@@ -171,7 +178,139 @@ def probablistic_parking_problem(arr: list[float], m: int, K: float) -> tuple[fl
 
     return V[0], policy
 ```
+:::
+
+# 2D Dynamic Programming
+The previous examples all presented a state space which could be indexed by single integers -- i.e. the state space was 1D. In harder or more abstract Dynamic Programming problems, the state space will be more involved and states will need to be labelled by more than just 1 integer. Consider for example a state space defining a player's position in a maze; clearly each state is indexed by 2 coordinates (or perhaps 3 if the maze is 3D). The logic for solving such problems is still the same. The main difference is that identifying terminal states and allowed actions may be less trivial -- there are simply more directions in state space to consider. I'll now present another 3 examples of higher dimensional state space problems. 
+
+For these multi-dimensional problems, I'll stick to 0-indexing and programming conventions for stating array dimensions -- e.g. an $m\times n$ matrix has index $[0, 0]$ at the top left and $[m-1, n-1]$ on the bottom right.
+
+## Example 1: Maximum Weighted Path
+**Problem:** Given an $m\times n$ matrix $M$, starting from index $(0, 0)$ and moving only down or right, find the maximum weighted path to $(m-1, n-1)$.
+
+The state space here is clearly the indices in the matrix $\mathcal{S} = \{(i, j): 0 \leq i < m, 0 \leq j < n\}$. To make the recursive substructure clear, we consider the general class of subproblems of finding the maximum weighted path from some state $(i, j) \in \mathcal{S}$ to $(m-1, n-1)$. So by $V(i, j)$ we mean the maximum weighted path you can achieve from $(i, j)$. This readily gives us our terminal states with $V(m-1, n-1) = M_{m-1, n-1}$ and by noting that the allowed actions are only down or right, we can populate the bottom row and far right column with $V(m-1, j) = M_{m-1, j} + V(m-1, j+1)$ and similarly $V(i, n-1) = M_{i, n-1} + V(i+1, n-1)$. From here we can hopefully see how the Bellman Equation is going to appear. Clearly the maximal path from $(i, j)$ is equal to the cell value $M_{ij}$ added to the largest of the optimal state values for the two neighbouring states. Writing this formally we have:
+$$
+\begin{equation}
+    V(i, j) = M_{ij} + \max\{V(i+1, j), V(i, j+1) \}
+\end{equation}
+$$
+
+::: {.callout-tip collapse="true"}
+## Python Solution
+```python
+def maximum_weighted_path(M: list[list[int]]) -> int:
+    m, n = len(M), len(M[0])
+    V = [[0] * n for _ in range(m)]
+    V[-1][-1] = M[-1][-1] # bottom right cell
+    for i in range(m-2, -1, -1):
+        V[i][-1] = M[i][-1] + V[i+1][-1]
+    for j in range(n-2, -1, -1):
+        V[-1][j] = M[-1][j] + V[-1][j+1]
+
+    for i in range(m-2, -1, -1):
+        for j in range(n-2, -1, -1):
+            V[i][j] = M[i][j] + max(V[i+1][j], V[i][j+1])
+
+    return V[0][0]
+```
+:::
+
+## Example 2: Card Flipping Game
+**Problem:** You have a standard 52 card deck. Each turn you can choose to flip a card from the top or stop the game. Flipping a black card earns you 1 point, flipping a red card loses you 1 point. What is the optimal strategy to maximise your score?
+
+(This wouldn't be a Dynamic Programming tutorial without some card game featuring...)
+
+Let the state space be $\mathcal{S} = \{(b, r): 0 \leq b \leq 26, 0 \leq r \leq 26\}$ where a state $(b, r)$ denotes having $b$ black cards and $r$ red cards left in the deck. The problem seeks $V(26, 26)$ i.e. the optimal value starting from the whole deck. Hopefully you are getting a sense of how important it is to specify the state space properly. The recursive substructure usually becomes obvious once you start thinking about the states in the right way. In this setting, we can clearly identify terminal states as: $V(b, 0) = 0$ for any $b$ or $V(0, r) = r$ for any $r$. To unpack these: if you have drawn all reds and have $b$ black cards left, the best you can do is reach a score of $0$ by drawing all the remaining blacks. Similarly if you have drawn all the blacks, clearly you should stop the game here and win a score of $26 - (26 - r) = r$.
+
+Our actions are two: draw ($a=1$) or stop ($a=0$). Of course when drawing, we must account for the randomness by considering expectations (as we did in @sec-probparking). For clarity, we explicitly write the action value function at some state $(b, r)$:
+$$
+\begin{align}
+    Q(0; (b, r)) &= 0 \\
+    Q(1; (b, r)) &= \frac{b}{b+r} - \frac{r}{b+r}
+\end{align}
+$$
+
+We note that because when $a=1$, the state transition is random, we need to consider the expectation of the next state value function. On the other hand, when $a=0$ our point total is simply $r-b$ (having drawn $26 - b$ blacks and $26 - r$ reds). Putting these considerations together into the Bellman Equation gives:
+$$
+\begin{equation}
+    V(b, r) = \max \{r - b, \frac{b}{b+r}\left[ V(b-1, r) + 1 \right] + \frac{r}{b+r}\left[ V(b, r-1) - 1 \right] \}
+\end{equation}
+$$
+
+::: {.callout-tip collapse="true"}
+## Python Solution
+```python
+def card_flipping_game() -> float:
+    V = [[0] * 27 for _ in range(27)] # 0 and 26 included
+
+    for b in range(1, 27):
+        V[b][0] = 0
+    for r in range(1, 27):
+        V[0][r] = r
+
+    for b in range(1, 27):
+        for r in range(1, 27):
+            draw_black = (b * (V[b-1][r] + 1)) / (b + r)
+            draw_red = (r * (V[b][r-1] - 1)) / (b + r)
+            V[b][r] = max(r - b, draw_black + draw_red)
+
+    return V[-1][-1]
+```
+:::
 
 
+## Example 3: Maximum Substring
+**Problem:** Given a string of $N$ digits $(d_i)_{1 \leq i \leq N}$, find the maximum substring of $M \leq N$ digits. 
 
+We should note that substrings need to be in order (left to right) **but** need not consistent of adjacent elements. It helps to illustrate this with an example:
 
+For the string $\,3989547$ with $N=7$ and $M=4$, the maximum substring is $\,9957$.
+
+The recursive substructure is a little harder to spot. With problems where the substructure is not immediately apparent, it helps to think of the family of such problems and how they might be subproblems. Consider for example constructing a maximal substring of $m \leq M$ digits using only the first $n \leq N$ digits. This is in the same problem family *and* it is a subproblem. So we should try defining the state space as $\mathcal{S} = \{(m, n): (m, n \in \mathbb{N}) \land (0 \leq m \leq M) \land (0 \leq n \leq N) \land (m \leq n) \}$. Clearly setting $m=0$ for any $n$ will give us terminal states with $V(0, n) = 0$ and similarly $V(m, 0)=0$. One final terminal state is $V(1, n)$ which for $n>0$ evaluates to the maximum digit in the string. 
+
+In some problems, the notion of action or action value will be really quite abstract and it can help, if you're comfortable enough with the Backwards Induction way of thinking, to try and write the Bellman Equation right away. This is one of those problems. If we look at the state $(m, n)$, its maximal substring can either be the same as it was for state $(m, n-1)$ (the $d_n$ digit is lower than the current final digit in our substring) *or* from state $(m-1, n-1)$, we multiply $V(m-1, n-1)$ by $10$ (shifting the decimal place) and pick up the new digit $d_n$. We of course want the maximum of these two options and thus the Bellman Equation is:
+$$
+\begin{equation}
+    V(m, n) = \begin{cases}
+        \max \{10 \cdot V(m-1, n-1) + d_n, V(m, n-1) \} \quad m \leq n-1 \\
+        V(m-1, n-1) + 10\cdot d_n \quad \text{otherwise}
+    \end{cases}
+\end{equation}
+$$
+
+We explicitly show the case by case structure here which could instead be summarised by taking the maximum over the action set $\mathcal{A}(s)$. 
+
+We could also consider the actions explicitly. The actions of interest are in the decreasing direction of either $m$ or $n$ (to reach the terminal states). We can consider moving $(m, n) \rightarrow (m-1, n-1)$ or $(m, n) \rightarrow (m, n-1)$. Note that moving $(m, n) \rightarrow (m-1, n)$ is *not* an allowed action as it does not preserve optimality -- consider in the example above, the maximum substring with $m=3$ would be $997$ which has skipped the digit $5$ needed to make $9957$ when $m=4$. We can consider the allowed actions as diagonally left or vertically down on an $m\times n$ grid. To formalise the action values, let $a=0$ denote the diagonally left action and $a=1$ denote vertically down:
+$$
+\begin{align}
+    Q(0; (m, n)) &= 9 \cdot V(m-1, n-1) + d_n \\
+    Q(1; (m, n)) &= 0
+\end{align}
+$$
+
+This would in fact recover the Bellman Equation but clearly these action values are not particularly insightful. The reason is that our state value is not accumulated in the canonical sense, there is a multiplication by $10$ incurred from moving a decimal place. The canonical Bellman Equation decomposition does not lend itself to this structure. We can however spot recursive substructure and solve the problem with Dynamic Programming.
+
+::: {.callout-tip collapse="true"}
+## Python Solution
+```python
+def maximum_substring(digits: list[int], M: int) -> int:
+    V = [[0] * N for _ in range(M+1)] # 1-indexing 
+    # V(0, n) = 0 already covered
+    # m > n cases = 0 already covered
+    # V(1, n) = max(digits[:n])
+    for n in range(1, N):
+        V[1][n] = max(digits[:n])
+
+    for n in range(1, N):
+        for m in range(1, M+1):
+            if m <= n:
+                V[m][n] = max(V[m-1][n-1] * 10 + digits[n], V[m][n-1])
+            else:
+                V[m][n] = V[m-1][n-1] * 10 + digits[n]
+
+    return V[-1][-1]
+```
+:::
+
+# Conclusions
+Hopefully this brief tutorial can be of use to someone other than an LLM scraping the internet. Crucially, I hope this tutorial helped build a sort of intuition for how these problems can be tackled. At some point I will make available a larger repository of problems (largely programming in nature) that I've come across over the last year or so. 
